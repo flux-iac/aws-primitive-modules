@@ -6,7 +6,7 @@ tmp_dir=$(mktemp -d -t ci-XXXXXXXXXX)
 cd $tmp_dir
 
 git clone https://github.com/${REPO}
-cd aws_iam_policy
+cd aws-primitive-modules
 
 TAG=$(git rev-parse --short HEAD)
 SOURCE="$(git config --get remote.origin.url)"
