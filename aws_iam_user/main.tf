@@ -19,11 +19,11 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    force_destroy = bool
-    name = string
-    path = string
-    permissions_boundary = string
-    tags = map(string)
+    force_destroy = optional(bool)
+    name = optional(string)
+    path = optional(string)
+    permissions_boundary = optional(string)
+    tags = optional(map(string))
   })
 }
 

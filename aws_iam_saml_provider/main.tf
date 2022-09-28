@@ -19,9 +19,9 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    name = string
-    saml_metadata_document = string
-    tags = map(string)
+    name = optional(string)
+    saml_metadata_document = optional(string)
+    tags = optional(map(string))
   })
 }
 

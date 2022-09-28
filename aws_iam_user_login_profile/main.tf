@@ -19,10 +19,10 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    password_length = number
-    password_reset_required = bool
-    pgp_key = string
-    user = string
+    password_length = optional(number)
+    password_reset_required = optional(bool)
+    pgp_key = optional(string)
+    user = optional(string)
   })
 }
 

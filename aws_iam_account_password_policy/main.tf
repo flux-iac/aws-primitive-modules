@@ -19,8 +19,8 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    allow_users_to_change_password = bool
-    minimum_password_length = number
+    allow_users_to_change_password = optional(bool)
+    minimum_password_length = optional(number)
   })
 }
 

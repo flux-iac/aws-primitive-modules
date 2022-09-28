@@ -19,10 +19,10 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    name = string
-    name_prefix = string
-    policy = string
-    user = string
+    name = optional(string)
+    name_prefix = optional(string)
+    policy = optional(string)
+    user = optional(string)
   })
 }
 

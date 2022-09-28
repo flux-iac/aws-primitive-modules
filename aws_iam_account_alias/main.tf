@@ -19,7 +19,7 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    account_alias = string
+    account_alias = optional(string)
   })
 }
 

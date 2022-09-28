@@ -19,9 +19,9 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    certificate_body = string
-    status = string
-    user_name = string
+    certificate_body = optional(string)
+    status = optional(string)
+    user_name = optional(string)
   })
 }
 

@@ -19,11 +19,11 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    name = string
-    name_prefix = string
-    path = string
-    role = string
-    tags = map(string)
+    name = optional(string)
+    name_prefix = optional(string)
+    path = optional(string)
+    role = optional(string)
+    tags = optional(map(string))
   })
 }
 

@@ -19,8 +19,8 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    policy_arn = string
-    role = string
+    policy_arn = optional(string)
+    role = optional(string)
   })
 }
 

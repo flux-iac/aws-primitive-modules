@@ -19,15 +19,15 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    assume_role_policy = string
-    description = string
-    force_detach_policies = bool
-    max_session_duration = number
-    name = string
-    name_prefix = string
-    path = string
-    permissions_boundary = string
-    tags = map(string)
+    assume_role_policy = optional(string)
+    description = optional(string)
+    force_detach_policies = optional(bool)
+    max_session_duration = optional(number)
+    name = optional(string)
+    name_prefix = optional(string)
+    path = optional(string)
+    permissions_boundary = optional(string)
+    tags = optional(map(string))
   })
 }
 

@@ -19,13 +19,13 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    certificate_body = string
-    certificate_chain = string
-    name = string
-    name_prefix = string
-    path = string
-    private_key = string
-    tags = map(string)
+    certificate_body = optional(string)
+    certificate_chain = optional(string)
+    name = optional(string)
+    name_prefix = optional(string)
+    path = optional(string)
+    private_key = optional(string)
+    tags = optional(map(string))
   })
 }
 

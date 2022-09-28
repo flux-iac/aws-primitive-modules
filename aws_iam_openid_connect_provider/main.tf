@@ -19,10 +19,10 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    client_id_list = list(string)
-    tags = map(string)
-    thumbprint_list = list(string)
-    url = string
+    client_id_list = optional(list(string))
+    tags = optional(map(string))
+    thumbprint_list = optional(list(string))
+    url = optional(string)
   })
 }
 

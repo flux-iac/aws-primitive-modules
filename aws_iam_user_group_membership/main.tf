@@ -19,8 +19,8 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    groups = set(string)
-    user = string
+    groups = optional(set(string))
+    user = optional(string)
   })
 }
 

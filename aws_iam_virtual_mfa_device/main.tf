@@ -19,9 +19,9 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    path = string
-    tags = map(string)
-    virtual_mfa_device_name = string
+    path = optional(string)
+    tags = optional(map(string))
+    virtual_mfa_device_name = optional(string)
   })
 }
 
