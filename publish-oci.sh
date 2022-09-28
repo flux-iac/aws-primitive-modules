@@ -1,6 +1,7 @@
 pushd .
 
 REPO=tf-controller/aws-primitive-modules
+PROVIDER_VERSION=v4.32.0
 
 tmp_dir=$(mktemp -d -t ci-XXXXXXXXXX)
 cd $tmp_dir
@@ -17,17 +18,17 @@ rm Makefile
 rm *.sh
 
 flux push artifact \
-    oci://ghcr.io/${REPO}/module:$TAG \
+    oci://ghcr.io/${REPO}/$PROVIDER_VERSION:$TAG \
 	--path="./" \
 	--source=$SOURCE \
 	--revision=$REVISION
 
 flux tag artifact \
-    oci://ghcr.io/${REPO}/module:$TAG \
+    oci://ghcr.io/${REPO}$PROVIDER_VERSION:$TAG \
     --tag latest
 
 flux tag artifact \
-    oci://ghcr.io/${REPO}/module:$TAG \
+    oci://ghcr.io/${REPO}$PROVIDER_VERSION:$TAG \
     --tag $1
 
 rm -rf $tmp_dir
