@@ -24,11 +24,11 @@ flux push artifact \
 	--revision=$REVISION
 
 flux tag artifact \
-    oci://ghcr.io/${REPO}$PROVIDER_VERSION:$TAG \
+    oci://ghcr.io/${REPO}/$PROVIDER_VERSION:$TAG \
     --tag latest
 
 flux tag artifact \
-    oci://ghcr.io/${REPO}$PROVIDER_VERSION:$TAG \
+    oci://ghcr.io/${REPO}/$PROVIDER_VERSION:$TAG \
     --tag $1
 
 rm -rf $tmp_dir
