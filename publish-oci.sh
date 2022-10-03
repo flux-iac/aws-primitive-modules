@@ -1,7 +1,7 @@
 pushd .
 
 REPO=tf-controller/aws-primitive-modules
-PROVIDER_VERSION=v4.32.0
+PROVIDER_VERSION=v4.33.0
 
 tmp_dir=$(mktemp -d -t ci-XXXXXXXXXX)
 cd $tmp_dir
