@@ -18,18 +18,18 @@ rm Makefile
 rm *.sh
 
 flux push artifact \
-    oci://ghcr.io/${REPO}/$PROVIDER_VERSION:$TAG \
+    oci://ghcr.io/${REPO}:$PROVIDER_VERSION-$TAG \
 	--path="./" \
 	--source=$SOURCE \
 	--revision=$REVISION
 
 flux tag artifact \
-    oci://ghcr.io/${REPO}/$PROVIDER_VERSION:$TAG \
+    oci://ghcr.io/${REPO}:$PROVIDER_VERSION-$TAG \
     --tag latest
 
 flux tag artifact \
-    oci://ghcr.io/${REPO}/$PROVIDER_VERSION:$TAG \
-    --tag $1
+    oci://ghcr.io/${REPO}:$PROVIDER_VERSION-$TAG \
+    --tag $PROVIDER_VERSION-$1
 
 rm -rf $tmp_dir
 
