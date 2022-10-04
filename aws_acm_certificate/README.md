@@ -3,7 +3,7 @@
 
 This is the Weave TF-controller primitive module for resource `aws_acm_certificate`.
 
-~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/aws_acm_certificate). **The example below still needs to be tested and validated**.
+~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/acm_certificate). **The example below still needs to be tested and validated**.
 
 ## Description
 
@@ -42,8 +42,8 @@ spec:
 
 ## Argument Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by the `aws_acm_certificate` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/acm_certificate#argument-reference) for the arguments accepted by the `aws_acm_certificate` resource.
 
 ## Attribute Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#attributes-reference) for the attributes exported by the `aws_acm_certificate` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/acm_certificate#attributes-reference) for the attributes exported by the `aws_acm_certificate` resource.

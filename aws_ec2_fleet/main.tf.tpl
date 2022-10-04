@@ -28,12 +28,12 @@ variable "values" {
             version = optional(string)
         }))
         override = optional(object({
-            weighted_capacity = optional(number)
-            availability_zone = optional(string)
-            instance_type = optional(string)
             max_price = optional(string)
             priority = optional(number)
             subnet_id = optional(string)
+            weighted_capacity = optional(number)
+            availability_zone = optional(string)
+            instance_type = optional(string)
         }))
     }))
     on_demand_options = optional(object({
@@ -41,14 +41,14 @@ variable "values" {
     }))
     replace_unhealthy_instances = optional(bool)
     spot_options = optional(object({
+        allocation_strategy = optional(string)
+        instance_interruption_behavior = optional(string)
         instance_pools_to_use_count = optional(number)
         maintenance_strategies = optional(object({
             capacity_rebalance = optional(object({
                 replacement_strategy = optional(string)
             }))
         }))
-        allocation_strategy = optional(string)
-        instance_interruption_behavior = optional(string)
     }))
     tags = optional(map(string))
     target_capacity_specification = optional(object({

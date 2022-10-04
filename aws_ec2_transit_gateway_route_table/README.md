@@ -3,7 +3,7 @@
 
 This is the Weave TF-controller primitive module for resource `aws_ec2_transit_gateway_route_table`.
 
-~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/aws_ec2_transit_gateway_route_table). **The example below still needs to be tested and validated**.
+~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_transit_gateway_route_table). **The example below still needs to be tested and validated**.
 
 ## Description
 
@@ -31,8 +31,8 @@ spec:
 
 ## Argument Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by the `aws_ec2_transit_gateway_route_table` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/ec2_transit_gateway_route_table#argument-reference) for the arguments accepted by the `aws_ec2_transit_gateway_route_table` resource.
 
 ## Attribute Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#attributes-reference) for the attributes exported by the `aws_ec2_transit_gateway_route_table` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/ec2_transit_gateway_route_table#attributes-reference) for the attributes exported by the `aws_ec2_transit_gateway_route_table` resource.
