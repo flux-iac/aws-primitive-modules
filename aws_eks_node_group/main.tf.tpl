@@ -31,8 +31,8 @@ variable "values" {
     node_group_name_prefix = optional(string)
     node_role_arn = optional(string)
     remote_access = optional(object({
-        source_security_group_ids = optional(set(string))
         ec2_ssh_key = optional(string)
+        source_security_group_ids = optional(set(string))
     }))
     scaling_config = optional(object({
         desired_size = optional(number)
