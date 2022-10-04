@@ -34,8 +34,8 @@ spec:
 
 ## Argument Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_user_ssh_key#argument-reference) for the arguments accepted by the `aws_iam_user_ssh_key` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_user_ssh_key#argument-reference) for the arguments accepted by the `aws_iam_user_ssh_key` resource.
 
 ## Attribute Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_user_ssh_key#attributes-reference) for the attributes exported by the `aws_iam_user_ssh_key` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_user_ssh_key#attributes-reference) for the attributes exported by the `aws_iam_user_ssh_key` resource.

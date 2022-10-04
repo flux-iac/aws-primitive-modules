@@ -34,8 +34,8 @@ spec:
 
 ## Argument Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/ec2_transit_gateway_multicast_domain#argument-reference) for the arguments accepted by the `aws_ec2_transit_gateway_multicast_domain` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_transit_gateway_multicast_domain#argument-reference) for the arguments accepted by the `aws_ec2_transit_gateway_multicast_domain` resource.
 
 ## Attribute Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/ec2_transit_gateway_multicast_domain#attributes-reference) for the attributes exported by the `aws_ec2_transit_gateway_multicast_domain` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_transit_gateway_multicast_domain#attributes-reference) for the attributes exported by the `aws_ec2_transit_gateway_multicast_domain` resource.

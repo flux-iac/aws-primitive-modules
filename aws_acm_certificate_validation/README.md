@@ -39,8 +39,8 @@ spec:
 
 ## Argument Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/acm_certificate_validation#argument-reference) for the arguments accepted by the `aws_acm_certificate_validation` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/acm_certificate_validation#argument-reference) for the arguments accepted by the `aws_acm_certificate_validation` resource.
 
 ## Attribute Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/acm_certificate_validation#attributes-reference) for the attributes exported by the `aws_acm_certificate_validation` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/acm_certificate_validation#attributes-reference) for the attributes exported by the `aws_acm_certificate_validation` resource.

@@ -45,8 +45,8 @@ spec:
 
 ## Argument Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_server_certificate#argument-reference) for the arguments accepted by the `aws_iam_server_certificate` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_server_certificate#argument-reference) for the arguments accepted by the `aws_iam_server_certificate` resource.
 
 ## Attribute Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_server_certificate#attributes-reference) for the attributes exported by the `aws_iam_server_certificate` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_server_certificate#attributes-reference) for the attributes exported by the `aws_iam_server_certificate` resource.

@@ -65,8 +65,8 @@ spec:
 
 ## Argument Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/ec2_traffic_mirror_target#argument-reference) for the arguments accepted by the `aws_ec2_traffic_mirror_target` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_traffic_mirror_target#argument-reference) for the arguments accepted by the `aws_ec2_traffic_mirror_target` resource.
 
 ## Attribute Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/ec2_traffic_mirror_target#attributes-reference) for the attributes exported by the `aws_ec2_traffic_mirror_target` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_traffic_mirror_target#attributes-reference) for the attributes exported by the `aws_ec2_traffic_mirror_target` resource.

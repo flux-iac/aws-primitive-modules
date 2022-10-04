@@ -41,8 +41,8 @@ spec:
 
 ## Argument Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/docdb_cluster_instance#argument-reference) for the arguments accepted by the `aws_docdb_cluster_instance` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/docdb_cluster_instance#argument-reference) for the arguments accepted by the `aws_docdb_cluster_instance` resource.
 
 ## Attribute Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/docdb_cluster_instance#attributes-reference) for the attributes exported by the `aws_docdb_cluster_instance` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/docdb_cluster_instance#attributes-reference) for the attributes exported by the `aws_docdb_cluster_instance` resource.

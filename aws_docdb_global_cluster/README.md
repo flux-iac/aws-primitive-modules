@@ -35,8 +35,8 @@ spec:
 
 ## Argument Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/docdb_global_cluster#argument-reference) for the arguments accepted by the `aws_docdb_global_cluster` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/docdb_global_cluster#argument-reference) for the arguments accepted by the `aws_docdb_global_cluster` resource.
 
 ## Attribute Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/docdb_global_cluster#attributes-reference) for the attributes exported by the `aws_docdb_global_cluster` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/docdb_global_cluster#attributes-reference) for the attributes exported by the `aws_docdb_global_cluster` resource.

@@ -31,8 +31,8 @@ spec:
 
 ## Argument Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_service_linked_role#argument-reference) for the arguments accepted by the `aws_iam_service_linked_role` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_service_linked_role#argument-reference) for the arguments accepted by the `aws_iam_service_linked_role` resource.
 
 ## Attribute Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_service_linked_role#attributes-reference) for the attributes exported by the `aws_iam_service_linked_role` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_service_linked_role#attributes-reference) for the attributes exported by the `aws_iam_service_linked_role` resource.

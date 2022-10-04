@@ -31,8 +31,8 @@ spec:
 
 ## Argument Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/ec2_transit_gateway#argument-reference) for the arguments accepted by the `aws_ec2_transit_gateway` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_transit_gateway#argument-reference) for the arguments accepted by the `aws_ec2_transit_gateway` resource.
 
 ## Attribute Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/ec2_transit_gateway#attributes-reference) for the attributes exported by the `aws_ec2_transit_gateway` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_transit_gateway#attributes-reference) for the attributes exported by the `aws_ec2_transit_gateway` resource.

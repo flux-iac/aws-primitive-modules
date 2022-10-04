@@ -32,8 +32,8 @@ spec:
 
 ## Argument Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/docdb_cluster_snapshot#argument-reference) for the arguments accepted by the `aws_docdb_cluster_snapshot` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/docdb_cluster_snapshot#argument-reference) for the arguments accepted by the `aws_docdb_cluster_snapshot` resource.
 
 ## Attribute Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/docdb_cluster_snapshot#attributes-reference) for the attributes exported by the `aws_docdb_cluster_snapshot` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/docdb_cluster_snapshot#attributes-reference) for the attributes exported by the `aws_docdb_cluster_snapshot` resource.
