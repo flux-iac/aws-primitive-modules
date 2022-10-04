@@ -23,6 +23,14 @@ spec:
   sourceRef:
     kind: OCIRepository
     name: aws-package-v4.33.0
-  approvalPlan: auto
+  approvePlan: auto
   interval: 1h0m
 ```
+
+## Argument Reference
+
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by `aws_iam_access_key` resource.
+
+## Attribute Reference
+
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#attributes-reference) for the attributes exported by the `aws_iam_access_key` resource.

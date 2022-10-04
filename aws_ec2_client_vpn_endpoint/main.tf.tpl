@@ -28,9 +28,9 @@ variable "values" {
     }))
     client_cidr_block = optional(string)
     connection_log_options = optional(object({
-        enabled = optional(bool)
         cloudwatch_log_group = optional(string)
         cloudwatch_log_stream = optional(string)
+        enabled = optional(bool)
     }))
     description = optional(string)
     dns_servers = optional(list(string))
