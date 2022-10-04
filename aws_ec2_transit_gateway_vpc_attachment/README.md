@@ -3,6 +3,8 @@
 
 This is the Weave TF-controller primitive module for resource `aws_ec2_transit_gateway_vpc_attachment`.
 
+~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/aws_ec2_transit_gateway_vpc_attachment). **The example below still needs to be tested and validated**.
+
 ## Description
 
 Manages an EC2 Transit Gateway VPC Attachment. For examples of custom route table association and propagation, see the EC2 Transit Gateway Networking Examples Guide.

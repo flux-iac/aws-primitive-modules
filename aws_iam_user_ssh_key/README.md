@@ -3,6 +3,8 @@
 
 This is the Weave TF-controller primitive module for resource `aws_iam_user_ssh_key`.
 
+~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/aws_iam_user_ssh_key). **The example below still needs to be tested and validated**.
+
 ## Description
 
 Uploads an SSH public key and associates it with the specified IAM user.

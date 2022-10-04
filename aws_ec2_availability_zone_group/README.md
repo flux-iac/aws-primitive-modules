@@ -3,6 +3,8 @@
 
 This is the Weave TF-controller primitive module for resource `aws_ec2_availability_zone_group`.
 
+~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/aws_ec2_availability_zone_group). **The example below still needs to be tested and validated**.
+
 ## Description
 
 Manages an EC2 Availability Zone Group, such as updating its opt-in status.

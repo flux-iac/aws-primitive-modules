@@ -3,6 +3,8 @@
 
 This is the Weave TF-controller primitive module for resource `aws_ec2_tag`.
 
+~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/aws_ec2_tag). **The example below still needs to be tested and validated**.
+
 ## Description
 
 Manages an individual EC2 resource tag. This resource should only be used in cases where EC2 resources are created outside Terraform (e.g., AMIs), being shared via Resource Access Manager (RAM), or implicitly created by other means (e.g., Transit Gateway VPN Attachments).

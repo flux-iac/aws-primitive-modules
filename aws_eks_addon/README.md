@@ -3,6 +3,8 @@
 
 This is the Weave TF-controller primitive module for resource `aws_eks_addon`.
 
+~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/aws_eks_addon). **The example below still needs to be tested and validated**.
+
 ## Description
 
 Manages an EKS add-on.

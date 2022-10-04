@@ -3,6 +3,8 @@
 
 This is the Weave TF-controller primitive module for resource `aws_docdb_global_cluster`.
 
+~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/aws_docdb_global_cluster). **The example below still needs to be tested and validated**.
+
 ## Description
 
 Manages an DocumentDB Global Cluster. A global cluster consists of one primary region and up to five read-only secondary regions. You issue write operations directly to the primary cluster in the primary region and Amazon DocumentDB automatically replicates the data to the secondary regions using dedicated infrastructure.

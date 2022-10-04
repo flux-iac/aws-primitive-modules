@@ -3,6 +3,8 @@
 
 This is the Weave TF-controller primitive module for resource `aws_ec2_transit_gateway_route`.
 
+~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/aws_ec2_transit_gateway_route). **The example below still needs to be tested and validated**.
+
 ## Description
 
 Manages an EC2 Transit Gateway Route.

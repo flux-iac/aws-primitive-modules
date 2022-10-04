@@ -3,6 +3,8 @@
 
 This is the Weave TF-controller primitive module for resource `aws_ec2_network_insights_path`.
 
+~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/aws_ec2_network_insights_path). **The example below still needs to be tested and validated**.
+
 ## Description
 
 Provides a Network Insights Path resource. Part of the "Reachability Analyzer" service in the AWS VPC console.

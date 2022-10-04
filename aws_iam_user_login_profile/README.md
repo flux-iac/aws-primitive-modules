@@ -3,6 +3,8 @@
 
 This is the Weave TF-controller primitive module for resource `aws_iam_user_login_profile`.
 
+~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/aws_iam_user_login_profile). **The example below still needs to be tested and validated**.
+
 ## Description
 
 Manages an IAM User Login Profile with limited support for password creation during Terraform resource creation. Uses PGP to encrypt the password for safe transport to the user. PGP keys can be obtained from Keybase.

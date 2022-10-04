@@ -3,6 +3,8 @@
 
 This is the Weave TF-controller primitive module for resource `aws_iam_account_alias`.
 
+~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/aws_iam_account_alias). **The example below still needs to be tested and validated**.
+
 ## Description
 
 -> **Note:** There is only a single account alias per AWS account.

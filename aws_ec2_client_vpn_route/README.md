@@ -3,6 +3,8 @@
 
 This is the Weave TF-controller primitive module for resource `aws_ec2_client_vpn_route`.
 
+~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/aws_ec2_client_vpn_route). **The example below still needs to be tested and validated**.
+
 ## Description
 
 Provides additional routes for AWS Client VPN endpoints. For more information on usage, please see the

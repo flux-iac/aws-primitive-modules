@@ -3,6 +3,8 @@
 
 This is the Weave TF-controller primitive module for resource `aws_docdb_cluster_instance`.
 
+~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/aws_docdb_cluster_instance). **The example below still needs to be tested and validated**.
+
 ## Description
 
 Provides an DocDB Cluster Resource Instance. A Cluster Instance Resource defines

@@ -3,6 +3,8 @@
 
 This is the Weave TF-controller primitive module for resource `aws_iam_group_membership`.
 
+~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/aws_iam_group_membership). **The example below still needs to be tested and validated**.
+
 ## Description
 
 ~> **WARNING:** Multiple aws_iam_group_membership resources with the same group name will produce inconsistent behavior!

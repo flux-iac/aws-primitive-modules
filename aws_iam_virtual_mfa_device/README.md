@@ -3,6 +3,8 @@
 
 This is the Weave TF-controller primitive module for resource `aws_iam_virtual_mfa_device`.
 
+~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/aws_iam_virtual_mfa_device). **The example below still needs to be tested and validated**.
+
 ## Description
 
 Provides an IAM Virtual MFA Device.

@@ -3,6 +3,8 @@
 
 This is the Weave TF-controller primitive module for resource `aws_iam_access_key`.
 
+~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/aws_iam_access_key). **The example below still needs to be tested and validated**.
+
 ## Description
 
 Provides an IAM access key. This is a set of credentials that allow API requests to be made as an IAM user.

@@ -3,6 +3,8 @@
 
 This is the Weave TF-controller primitive module for resource `aws_eks_cluster`.
 
+~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/aws_eks_cluster). **The example below still needs to be tested and validated**.
+
 ## Description
 
 Manages an EKS Cluster.
@@ -21,9 +23,6 @@ metadata:
 spec:
   path: aws_eks_cluster
   values:
-    depends_on:
-    - ${aws_iam_role_policy_attachment.example-AmazonEKSClusterPolicy}
-    - ${aws_iam_role_policy_attachment.example-AmazonEKSVPCResourceController}
     name: example
     role_arn: << arn of an aws_iam_role >>
     vpc_config:

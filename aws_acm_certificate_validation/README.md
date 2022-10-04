@@ -3,6 +3,8 @@
 
 This is the Weave TF-controller primitive module for resource `aws_acm_certificate_validation`.
 
+~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/aws_acm_certificate_validation). **The example below still needs to be tested and validated**.
+
 ## Description
 
 This resource represents a successful validation of an ACM certificate in concert

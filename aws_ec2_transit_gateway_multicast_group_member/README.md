@@ -3,6 +3,8 @@
 
 This is the Weave TF-controller primitive module for resource `aws_ec2_transit_gateway_multicast_group_member`.
 
+~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/aws_ec2_transit_gateway_multicast_group_member). **The example below still needs to be tested and validated**.
+
 ## Description
 
 Registers members (network interfaces) with the transit gateway multicast group.

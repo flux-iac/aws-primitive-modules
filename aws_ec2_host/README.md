@@ -3,6 +3,8 @@
 
 This is the Weave TF-controller primitive module for resource `aws_ec2_host`.
 
+~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/aws_ec2_host). **The example below still needs to be tested and validated**.
+
 ## Description
 
 Provides an EC2 Host resource. This allows Dedicated Hosts to be allocated, modified, and released.

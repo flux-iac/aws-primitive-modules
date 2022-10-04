@@ -3,6 +3,8 @@
 
 This is the Weave TF-controller primitive module for resource `aws_iam_server_certificate`.
 
+~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/aws_iam_server_certificate). **The example below still needs to be tested and validated**.
+
 ## Description
 
 Provides an IAM Server Certificate resource to upload Server Certificates.

@@ -3,6 +3,8 @@
 
 This is the Weave TF-controller primitive module for resource `aws_ec2_transit_gateway_multicast_domain_association`.
 
+~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/aws_ec2_transit_gateway_multicast_domain_association). **The example below still needs to be tested and validated**.
+
 ## Description
 
 Associates the specified subnet and transit gateway attachment with the specified transit gateway multicast domain.

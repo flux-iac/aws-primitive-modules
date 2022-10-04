@@ -3,6 +3,8 @@
 
 This is the Weave TF-controller primitive module for resource `aws_docdb_cluster_snapshot`.
 
+~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/aws_docdb_cluster_snapshot). **The example below still needs to be tested and validated**.
+
 ## Description
 
 Manages a DocDB database cluster snapshot for DocDB clusters.

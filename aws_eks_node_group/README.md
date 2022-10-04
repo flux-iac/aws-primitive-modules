@@ -3,6 +3,8 @@
 
 This is the Weave TF-controller primitive module for resource `aws_eks_node_group`.
 
+~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/aws_eks_node_group). **The example below still needs to be tested and validated**.
+
 ## Description
 
 Manages an EKS Node Group, which can provision and optionally update an Auto Scaling Group of Kubernetes worker nodes compatible with EKS. Additional documentation about this functionality can be found in the [EKS User Guide](https://docs.aws.amazon.com/eks/latest/userguide/managed-node-groups.html).
@@ -20,10 +22,6 @@ spec:
   path: aws_eks_node_group
   values:
     cluster_name: << name of an aws_eks_cluster >>
-    depends_on:
-    - ${aws_iam_role_policy_attachment.example-AmazonEKSWorkerNodePolicy}
-    - ${aws_iam_role_policy_attachment.example-AmazonEKS_CNI_Policy}
-    - ${aws_iam_role_policy_attachment.example-AmazonEC2ContainerRegistryReadOnly}
     node_group_name: example
     node_role_arn: << arn of an aws_iam_role >>
     scaling_config:

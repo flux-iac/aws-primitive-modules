@@ -21,14 +21,14 @@ variable "values" {
   type = object({
     cluster_name = optional(string)
     oidc = optional(object({
-        username_claim = optional(string)
-        username_prefix = optional(string)
-        client_id = optional(string)
         groups_claim = optional(string)
         groups_prefix = optional(string)
         identity_provider_config_name = optional(string)
         issuer_url = optional(string)
         required_claims = optional(map(string))
+        username_claim = optional(string)
+        username_prefix = optional(string)
+        client_id = optional(string)
     }))
     tags = optional(map(string))
   })

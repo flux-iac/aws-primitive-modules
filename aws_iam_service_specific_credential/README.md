@@ -3,6 +3,8 @@
 
 This is the Weave TF-controller primitive module for resource `aws_iam_service_specific_credential`.
 
+~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/aws_iam_service_specific_credential). **The example below still needs to be tested and validated**.
+
 ## Description
 
 Provides an IAM Service Specific Credential.
