@@ -32,9 +32,7 @@ spec:
   path: aws_iam_server_certificate
   values:
     certificate_body: ${file("self-ca-cert.pem")}
-    lifecycle:
-      create_before_destroy: true
-    name_prefix: example-cert
+    name: some_test_cert
     private_key: ${file("test-key.pem")}
   sourceRef:
     kind: OCIRepository
@@ -45,7 +43,7 @@ spec:
 
 ## Argument Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by `aws_iam_server_certificate` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by the `aws_iam_server_certificate` resource.
 
 ## Attribute Reference
 

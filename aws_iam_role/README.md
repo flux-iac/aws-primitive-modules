@@ -18,14 +18,15 @@ Provides an IAM role.
 apiVersion: infra.contrib.fluxcd.io/v1alpha1
 kind: Terraform
 metadata:
-  name: example
+  name: test-role
   namespace: flux-system
 spec:
   path: aws_iam_role
   values:
-    assume_role_policy: << instance_assume_role_policy.json of a data >>
-    managed_policy_arns: []
-    name: yak_role
+    assume_role_policy: '{"Statement":[{"Action":"sts:AssumeRole","Effect":"Allow","Principal":{"Service":"ec2.amazonaws.com"},"Sid":""}],"Version":"2012-10-17"}'
+    name: test_role
+    tags:
+      tag-key: tag-value
   sourceRef:
     kind: OCIRepository
     name: aws-package-v4.33.0
@@ -35,7 +36,7 @@ spec:
 
 ## Argument Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by `aws_iam_role` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by the `aws_iam_role` resource.
 
 ## Attribute Reference
 

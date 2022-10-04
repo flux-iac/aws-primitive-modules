@@ -19,8 +19,8 @@ metadata:
 spec:
   path: aws_ec2_transit_gateway_prefix_list_reference
   values:
-    blackhole: true
     prefix_list_id: << id of an aws_ec2_managed_prefix_list >>
+    transit_gateway_attachment_id: << id of an aws_ec2_transit_gateway_vpc_attachment >>
     transit_gateway_route_table_id: << association_default_route_table_id of an aws_ec2_transit_gateway >>
   sourceRef:
     kind: OCIRepository
@@ -31,7 +31,7 @@ spec:
 
 ## Argument Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by `aws_ec2_transit_gateway_prefix_list_reference` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by the `aws_ec2_transit_gateway_prefix_list_reference` resource.
 
 ## Attribute Reference
 

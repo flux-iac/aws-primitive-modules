@@ -23,14 +23,14 @@ spec:
     description: test rule
     destination_cidr_block: 10.0.0.0/8
     destination_port_range:
-    - from_port: 22
+      from_port: 22
       to_port: 53
     protocol: 6
     rule_action: accept
     rule_number: 1
     source_cidr_block: 10.0.0.0/8
     source_port_range:
-    - from_port: 0
+      from_port: 0
       to_port: 10
     traffic_direction: ingress
     traffic_mirror_filter_id: << id of an aws_ec2_traffic_mirror_filter >>
@@ -64,7 +64,7 @@ spec:
 
 ## Argument Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by `aws_ec2_traffic_mirror_filter_rule` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by the `aws_ec2_traffic_mirror_filter_rule` resource.
 
 ## Attribute Reference
 

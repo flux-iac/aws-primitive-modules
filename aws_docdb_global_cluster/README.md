@@ -21,9 +21,9 @@ metadata:
 spec:
   path: aws_docdb_global_cluster
   values:
-    lifecycle:
-      ignore_changes:
-      - source_db_cluster_identifier
+    engine: docdb
+    engine_version: 4.0.0
+    global_cluster_identifier: global-test
   sourceRef:
     kind: OCIRepository
     name: aws-package-v4.33.0
@@ -33,7 +33,7 @@ spec:
 
 ## Argument Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by `aws_docdb_global_cluster` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by the `aws_docdb_global_cluster` resource.
 
 ## Attribute Reference
 

@@ -19,8 +19,6 @@ metadata:
 spec:
   path: aws_iam_openid_connect_provider
   values:
-    client_id_list:
-    - 266362248691-342342xasdasdasda-apps.googleusercontent.com
     thumbprint_list: []
     url: https://accounts.google.com
   sourceRef:
@@ -32,7 +30,7 @@ spec:
 
 ## Argument Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by `aws_iam_openid_connect_provider` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by the `aws_iam_openid_connect_provider` resource.
 
 ## Attribute Reference
 

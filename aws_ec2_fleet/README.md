@@ -20,11 +20,12 @@ spec:
   path: aws_ec2_fleet
   values:
     launch_template_config:
-    - override:
-      - instance_type: m4.xlarge
-        weighted_capacity: 1
-      - instance_type: m4.2xlarge
-        weighted_capacity: 2
+      launch_template_specification:
+        launch_template_id: << id of an aws_launch_template >>
+        version: << latest_version of an aws_launch_template >>
+    target_capacity_specification:
+      default_target_capacity_type: spot
+      total_target_capacity: 5
   sourceRef:
     kind: OCIRepository
     name: aws-package-v4.33.0
@@ -34,7 +35,7 @@ spec:
 
 ## Argument Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by `aws_ec2_fleet` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by the `aws_ec2_fleet` resource.
 
 ## Attribute Reference
 

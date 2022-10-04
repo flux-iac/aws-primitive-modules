@@ -23,9 +23,6 @@ spec:
   path: aws_ec2_client_vpn_network_association
   values:
     client_vpn_endpoint_id: << id of an aws_ec2_client_vpn_endpoint >>
-    security_groups:
-    - << id of an aws_security_group >>
-    - << id of an aws_security_group >>
     subnet_id: << id of an aws_subnet >>
   sourceRef:
     kind: OCIRepository
@@ -36,7 +33,7 @@ spec:
 
 ## Argument Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by `aws_ec2_client_vpn_network_association` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by the `aws_ec2_client_vpn_network_association` resource.
 
 ## Attribute Reference
 

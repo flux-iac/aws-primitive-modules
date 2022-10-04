@@ -19,8 +19,6 @@ metadata:
 spec:
   path: aws_ec2_transit_gateway_vpc_attachment
   values:
-    subnet_ids:
-    - << id of an aws_subnet >>
     transit_gateway_id: << id of an aws_ec2_transit_gateway >>
     vpc_id: << id of an aws_vpc >>
   sourceRef:
@@ -32,7 +30,7 @@ spec:
 
 ## Argument Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by `aws_ec2_transit_gateway_vpc_attachment` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by the `aws_ec2_transit_gateway_vpc_attachment` resource.
 
 ## Attribute Reference
 

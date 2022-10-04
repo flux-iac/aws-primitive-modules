@@ -21,11 +21,8 @@ metadata:
 spec:
   path: aws_iam_user_login_profile
   values:
-    lifecycle:
-      ignore_changes:
-      - password_length
-      - password_reset_required
-      - pgp_key
+    pgp_key: keybase:some_person_that_exists
+    user: << name of an aws_iam_user >>
   sourceRef:
     kind: OCIRepository
     name: aws-package-v4.33.0
@@ -35,7 +32,7 @@ spec:
 
 ## Argument Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by `aws_iam_user_login_profile` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by the `aws_iam_user_login_profile` resource.
 
 ## Attribute Reference
 

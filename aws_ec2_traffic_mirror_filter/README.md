@@ -21,8 +21,6 @@ spec:
   path: aws_ec2_traffic_mirror_filter
   values:
     description: traffic mirror filter - terraform example
-    network_services:
-    - amazon-dns
   sourceRef:
     kind: OCIRepository
     name: aws-package-v4.33.0
@@ -32,7 +30,7 @@ spec:
 
 ## Argument Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by `aws_ec2_traffic_mirror_filter` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by the `aws_ec2_traffic_mirror_filter` resource.
 
 ## Attribute Reference
 

@@ -25,14 +25,8 @@ metadata:
 spec:
   path: aws_iam_policy_attachment
   values:
-    groups:
-    - << name of an aws_iam_group >>
     name: test-attachment
     policy_arn: << arn of an aws_iam_policy >>
-    roles:
-    - << name of an aws_iam_role >>
-    users:
-    - << name of an aws_iam_user >>
   sourceRef:
     kind: OCIRepository
     name: aws-package-v4.33.0
@@ -42,7 +36,7 @@ spec:
 
 ## Argument Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by `aws_iam_policy_attachment` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by the `aws_iam_policy_attachment` resource.
 
 ## Attribute Reference
 

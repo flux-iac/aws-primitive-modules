@@ -17,15 +17,12 @@ Provides an IAM Signing Certificate resource to upload Signing Certificates.
 apiVersion: infra.contrib.fluxcd.io/v1alpha1
 kind: Terraform
 metadata:
-  name: test-cert-alt
+  name: test-cert
   namespace: flux-system
 spec:
   path: aws_iam_signing_certificate
   values:
-    certificate_body: |
-      -----BEGIN CERTIFICATE-----
-      [......] # cert contents
-      -----END CERTIFICATE-----
+    certificate_body: ${file("self-ca-cert.pem")}
     username: some_test_cert
   sourceRef:
     kind: OCIRepository
@@ -36,7 +33,7 @@ spec:
 
 ## Argument Reference
 
-Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by `aws_iam_signing_certificate` resource.
+Please visit [here](https://registry.terraform.io/providers/hashicorp/aws/4.33.0/docs/resources/iam_policy#argument-reference) for the arguments accepted by the `aws_iam_signing_certificate` resource.
 
 ## Attribute Reference
 
