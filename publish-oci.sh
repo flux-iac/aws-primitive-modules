@@ -13,9 +13,11 @@ TAG=$(git rev-parse --short HEAD)
 SOURCE="$(git config --get remote.origin.url)"
 REVISION="$(git branch --show-current)/$(git rev-parse HEAD)"
 
-rm -rf .git
+rm -rf .git || true
+rm -rf .github || true
 rm Makefile
 rm *.sh
+rm $(find . -name "README.md")
 
 flux push artifact \
     oci://ghcr.io/${REPO}:$PROVIDER_VERSION-$TAG \
