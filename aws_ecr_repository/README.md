@@ -1,9 +1,9 @@
 
 # Primitive Module: aws_ecr_repository
 
-This is the Weave TF-controller primitive module for resource `aws_ecr_repository`.
+This is the Weave TF-controller primitive module for the resource `aws_ecr_repository`.
 
-~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecr_repository). **The example below still needs to be tested and validated**.
+~> **CAUTION:** This primitive module is automatically generated from the [AWS Terraform Provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecr_repository). **The example below still needs to be tested and validated**.
 
 ## Description
 

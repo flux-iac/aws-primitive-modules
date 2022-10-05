@@ -1,9 +1,9 @@
 
 # Primitive Module: aws_iam_openid_connect_provider
 
-This is the Weave TF-controller primitive module for resource `aws_iam_openid_connect_provider`.
+This is the Weave TF-controller primitive module for the resource `aws_iam_openid_connect_provider`.
 
-~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_openid_connect_provider). **The example below still needs to be tested and validated**.
+~> **CAUTION:** This primitive module is automatically generated from the [AWS Terraform Provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_openid_connect_provider). **The example below still needs to be tested and validated**.
 
 ## Description
 

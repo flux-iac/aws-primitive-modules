@@ -1,9 +1,9 @@
 
 # Primitive Module: aws_ami_from_instance
 
-This is the Weave TF-controller primitive module for resource `aws_ami_from_instance`.
+This is the Weave TF-controller primitive module for the resource `aws_ami_from_instance`.
 
-~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ami_from_instance). **The example below still needs to be tested and validated**.
+~> **CAUTION:** This primitive module is automatically generated from the [AWS Terraform Provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ami_from_instance). **The example below still needs to be tested and validated**.
 
 ## Description
 

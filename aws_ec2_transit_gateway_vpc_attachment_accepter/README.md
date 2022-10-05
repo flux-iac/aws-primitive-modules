@@ -1,9 +1,9 @@
 
 # Primitive Module: aws_ec2_transit_gateway_vpc_attachment_accepter
 
-This is the Weave TF-controller primitive module for resource `aws_ec2_transit_gateway_vpc_attachment_accepter`.
+This is the Weave TF-controller primitive module for the resource `aws_ec2_transit_gateway_vpc_attachment_accepter`.
 
-~> **NOTE:** This primitive module is automatically generated from the Terraform provider [aws](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_transit_gateway_vpc_attachment_accepter). **The example below still needs to be tested and validated**.
+~> **CAUTION:** This primitive module is automatically generated from the [AWS Terraform Provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_transit_gateway_vpc_attachment_accepter). **The example below still needs to be tested and validated**.
 
 ## Description
 

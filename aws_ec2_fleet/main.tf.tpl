@@ -28,12 +28,12 @@ variable "values" {
             version = optional(string)
         }))
         override = optional(object({
-            subnet_id = optional(string)
-            weighted_capacity = optional(number)
             availability_zone = optional(string)
             instance_type = optional(string)
             max_price = optional(string)
             priority = optional(number)
+            subnet_id = optional(string)
+            weighted_capacity = optional(number)
         }))
     }))
     on_demand_options = optional(object({
@@ -52,10 +52,10 @@ variable "values" {
     }))
     tags = optional(map(string))
     target_capacity_specification = optional(object({
+        total_target_capacity = optional(number)
         default_target_capacity_type = optional(string)
         on_demand_target_capacity = optional(number)
         spot_target_capacity = optional(number)
-        total_target_capacity = optional(number)
     }))
     terminate_instances = optional(bool)
     terminate_instances_with_expiration = optional(bool)
