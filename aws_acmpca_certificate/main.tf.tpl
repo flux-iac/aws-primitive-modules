@@ -24,8 +24,8 @@ variable "values" {
     signing_algorithm = optional(string)
     template_arn = optional(string)
     validity = optional(object({
-        value = optional(string)
         type = optional(string)
+        value = optional(string)
     }))
   })
 }

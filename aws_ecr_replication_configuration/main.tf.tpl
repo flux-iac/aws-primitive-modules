@@ -21,13 +21,13 @@ variable "values" {
   type = object({
     replication_configuration = optional(object({
         rule = optional(object({
-            destination = optional(object({
-                region = optional(string)
-                registry_id = optional(string)
-            }))
             repository_filter = optional(object({
                 filter = optional(string)
                 filter_type = optional(string)
+            }))
+            destination = optional(object({
+                region = optional(string)
+                registry_id = optional(string)
             }))
         }))
     }))

@@ -35,9 +35,9 @@ variable "values" {
         source_security_group_ids = optional(set(string))
     }))
     scaling_config = optional(object({
-        min_size = optional(number)
         desired_size = optional(number)
         max_size = optional(number)
+        min_size = optional(number)
     }))
     subnet_ids = optional(set(string))
     tags = optional(map(string))

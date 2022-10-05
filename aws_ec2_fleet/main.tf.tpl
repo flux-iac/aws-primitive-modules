@@ -22,18 +22,18 @@ variable "values" {
     context = optional(string)
     excess_capacity_termination_policy = optional(string)
     launch_template_config = optional(object({
-        launch_template_specification = optional(object({
-            launch_template_id = optional(string)
-            launch_template_name = optional(string)
-            version = optional(string)
-        }))
         override = optional(object({
+            weighted_capacity = optional(number)
             availability_zone = optional(string)
             instance_type = optional(string)
             max_price = optional(string)
             priority = optional(number)
             subnet_id = optional(string)
-            weighted_capacity = optional(number)
+        }))
+        launch_template_specification = optional(object({
+            launch_template_id = optional(string)
+            launch_template_name = optional(string)
+            version = optional(string)
         }))
     }))
     on_demand_options = optional(object({
@@ -41,21 +41,21 @@ variable "values" {
     }))
     replace_unhealthy_instances = optional(bool)
     spot_options = optional(object({
-        allocation_strategy = optional(string)
-        instance_interruption_behavior = optional(string)
         instance_pools_to_use_count = optional(number)
         maintenance_strategies = optional(object({
             capacity_rebalance = optional(object({
                 replacement_strategy = optional(string)
             }))
         }))
+        allocation_strategy = optional(string)
+        instance_interruption_behavior = optional(string)
     }))
     tags = optional(map(string))
     target_capacity_specification = optional(object({
-        total_target_capacity = optional(number)
-        default_target_capacity_type = optional(string)
         on_demand_target_capacity = optional(number)
         spot_target_capacity = optional(number)
+        total_target_capacity = optional(number)
+        default_target_capacity_type = optional(string)
     }))
     terminate_instances = optional(bool)
     terminate_instances_with_expiration = optional(bool)

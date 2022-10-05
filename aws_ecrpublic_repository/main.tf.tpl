@@ -20,12 +20,12 @@ provider "aws" {
 variable "values" {
   type = object({
     catalog_data = optional(object({
+        operating_systems = optional(set(string))
+        usage_text = optional(string)
         about_text = optional(string)
         architectures = optional(set(string))
         description = optional(string)
         logo_image_blob = optional(string)
-        operating_systems = optional(set(string))
-        usage_text = optional(string)
     }))
     force_destroy = optional(bool)
     repository_name = optional(string)
