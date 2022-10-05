@@ -35,7 +35,7 @@ Please apply the following YAML to install this package.
 You can apply it directly with `kubectl`, or copy only the YAML content
 as a file and add it to a Git repository.
 
-```
+```yaml
 cat << EOF | kubectl apply -f -
 ---
 apiVersion: source.toolkit.fluxcd.io/v1beta2
