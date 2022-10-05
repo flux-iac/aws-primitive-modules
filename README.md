@@ -45,7 +45,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 30s
-  url: ghcr.io/tf-controller/aws-primitive-modules
+  url: oci://ghcr.io/tf-controller/aws-primitive-modules
   ref:
     tag: v4.33.0-v1alpha2
 EOF
