@@ -25,7 +25,7 @@ spec:
     load_balancer_name: ${aws_elb.wu-tang.name}
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.33.0
+    name: aws-package-v4.38.0
   approvePlan: auto
   interval: 1h0m
 ```

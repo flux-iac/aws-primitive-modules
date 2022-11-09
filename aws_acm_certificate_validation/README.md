@@ -32,7 +32,7 @@ spec:
     validation_record_fqdns: '${[for record in aws_route53_record.example : record.fqdn]}'
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.33.0
+    name: aws-package-v4.38.0
   approvePlan: auto
   interval: 1h0m
 ```

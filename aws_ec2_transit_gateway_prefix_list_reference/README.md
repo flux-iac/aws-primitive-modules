@@ -26,7 +26,7 @@ spec:
     transit_gateway_route_table_id: << association_default_route_table_id of an aws_ec2_transit_gateway >>
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.33.0
+    name: aws-package-v4.38.0
   approvePlan: auto
   interval: 1h0m
 ```

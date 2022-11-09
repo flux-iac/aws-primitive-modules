@@ -29,7 +29,7 @@ spec:
       topic_arn: << arn of an aws_sns_topic >>
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.33.0
+    name: aws-package-v4.38.0
   approvePlan: auto
   interval: 1h0m
 ```

@@ -27,7 +27,7 @@ spec:
     target_vpc_subnet_id: << subnet_id of an aws_ec2_client_vpn_network_association >>
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.33.0
+    name: aws-package-v4.38.0
   approvePlan: auto
   interval: 1h0m
 ```

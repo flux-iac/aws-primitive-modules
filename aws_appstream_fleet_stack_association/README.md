@@ -25,7 +25,7 @@ spec:
     stack_name: << name of an aws_appstream_stack >>
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.33.0
+    name: aws-package-v4.38.0
   approvePlan: auto
   interval: 1h0m
 ```

@@ -25,7 +25,7 @@ spec:
     domain_name: << domain_name of an aws_appsync_domain_name >>
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.33.0
+    name: aws-package-v4.38.0
   approvePlan: auto
   interval: 1h0m
 ```

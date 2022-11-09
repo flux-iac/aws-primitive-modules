@@ -29,7 +29,7 @@ spec:
     policy_type_name: PublicKeyPolicyType
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.33.0
+    name: aws-package-v4.38.0
   approvePlan: auto
   interval: 1h0m
 ---
@@ -49,7 +49,7 @@ spec:
     policy_type_name: BackendServerAuthenticationPolicyType
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.33.0
+    name: aws-package-v4.38.0
   approvePlan: auto
   interval: 1h0m
 ---
@@ -71,7 +71,7 @@ spec:
     policy_type_name: SSLNegotiationPolicyType
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.33.0
+    name: aws-package-v4.38.0
   approvePlan: auto
   interval: 1h0m
 ---
@@ -91,7 +91,7 @@ spec:
     policy_type_name: SSLNegotiationPolicyType
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.33.0
+    name: aws-package-v4.38.0
   approvePlan: auto
   interval: 1h0m
 ```

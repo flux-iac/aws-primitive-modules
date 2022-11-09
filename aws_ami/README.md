@@ -32,12 +32,13 @@ spec:
       device_name: /dev/xvda
       snapshot_id: snap-xxxxxxxx
       volume_size: 8
+    imds_support: v2.0
     name: terraform-example
     root_device_name: /dev/xvda
     virtualization_type: hvm
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.33.0
+    name: aws-package-v4.38.0
   approvePlan: auto
   interval: 1h0m
 ```

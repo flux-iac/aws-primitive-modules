@@ -26,7 +26,7 @@ spec:
     transit_gateway_attachment_id: << id of an aws_ec2_transit_gateway_peering_attachment >>
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.33.0
+    name: aws-package-v4.38.0
   approvePlan: auto
   interval: 1h0m
 ```

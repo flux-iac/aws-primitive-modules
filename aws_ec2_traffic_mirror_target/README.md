@@ -26,7 +26,7 @@ spec:
     network_interface_id: << primary_network_interface_id of an aws_instance >>
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.33.0
+    name: aws-package-v4.38.0
   approvePlan: auto
   interval: 1h0m
 ---
@@ -42,7 +42,7 @@ spec:
     gateway_load_balancer_endpoint_id: << id of an aws_vpc_endpoint >>
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.33.0
+    name: aws-package-v4.38.0
   approvePlan: auto
   interval: 1h0m
 ---
@@ -58,7 +58,7 @@ spec:
     network_load_balancer_arn: << arn of an aws_lb >>
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.33.0
+    name: aws-package-v4.38.0
   approvePlan: auto
   interval: 1h0m
 ```

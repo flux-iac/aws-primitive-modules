@@ -9,8 +9,6 @@ This is the Weave TF-controller primitive module for the resource `aws_prometheu
 
 Manages an Amazon Managed Service for Prometheus (AMP) Workspace.
 
-~> **NOTE:** This AWS functionality is in Preview and may change before General Availability release. Backwards compatibility is not guaranteed between Terraform AWS Provider releases.
-
 ## Example usage
 
 ```yaml
@@ -18,18 +16,17 @@ Manages an Amazon Managed Service for Prometheus (AMP) Workspace.
 apiVersion: infra.contrib.fluxcd.io/v1alpha1
 kind: Terraform
 metadata:
-  name: demo
+  name: example
   namespace: flux-system
 spec:
   path: aws_prometheus_workspace
   values:
-    alias: prometheus-test
+    alias: example
     tags:
       Environment: production
-      Owner: abhi
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.33.0
+    name: aws-package-v4.38.0
   approvePlan: auto
   interval: 1h0m
 ```
