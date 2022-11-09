@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     availability_zones = optional(set(string))
     backup_retention_period = optional(number)
     cluster_identifier = optional(string)

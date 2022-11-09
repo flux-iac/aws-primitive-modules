@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     hash_key = optional(string)
     item = optional(string)
     range_key = optional(string)

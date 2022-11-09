@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     access_group_id = optional(string)
     authorize_all_groups = optional(bool)
     client_vpn_endpoint_id = optional(string)

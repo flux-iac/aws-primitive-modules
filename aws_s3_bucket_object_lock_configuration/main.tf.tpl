@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     bucket = optional(string)
     expected_bucket_owner = optional(string)
     object_lock_enabled = optional(string)

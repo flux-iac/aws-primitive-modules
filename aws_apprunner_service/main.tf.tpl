@@ -17,17 +17,17 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     encryption_configuration = optional(list({
         kms_key = optional(string)
     }))
     health_check_configuration = optional(list({
+        unhealthy_threshold = optional(number)
         healthy_threshold = optional(number)
         interval = optional(number)
         path = optional(string)
         protocol = optional(string)
         timeout = optional(number)
-        unhealthy_threshold = optional(number)
     }))
     observability_configuration = optional(list({
         observability_configuration_arn = optional(string)
@@ -39,18 +39,18 @@ variable "values" {
         code_repository = optional(list({
             code_configuration = optional(list({
                 code_configuration_values = optional(list({
-                    start_command = optional(string)
                     build_command = optional(string)
                     port = optional(string)
                     runtime = optional(string)
                     runtime_environment_variables = optional(map(string))
+                    start_command = optional(string)
                 }))
                 configuration_source = optional(string)
             }))
             repository_url = optional(string)
             source_code_version = optional(list({
-                value = optional(string)
                 type = optional(string)
+                value = optional(string)
             }))
         }))
         image_repository = optional(list({

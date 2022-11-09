@@ -17,30 +17,10 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     account_id = optional(string)
     config_id = optional(string)
     storage_lens_configuration = optional(list({
-        data_export = optional(list({
-            cloud_watch_metrics = optional(list({
-                enabled = optional(bool)
-            }))
-            s3_bucket_destination = optional(list({
-                arn = optional(string)
-                encryption = optional(list({
-                    sse_kms = optional(list({
-                        key_id = optional(string)
-                    }))
-                    sse_s3 = optional(list({
-                    }))
-                }))
-                format = optional(string)
-                output_schema_version = optional(string)
-                prefix = optional(string)
-                account_id = optional(string)
-            }))
-        }))
-        enabled = optional(bool)
         exclude = optional(list({
             buckets = optional(set(string))
             regions = optional(set(string))
@@ -54,6 +34,9 @@ variable "values" {
                 enabled = optional(bool)
             }))
             bucket_level = optional(list({
+                activity_metrics = optional(list({
+                    enabled = optional(bool)
+                }))
                 prefix_level = optional(list({
                     storage_metrics = optional(list({
                         enabled = optional(bool)
@@ -64,14 +47,31 @@ variable "values" {
                         }))
                     }))
                 }))
-                activity_metrics = optional(list({
-                    enabled = optional(bool)
-                }))
             }))
         }))
         aws_org = optional(list({
             arn = optional(string)
         }))
+        data_export = optional(list({
+            cloud_watch_metrics = optional(list({
+                enabled = optional(bool)
+            }))
+            s3_bucket_destination = optional(list({
+                output_schema_version = optional(string)
+                prefix = optional(string)
+                account_id = optional(string)
+                arn = optional(string)
+                encryption = optional(list({
+                    sse_s3 = optional(list({
+                    }))
+                    sse_kms = optional(list({
+                        key_id = optional(string)
+                    }))
+                }))
+                format = optional(string)
+            }))
+        }))
+        enabled = optional(bool)
     }))
     tags = optional(map(string))
   })

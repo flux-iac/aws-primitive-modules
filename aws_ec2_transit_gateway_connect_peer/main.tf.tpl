@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     bgp_asn = optional(string)
     inside_cidr_blocks = optional(set(string))
     peer_address = optional(string)

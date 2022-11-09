@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     blackhole = optional(bool)
     prefix_list_id = optional(string)
     transit_gateway_attachment_id = optional(string)

@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     bucket = optional(string)
     filter = optional(list({
         prefix = optional(string)

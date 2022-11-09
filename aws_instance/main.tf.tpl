@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     ami = optional(string)
     associate_public_ip_address = optional(bool)
     availability_zone = optional(string)

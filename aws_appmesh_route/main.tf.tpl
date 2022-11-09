@@ -17,19 +17,23 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     mesh_name = optional(string)
     mesh_owner = optional(string)
     name = optional(string)
     spec = optional(list({
-        http2_route = optional(list({
+        grpc_route = optional(list({
+            action = optional(list({
+                weighted_target = optional(set(any))
+            }))
             match = optional(list({
-                method = optional(string)
+                metadata = optional(set(any))
+                method_name = optional(string)
                 prefix = optional(string)
-                scheme = optional(string)
-                header = optional(set(any))
+                service_name = optional(string)
             }))
             retry_policy = optional(list({
+                grpc_retry_events = optional(set(string))
                 http_retry_events = optional(set(string))
                 max_retries = optional(number)
                 per_retry_timeout = optional(list({
@@ -48,19 +52,26 @@ variable "values" {
                     unit = optional(string)
                 }))
             }))
-            action = optional(list({
-                weighted_target = optional(set(any))
-            }))
         }))
-        http_route = optional(list({
+        http2_route = optional(list({
+            timeout = optional(list({
+                idle = optional(list({
+                    unit = optional(string)
+                    value = optional(number)
+                }))
+                per_request = optional(list({
+                    value = optional(number)
+                    unit = optional(string)
+                }))
+            }))
             action = optional(list({
                 weighted_target = optional(set(any))
             }))
             match = optional(list({
-                prefix = optional(string)
-                scheme = optional(string)
                 header = optional(set(any))
                 method = optional(string)
+                prefix = optional(string)
+                scheme = optional(string)
             }))
             retry_policy = optional(list({
                 http_retry_events = optional(set(string))
@@ -68,6 +79,26 @@ variable "values" {
                 per_retry_timeout = optional(list({
                     unit = optional(string)
                     value = optional(number)
+                }))
+                tcp_retry_events = optional(set(string))
+            }))
+        }))
+        http_route = optional(list({
+            action = optional(list({
+                weighted_target = optional(set(any))
+            }))
+            match = optional(list({
+                header = optional(set(any))
+                method = optional(string)
+                prefix = optional(string)
+                scheme = optional(string)
+            }))
+            retry_policy = optional(list({
+                http_retry_events = optional(set(string))
+                max_retries = optional(number)
+                per_retry_timeout = optional(list({
+                    value = optional(number)
+                    unit = optional(string)
                 }))
                 tcp_retry_events = optional(set(string))
             }))
@@ -84,45 +115,14 @@ variable "values" {
         }))
         priority = optional(number)
         tcp_route = optional(list({
-            action = optional(list({
-                weighted_target = optional(set(any))
-            }))
             timeout = optional(list({
                 idle = optional(list({
                     unit = optional(string)
                     value = optional(number)
                 }))
             }))
-        }))
-        grpc_route = optional(list({
             action = optional(list({
                 weighted_target = optional(set(any))
-            }))
-            match = optional(list({
-                prefix = optional(string)
-                service_name = optional(string)
-                metadata = optional(set(any))
-                method_name = optional(string)
-            }))
-            retry_policy = optional(list({
-                tcp_retry_events = optional(set(string))
-                grpc_retry_events = optional(set(string))
-                http_retry_events = optional(set(string))
-                max_retries = optional(number)
-                per_retry_timeout = optional(list({
-                    unit = optional(string)
-                    value = optional(number)
-                }))
-            }))
-            timeout = optional(list({
-                idle = optional(list({
-                    value = optional(number)
-                    unit = optional(string)
-                }))
-                per_request = optional(list({
-                    unit = optional(string)
-                    value = optional(number)
-                }))
             }))
         }))
     }))

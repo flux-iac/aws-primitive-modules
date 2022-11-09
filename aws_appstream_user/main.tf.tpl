@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     authentication_type = optional(string)
     enabled = optional(bool)
     first_name = optional(string)

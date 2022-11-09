@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     security_groups = optional(set(string))
     subnets = optional(set(string))
     vpc_connector_name = optional(string)

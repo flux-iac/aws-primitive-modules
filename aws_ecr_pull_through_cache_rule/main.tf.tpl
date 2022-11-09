@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     ecr_repository_prefix = optional(string)
     upstream_registry_url = optional(string)
   })

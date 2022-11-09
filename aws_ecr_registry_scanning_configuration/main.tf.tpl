@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     rule = optional(set(any))
     scan_type = optional(string)
   })

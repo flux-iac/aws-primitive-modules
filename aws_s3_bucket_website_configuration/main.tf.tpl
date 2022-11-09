@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     bucket = optional(string)
     error_document = optional(list({
         key = optional(string)

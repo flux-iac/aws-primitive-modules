@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     capacity_provider_strategy = optional(set(any))
     cluster = optional(string)
     deployment_circuit_breaker = optional(list({
@@ -39,9 +39,9 @@ variable "values" {
     load_balancer = optional(set(any))
     name = optional(string)
     network_configuration = optional(list({
+        assign_public_ip = optional(bool)
         security_groups = optional(set(string))
         subnets = optional(set(string))
-        assign_public_ip = optional(bool)
     }))
     ordered_placement_strategy = optional(list({
         field = optional(string)

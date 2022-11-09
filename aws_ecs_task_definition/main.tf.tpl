@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     container_definitions = optional(string)
     cpu = optional(string)
     ephemeral_storage = optional(list({

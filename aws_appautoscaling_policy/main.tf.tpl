@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     name = optional(string)
     policy_type = optional(string)
     resource_id = optional(string)
@@ -31,6 +31,13 @@ variable "values" {
         step_adjustment = optional(set(any))
     }))
     target_tracking_scaling_policy_configuration = optional(list({
+        customized_metric_specification = optional(list({
+            dimensions = optional(set(any))
+            metric_name = optional(string)
+            namespace = optional(string)
+            statistic = optional(string)
+            unit = optional(string)
+        }))
         disable_scale_in = optional(bool)
         predefined_metric_specification = optional(list({
             predefined_metric_type = optional(string)
@@ -39,13 +46,6 @@ variable "values" {
         scale_in_cooldown = optional(number)
         scale_out_cooldown = optional(number)
         target_value = optional(number)
-        customized_metric_specification = optional(list({
-            unit = optional(string)
-            dimensions = optional(set(any))
-            metric_name = optional(string)
-            namespace = optional(string)
-            statistic = optional(string)
-        }))
     }))
   })
 }

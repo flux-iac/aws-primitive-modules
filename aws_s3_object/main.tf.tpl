@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     acl = optional(string)
     bucket = optional(string)
     cache_control = optional(string)

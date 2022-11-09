@@ -17,21 +17,21 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     mesh_name = optional(string)
     mesh_owner = optional(string)
     name = optional(string)
     spec = optional(list({
         grpc_route = optional(list({
+            match = optional(list({
+                service_name = optional(string)
+            }))
             action = optional(list({
                 target = optional(list({
                     virtual_service = optional(list({
                         virtual_service_name = optional(string)
                     }))
                 }))
-            }))
-            match = optional(list({
-                service_name = optional(string)
             }))
         }))
         http2_route = optional(list({
@@ -54,8 +54,8 @@ variable "values" {
             match = optional(list({
                 prefix = optional(string)
                 hostname = optional(list({
-                    exact = optional(string)
                     suffix = optional(string)
+                    exact = optional(string)
                 }))
             }))
         }))
@@ -67,21 +67,21 @@ variable "values" {
                     }))
                 }))
                 rewrite = optional(list({
-                    hostname = optional(list({
-                        default_target_hostname = optional(string)
-                    }))
                     prefix = optional(list({
                         default_prefix = optional(string)
                         value = optional(string)
                     }))
+                    hostname = optional(list({
+                        default_target_hostname = optional(string)
+                    }))
                 }))
             }))
             match = optional(list({
-                prefix = optional(string)
                 hostname = optional(list({
                     exact = optional(string)
                     suffix = optional(string)
                 }))
+                prefix = optional(string)
             }))
         }))
     }))

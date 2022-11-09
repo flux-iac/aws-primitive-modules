@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     ingress_vpc_configuration = optional(list({
         vpc_id = optional(string)
         vpc_endpoint_id = optional(string)

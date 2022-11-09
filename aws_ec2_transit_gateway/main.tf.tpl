@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     amazon_side_asn = optional(number)
     auto_accept_shared_attachments = optional(string)
     default_route_table_association = optional(string)

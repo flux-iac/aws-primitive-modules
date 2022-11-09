@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     auto_scaling_configuration_name = optional(string)
     max_concurrency = optional(number)
     max_size = optional(number)

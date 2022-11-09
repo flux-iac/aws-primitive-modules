@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     auto_minor_version_upgrade = optional(bool)
     availability_zone = optional(string)
     cluster_identifier = optional(string)

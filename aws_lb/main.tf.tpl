@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     access_logs = optional(list({
         bucket = optional(string)
         prefix = optional(string)

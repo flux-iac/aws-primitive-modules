@@ -17,41 +17,41 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     bucket = optional(string)
     expected_bucket_owner = optional(string)
     rule = optional(list({
-        expiration = optional(list({
-            date = optional(string)
-            days = optional(number)
-            expired_object_delete_marker = optional(bool)
-        }))
         noncurrent_version_transition = optional(set(any))
-        prefix = optional(string)
         status = optional(string)
         transition = optional(set(any))
         abort_incomplete_multipart_upload = optional(list({
             days_after_initiation = optional(number)
         }))
+        id = optional(string)
+        noncurrent_version_expiration = optional(list({
+            newer_noncurrent_versions = optional(string)
+            noncurrent_days = optional(number)
+        }))
+        prefix = optional(string)
+        expiration = optional(list({
+            date = optional(string)
+            days = optional(number)
+            expired_object_delete_marker = optional(bool)
+        }))
         filter = optional(list({
+            and = optional(list({
+                tags = optional(map(string))
+                object_size_greater_than = optional(number)
+                object_size_less_than = optional(number)
+                prefix = optional(string)
+            }))
+            object_size_greater_than = optional(string)
             object_size_less_than = optional(string)
             prefix = optional(string)
             tag = optional(list({
                 key = optional(string)
                 value = optional(string)
             }))
-            and = optional(list({
-                object_size_greater_than = optional(number)
-                object_size_less_than = optional(number)
-                prefix = optional(string)
-                tags = optional(map(string))
-            }))
-            object_size_greater_than = optional(string)
-        }))
-        id = optional(string)
-        noncurrent_version_expiration = optional(list({
-            newer_noncurrent_versions = optional(string)
-            noncurrent_days = optional(number)
         }))
     }))
   })

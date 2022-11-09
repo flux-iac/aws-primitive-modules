@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     auto_placement = optional(string)
     availability_zone = optional(string)
     host_recovery = optional(string)

@@ -17,36 +17,41 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     description = optional(string)
     destination_flow_config = optional(set(any))
     kms_arn = optional(string)
     name = optional(string)
     source_flow_config = optional(list({
-        api_version = optional(string)
-        connector_profile_name = optional(string)
-        connector_type = optional(string)
         incremental_pull_config = optional(list({
             datetime_type_field_name = optional(string)
         }))
         source_connector_properties = optional(list({
-            datadog = optional(list({
+            infor_nexus = optional(list({
                 object = optional(string)
             }))
-            marketo = optional(list({
+            salesforce = optional(list({
                 object = optional(string)
+                enable_dynamic_field_update = optional(bool)
+                include_deleted_records = optional(bool)
             }))
             veeva = optional(list({
-                document_type = optional(string)
-                include_all_versions = optional(bool)
                 include_renditions = optional(bool)
                 include_source_files = optional(bool)
                 object = optional(string)
+                document_type = optional(string)
+                include_all_versions = optional(bool)
             }))
-            zendesk = optional(list({
+            amplitude = optional(list({
                 object = optional(string)
             }))
-            singular = optional(list({
+            sapo_data = optional(list({
+                object = optional(string)
+            }))
+            slack = optional(list({
+                object = optional(string)
+            }))
+            trendmicro = optional(list({
                 object = optional(string)
             }))
             custom_connector = optional(list({
@@ -59,24 +64,13 @@ variable "values" {
             google_analytics = optional(list({
                 object = optional(string)
             }))
-            salesforce = optional(list({
-                enable_dynamic_field_update = optional(bool)
-                include_deleted_records = optional(bool)
+            marketo = optional(list({
                 object = optional(string)
             }))
-            sapo_data = optional(list({
+            zendesk = optional(list({
                 object = optional(string)
             }))
-            service_now = optional(list({
-                object = optional(string)
-            }))
-            infor_nexus = optional(list({
-                object = optional(string)
-            }))
-            trendmicro = optional(list({
-                object = optional(string)
-            }))
-            amplitude = optional(list({
+            datadog = optional(list({
                 object = optional(string)
             }))
             s3 = optional(list({
@@ -86,23 +80,29 @@ variable "values" {
                     s3_input_file_type = optional(string)
                 }))
             }))
-            slack = optional(list({
+            service_now = optional(list({
+                object = optional(string)
+            }))
+            singular = optional(list({
                 object = optional(string)
             }))
         }))
+        api_version = optional(string)
+        connector_profile_name = optional(string)
+        connector_type = optional(string)
     }))
     tags = optional(map(string))
     task = optional(set(any))
     trigger_config = optional(list({
         trigger_properties = optional(list({
             scheduled = optional(list({
+                schedule_start_time = optional(string)
                 timezone = optional(string)
                 data_pull_mode = optional(string)
                 first_execution_from = optional(string)
                 schedule_end_time = optional(string)
                 schedule_expression = optional(string)
                 schedule_offset = optional(number)
-                schedule_start_time = optional(string)
             }))
         }))
         trigger_type = optional(string)

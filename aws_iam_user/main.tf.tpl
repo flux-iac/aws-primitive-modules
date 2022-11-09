@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     force_destroy = optional(bool)
     name = optional(string)
     path = optional(string)

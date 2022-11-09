@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     cookie_name = optional(string)
     lb_port = optional(number)
     load_balancer = optional(string)

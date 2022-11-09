@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     encryption_configuration = optional(list({
         encryption_type = optional(string)
         kms_key = optional(string)

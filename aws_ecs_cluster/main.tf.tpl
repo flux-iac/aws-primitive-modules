@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     configuration = optional(list({
         execute_command_configuration = optional(list({
             kms_key_id = optional(string)

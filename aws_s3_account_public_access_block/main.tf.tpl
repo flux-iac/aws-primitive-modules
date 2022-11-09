@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     account_id = optional(string)
     block_public_acls = optional(bool)
     block_public_policy = optional(bool)

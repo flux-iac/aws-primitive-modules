@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     load_balancer_name = optional(string)
     policy_name = optional(string)
     policy_type_name = optional(string)

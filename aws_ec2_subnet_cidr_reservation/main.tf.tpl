@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     cidr_block = optional(string)
     description = optional(string)
     reservation_type = optional(string)

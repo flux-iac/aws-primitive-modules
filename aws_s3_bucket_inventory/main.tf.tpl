@@ -17,10 +17,12 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     bucket = optional(string)
     destination = optional(list({
         bucket = optional(list({
+            format = optional(string)
+            bucket_arn = optional(string)
             account_id = optional(string)
             prefix = optional(string)
             encryption = optional(list({
@@ -30,8 +32,6 @@ variable "values" {
                 sse_s3 = optional(list({
                 }))
             }))
-            format = optional(string)
-            bucket_arn = optional(string)
         }))
     }))
     enabled = optional(bool)

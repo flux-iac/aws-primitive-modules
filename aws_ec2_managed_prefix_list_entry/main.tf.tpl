@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     cidr = optional(string)
     description = optional(string)
     prefix_list_id = optional(string)

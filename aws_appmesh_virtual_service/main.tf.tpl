@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     mesh_name = optional(string)
     mesh_owner = optional(string)
     name = optional(string)

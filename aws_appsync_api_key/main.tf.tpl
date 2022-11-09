@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     api_id = optional(string)
     description = optional(string)
     expires = optional(string)

@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     account_id = optional(string)
     bucket = optional(string)
     name = optional(string)

@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     mesh_name = optional(string)
     mesh_owner = optional(string)
     name = optional(string)
@@ -26,7 +26,6 @@ variable "values" {
         backend_defaults = optional(list({
             client_policy = optional(list({
                 tls = optional(list({
-                    ports = optional(set(number))
                     validation = optional(list({
                         subject_alternative_names = optional(list({
                             match = optional(list({
@@ -34,54 +33,73 @@ variable "values" {
                             }))
                         }))
                         trust = optional(list({
+                            acm = optional(list({
+                                certificate_authority_arns = optional(set(string))
+                            }))
                             file = optional(list({
                                 certificate_chain = optional(string)
                             }))
                             sds = optional(list({
                                 secret_name = optional(string)
                             }))
-                            acm = optional(list({
-                                certificate_authority_arns = optional(set(string))
-                            }))
                         }))
                     }))
                     certificate = optional(list({
+                        sds = optional(list({
+                            secret_name = optional(string)
+                        }))
                         file = optional(list({
                             certificate_chain = optional(string)
                             private_key = optional(string)
                         }))
-                        sds = optional(list({
-                            secret_name = optional(string)
-                        }))
                     }))
                     enforce = optional(bool)
+                    ports = optional(set(number))
                 }))
             }))
         }))
         listener = optional(list({
+            connection_pool = optional(list({
+                grpc = optional(list({
+                    max_requests = optional(number)
+                }))
+                http = optional(list({
+                    max_connections = optional(number)
+                    max_pending_requests = optional(number)
+                }))
+                http2 = optional(list({
+                    max_requests = optional(number)
+                }))
+                tcp = optional(list({
+                    max_connections = optional(number)
+                }))
+            }))
+            health_check = optional(list({
+                protocol = optional(string)
+                timeout_millis = optional(number)
+                unhealthy_threshold = optional(number)
+                healthy_threshold = optional(number)
+                interval_millis = optional(number)
+                path = optional(string)
+                port = optional(number)
+            }))
             outlier_detection = optional(list({
+                max_ejection_percent = optional(number)
+                max_server_errors = optional(number)
                 base_ejection_duration = optional(list({
-                    unit = optional(string)
                     value = optional(number)
+                    unit = optional(string)
                 }))
                 interval = optional(list({
                     unit = optional(string)
                     value = optional(number)
                 }))
-                max_ejection_percent = optional(number)
-                max_server_errors = optional(number)
             }))
             port_mapping = optional(list({
-                port = optional(number)
                 protocol = optional(string)
+                port = optional(number)
             }))
             timeout = optional(list({
-                tcp = optional(list({
-                    idle = optional(list({
-                        unit = optional(string)
-                        value = optional(number)
-                    }))
-                }))
                 grpc = optional(list({
                     idle = optional(list({
                         unit = optional(string)
@@ -104,10 +122,16 @@ variable "values" {
                 }))
                 http2 = optional(list({
                     idle = optional(list({
+                        value = optional(number)
+                        unit = optional(string)
+                    }))
+                    per_request = optional(list({
                         unit = optional(string)
                         value = optional(number)
                     }))
-                    per_request = optional(list({
+                }))
+                tcp = optional(list({
+                    idle = optional(list({
                         unit = optional(string)
                         value = optional(number)
                     }))
@@ -143,30 +167,6 @@ variable "values" {
                     }))
                 }))
             }))
-            connection_pool = optional(list({
-                grpc = optional(list({
-                    max_requests = optional(number)
-                }))
-                http = optional(list({
-                    max_connections = optional(number)
-                    max_pending_requests = optional(number)
-                }))
-                http2 = optional(list({
-                    max_requests = optional(number)
-                }))
-                tcp = optional(list({
-                    max_connections = optional(number)
-                }))
-            }))
-            health_check = optional(list({
-                protocol = optional(string)
-                timeout_millis = optional(number)
-                unhealthy_threshold = optional(number)
-                healthy_threshold = optional(number)
-                interval_millis = optional(number)
-                path = optional(string)
-                port = optional(number)
-            }))
         }))
         logging = optional(list({
             access_log = optional(list({
@@ -177,9 +177,9 @@ variable "values" {
         }))
         service_discovery = optional(list({
             aws_cloud_map = optional(list({
+                service_name = optional(string)
                 attributes = optional(map(string))
                 namespace_name = optional(string)
-                service_name = optional(string)
             }))
             dns = optional(list({
                 hostname = optional(string)

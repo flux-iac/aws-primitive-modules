@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     connection_termination = optional(bool)
     deregistration_delay = optional(string)
     ip_address_type = optional(string)

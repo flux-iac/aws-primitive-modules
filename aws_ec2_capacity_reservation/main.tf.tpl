@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     availability_zone = optional(string)
     ebs_optimized = optional(bool)
     end_date = optional(string)

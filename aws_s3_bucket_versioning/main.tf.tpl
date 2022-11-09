@@ -17,13 +17,13 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     bucket = optional(string)
     expected_bucket_owner = optional(string)
     mfa = optional(string)
     versioning_configuration = optional(list({
-        status = optional(string)
         mfa_delete = optional(string)
+        status = optional(string)
     }))
   })
 }

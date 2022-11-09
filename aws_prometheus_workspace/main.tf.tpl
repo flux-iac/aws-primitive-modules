@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     alias = optional(string)
     logging_configuration = optional(list({
         log_group_arn = optional(string)

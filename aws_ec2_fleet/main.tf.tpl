@@ -17,69 +17,69 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     context = optional(string)
     excess_capacity_termination_policy = optional(string)
     launch_template_config = optional(list({
+        launch_template_specification = optional(list({
+            launch_template_id = optional(string)
+            launch_template_name = optional(string)
+            version = optional(string)
+        }))
         override = optional(list({
+            subnet_id = optional(string)
+            weighted_capacity = optional(number)
             availability_zone = optional(string)
             instance_requirements = optional(list({
-                baseline_ebs_bandwidth_mbps = optional(list({
+                accelerator_total_memory_mib = optional(list({
+                    max = optional(number)
+                    min = optional(number)
+                }))
+                accelerator_types = optional(set(string))
+                excluded_instance_types = optional(set(string))
+                instance_generations = optional(set(string))
+                local_storage = optional(string)
+                local_storage_types = optional(set(string))
+                memory_gib_per_vcpu = optional(list({
+                    max = optional(number)
+                    min = optional(number)
+                }))
+                network_interface_count = optional(list({
+                    max = optional(number)
+                    min = optional(number)
+                }))
+                bare_metal = optional(string)
+                burstable_performance = optional(string)
+                cpu_manufacturers = optional(set(string))
+                memory_mib = optional(list({
                     max = optional(number)
                     min = optional(number)
                 }))
                 on_demand_max_price_percentage_over_lowest_price = optional(number)
                 total_local_storage_gb = optional(list({
-                    min = optional(number)
                     max = optional(number)
+                    min = optional(number)
                 }))
                 vcpu_count = optional(list({
                     max = optional(number)
                     min = optional(number)
                 }))
                 accelerator_manufacturers = optional(set(string))
-                accelerator_names = optional(set(string))
-                excluded_instance_types = optional(set(string))
-                instance_generations = optional(set(string))
-                local_storage = optional(string)
-                local_storage_types = optional(set(string))
-                network_interface_count = optional(list({
-                    max = optional(number)
+                baseline_ebs_bandwidth_mbps = optional(list({
                     min = optional(number)
+                    max = optional(number)
                 }))
                 spot_max_price_percentage_over_lowest_price = optional(number)
-                burstable_performance = optional(string)
-                cpu_manufacturers = optional(set(string))
-                bare_metal = optional(string)
-                memory_gib_per_vcpu = optional(list({
-                    min = optional(number)
-                    max = optional(number)
-                }))
-                memory_mib = optional(list({
-                    max = optional(number)
-                    min = optional(number)
-                }))
-                accelerator_total_memory_mib = optional(list({
-                    max = optional(number)
-                    min = optional(number)
-                }))
-                accelerator_types = optional(set(string))
                 accelerator_count = optional(list({
-                    max = optional(number)
                     min = optional(number)
+                    max = optional(number)
                 }))
+                accelerator_names = optional(set(string))
                 require_hibernate_support = optional(bool)
             }))
             instance_type = optional(string)
             max_price = optional(string)
             priority = optional(number)
-            subnet_id = optional(string)
-            weighted_capacity = optional(number)
-        }))
-        launch_template_specification = optional(list({
-            launch_template_id = optional(string)
-            launch_template_name = optional(string)
-            version = optional(string)
         }))
     }))
     on_demand_options = optional(list({
@@ -98,11 +98,11 @@ variable "values" {
     }))
     tags = optional(map(string))
     target_capacity_specification = optional(list({
+        target_capacity_unit_type = optional(string)
         total_target_capacity = optional(number)
         default_target_capacity_type = optional(string)
         on_demand_target_capacity = optional(number)
         spot_target_capacity = optional(number)
-        target_capacity_unit_type = optional(string)
     }))
     terminate_instances = optional(bool)
     terminate_instances_with_expiration = optional(bool)

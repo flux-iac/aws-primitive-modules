@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     peer_account_id = optional(string)
     peer_region = optional(string)
     peer_transit_gateway_id = optional(string)

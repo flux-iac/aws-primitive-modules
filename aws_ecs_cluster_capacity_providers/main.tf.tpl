@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     capacity_providers = optional(set(string))
     cluster_name = optional(string)
     default_capacity_provider_strategy = optional(set(any))

@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     deployment_duration_in_minutes = optional(number)
     description = optional(string)
     final_bake_time_in_minutes = optional(number)

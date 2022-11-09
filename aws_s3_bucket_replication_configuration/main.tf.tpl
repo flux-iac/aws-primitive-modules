@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     bucket = optional(string)
     role = optional(string)
     rule = optional(list({
@@ -25,18 +25,26 @@ variable "values" {
         delete_marker_replication = optional(list({
             status = optional(string)
         }))
+        existing_object_replication = optional(list({
+            status = optional(string)
+        }))
+        id = optional(string)
         prefix = optional(string)
+        priority = optional(number)
         source_selection_criteria = optional(list({
-            replica_modifications = optional(list({
-                status = optional(string)
-            }))
             sse_kms_encrypted_objects = optional(list({
                 status = optional(string)
             }))
+            replica_modifications = optional(list({
+                status = optional(string)
+            }))
         }))
-        id = optional(string)
-        priority = optional(number)
         destination = optional(list({
+            account = optional(string)
+            bucket = optional(string)
+            encryption_configuration = optional(list({
+                replica_kms_key_id = optional(string)
+            }))
             metrics = optional(list({
                 event_threshold = optional(list({
                     minutes = optional(number)
@@ -53,14 +61,6 @@ variable "values" {
             access_control_translation = optional(list({
                 owner = optional(string)
             }))
-            account = optional(string)
-            bucket = optional(string)
-            encryption_configuration = optional(list({
-                replica_kms_key_id = optional(string)
-            }))
-        }))
-        existing_object_replication = optional(list({
-            status = optional(string)
         }))
         filter = optional(list({
             and = optional(list({

@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     ami_type = optional(string)
     capacity_type = optional(string)
     cluster_name = optional(string)

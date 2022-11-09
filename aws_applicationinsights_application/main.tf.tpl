@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     auto_config_enabled = optional(bool)
     auto_create = optional(bool)
     cwe_monitor_enabled = optional(bool)

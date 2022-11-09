@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     global_table_arn = optional(string)
     point_in_time_recovery = optional(bool)
     table_class_override = optional(string)

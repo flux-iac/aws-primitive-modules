@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     destination = optional(string)
     destination_ip = optional(string)
     destination_port = optional(number)

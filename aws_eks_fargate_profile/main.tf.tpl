@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     cluster_name = optional(string)
     fargate_profile_name = optional(string)
     pod_execution_role_arn = optional(string)

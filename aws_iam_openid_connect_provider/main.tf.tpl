@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     client_id_list = optional(list(string))
     tags = optional(map(string))
     thumbprint_list = optional(list(string))

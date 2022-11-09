@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     auto_scaling_group_provider = optional(list({
         auto_scaling_group_arn = optional(string)
         managed_scaling = optional(list({

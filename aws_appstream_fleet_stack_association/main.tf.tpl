@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     fleet_name = optional(string)
     stack_name = optional(string)
   })

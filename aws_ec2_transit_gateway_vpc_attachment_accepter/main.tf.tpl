@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     tags = optional(map(string))
     transit_gateway_attachment_id = optional(string)
     transit_gateway_default_route_table_association = optional(bool)

@@ -17,33 +17,43 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     alpn_policy = optional(string)
     certificate_arn = optional(string)
     default_action = optional(list({
+        order = optional(number)
+        redirect = optional(list({
+            port = optional(string)
+            protocol = optional(string)
+            query = optional(string)
+            status_code = optional(string)
+            host = optional(string)
+            path = optional(string)
+        }))
+        target_group_arn = optional(string)
         type = optional(string)
         authenticate_cognito = optional(list({
-            authentication_request_extra_params = optional(map(string))
-            on_unauthenticated_request = optional(string)
-            scope = optional(string)
-            session_cookie_name = optional(string)
             session_timeout = optional(number)
             user_pool_arn = optional(string)
             user_pool_client_id = optional(string)
             user_pool_domain = optional(string)
-        }))
-        authenticate_oidc = optional(list({
-            issuer = optional(string)
-            user_info_endpoint = optional(string)
             authentication_request_extra_params = optional(map(string))
-            client_secret = optional(string)
             on_unauthenticated_request = optional(string)
             scope = optional(string)
             session_cookie_name = optional(string)
-            session_timeout = optional(number)
-            token_endpoint = optional(string)
+        }))
+        authenticate_oidc = optional(list({
             authorization_endpoint = optional(string)
             client_id = optional(string)
+            scope = optional(string)
+            session_cookie_name = optional(string)
+            session_timeout = optional(number)
+            authentication_request_extra_params = optional(map(string))
+            client_secret = optional(string)
+            issuer = optional(string)
+            on_unauthenticated_request = optional(string)
+            token_endpoint = optional(string)
+            user_info_endpoint = optional(string)
         }))
         fixed_response = optional(list({
             status_code = optional(string)
@@ -51,22 +61,12 @@ variable "values" {
             message_body = optional(string)
         }))
         forward = optional(list({
-            target_group = optional(set(any))
             stickiness = optional(list({
                 duration = optional(number)
                 enabled = optional(bool)
             }))
+            target_group = optional(set(any))
         }))
-        order = optional(number)
-        redirect = optional(list({
-            path = optional(string)
-            port = optional(string)
-            protocol = optional(string)
-            query = optional(string)
-            status_code = optional(string)
-            host = optional(string)
-        }))
-        target_group_arn = optional(string)
     }))
     load_balancer_arn = optional(string)
     port = optional(number)

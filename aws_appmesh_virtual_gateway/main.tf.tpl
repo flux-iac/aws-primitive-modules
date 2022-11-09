@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     mesh_name = optional(string)
     mesh_owner = optional(string)
     name = optional(string)
@@ -25,6 +25,7 @@ variable "values" {
         backend_defaults = optional(list({
             client_policy = optional(list({
                 tls = optional(list({
+                    enforce = optional(bool)
                     ports = optional(set(number))
                     validation = optional(list({
                         subject_alternative_names = optional(list({
@@ -46,38 +47,25 @@ variable "values" {
                     }))
                     certificate = optional(list({
                         file = optional(list({
-                            certificate_chain = optional(string)
                             private_key = optional(string)
+                            certificate_chain = optional(string)
                         }))
                         sds = optional(list({
                             secret_name = optional(string)
                         }))
                     }))
-                    enforce = optional(bool)
                 }))
             }))
         }))
         listener = optional(list({
-            connection_pool = optional(list({
-                grpc = optional(list({
-                    max_requests = optional(number)
-                }))
-                http = optional(list({
-                    max_connections = optional(number)
-                    max_pending_requests = optional(number)
-                }))
-                http2 = optional(list({
-                    max_requests = optional(number)
-                }))
-            }))
             health_check = optional(list({
+                healthy_threshold = optional(number)
+                interval_millis = optional(number)
                 path = optional(string)
                 port = optional(number)
                 protocol = optional(string)
                 timeout_millis = optional(number)
                 unhealthy_threshold = optional(number)
-                healthy_threshold = optional(number)
-                interval_millis = optional(number)
             }))
             port_mapping = optional(list({
                 port = optional(number)
@@ -85,15 +73,15 @@ variable "values" {
             }))
             tls = optional(list({
                 certificate = optional(list({
+                    sds = optional(list({
+                        secret_name = optional(string)
+                    }))
                     acm = optional(list({
                         certificate_arn = optional(string)
                     }))
                     file = optional(list({
                         certificate_chain = optional(string)
                         private_key = optional(string)
-                    }))
-                    sds = optional(list({
-                        secret_name = optional(string)
                     }))
                 }))
                 mode = optional(string)
@@ -104,13 +92,25 @@ variable "values" {
                         }))
                     }))
                     trust = optional(list({
-                        file = optional(list({
-                            certificate_chain = optional(string)
-                        }))
                         sds = optional(list({
                             secret_name = optional(string)
                         }))
+                        file = optional(list({
+                            certificate_chain = optional(string)
+                        }))
                     }))
+                }))
+            }))
+            connection_pool = optional(list({
+                grpc = optional(list({
+                    max_requests = optional(number)
+                }))
+                http = optional(list({
+                    max_connections = optional(number)
+                    max_pending_requests = optional(number)
+                }))
+                http2 = optional(list({
+                    max_requests = optional(number)
                 }))
             }))
         }))

@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     attribute = optional(set(any))
     billing_mode = optional(string)
     global_secondary_index = optional(set(any))

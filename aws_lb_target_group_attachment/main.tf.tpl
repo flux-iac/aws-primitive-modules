@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     availability_zone = optional(string)
     port = optional(number)
     target_group_arn = optional(string)

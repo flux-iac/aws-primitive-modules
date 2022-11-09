@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     bucket = optional(string)
     cors_rule = optional(set(any))
     expected_bucket_owner = optional(string)

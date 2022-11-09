@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     assume_role_policy = optional(string)
     description = optional(string)
     force_detach_policies = optional(bool)

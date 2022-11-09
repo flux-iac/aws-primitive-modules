@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     outpost_id = optional(string)
     security_group_id = optional(string)
     subnet_id = optional(string)

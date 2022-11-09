@@ -17,12 +17,12 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     access_logs = optional(list({
-        bucket_prefix = optional(string)
-        enabled = optional(bool)
         interval = optional(number)
         bucket = optional(string)
+        bucket_prefix = optional(string)
+        enabled = optional(bool)
     }))
     connection_draining = optional(bool)
     connection_draining_timeout = optional(number)

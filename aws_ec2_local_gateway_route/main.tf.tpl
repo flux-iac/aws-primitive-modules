@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     destination_cidr_block = optional(string)
     local_gateway_route_table_id = optional(string)
     local_gateway_virtual_interface_group_id = optional(string)

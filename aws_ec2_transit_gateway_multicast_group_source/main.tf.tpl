@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     group_ip_address = optional(string)
     network_interface_id = optional(string)
     transit_gateway_multicast_domain_id = optional(string)

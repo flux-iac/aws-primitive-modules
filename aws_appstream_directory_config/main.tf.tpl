@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     directory_name = optional(string)
     organizational_unit_distinguished_names = optional(set(string))
     service_account_credentials = optional(list({

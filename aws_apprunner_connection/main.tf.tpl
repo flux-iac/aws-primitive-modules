@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     connection_name = optional(string)
     provider_type = optional(string)
     tags = optional(map(string))

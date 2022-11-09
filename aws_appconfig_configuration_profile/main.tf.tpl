@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     application_id = optional(string)
     description = optional(string)
     location_uri = optional(string)

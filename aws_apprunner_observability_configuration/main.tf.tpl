@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     observability_configuration_name = optional(string)
     tags = optional(map(string))
     trace_configuration = optional(list({

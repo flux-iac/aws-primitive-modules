@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     replication_configuration = optional(list({
         rule = optional(list({
             destination = optional(list({
@@ -25,8 +25,8 @@ variable "values" {
                 registry_id = optional(string)
             }))
             repository_filter = optional(list({
-                filter_type = optional(string)
                 filter = optional(string)
+                filter_type = optional(string)
             }))
         }))
     }))

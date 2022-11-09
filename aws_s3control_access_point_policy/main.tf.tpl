@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     access_point_arn = optional(string)
     policy = optional(string)
   })

@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     deprecation_time = optional(string)
     description = optional(string)
     ephemeral_block_device = optional(set(any))

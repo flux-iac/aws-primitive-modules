@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     description = optional(string)
     display_name = optional(string)
     name = optional(string)

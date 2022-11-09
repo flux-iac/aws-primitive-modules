@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     tags = optional(map(string))
     transit_gateway_id = optional(string)
   })

@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     definition = optional(string)
     workspace_id = optional(string)
   })

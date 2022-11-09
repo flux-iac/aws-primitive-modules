@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     local_gateway_route_table_id = optional(string)
     tags = optional(map(string))
     vpc_id = optional(string)

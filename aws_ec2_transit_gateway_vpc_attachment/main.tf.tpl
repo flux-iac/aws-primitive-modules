@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     appliance_mode_support = optional(string)
     dns_support = optional(string)
     ipv6_support = optional(string)

@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     capacity_provider_strategy = optional(set(any))
     cluster = optional(string)
     external_id = optional(string)
@@ -25,17 +25,17 @@ variable "values" {
     launch_type = optional(string)
     load_balancer = optional(set(any))
     network_configuration = optional(list({
+        assign_public_ip = optional(bool)
         security_groups = optional(set(string))
         subnets = optional(set(string))
-        assign_public_ip = optional(bool)
     }))
     platform_version = optional(string)
     service = optional(string)
     service_registries = optional(list({
-        container_name = optional(string)
         container_port = optional(number)
         port = optional(number)
         registry_arn = optional(string)
+        container_name = optional(string)
     }))
     tags = optional(map(string))
     task_definition = optional(string)

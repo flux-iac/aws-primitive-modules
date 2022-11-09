@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     db_cluster_identifier = optional(string)
     db_cluster_snapshot_identifier = optional(string)
   })

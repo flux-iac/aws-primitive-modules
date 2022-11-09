@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     domain_name = optional(string)
     enable_www_subdomain = optional(bool)
     service_arn = optional(string)

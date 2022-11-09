@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     stream_arn = optional(string)
     table_name = optional(string)
   })

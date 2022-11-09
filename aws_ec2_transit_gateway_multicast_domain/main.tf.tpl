@@ -17,7 +17,7 @@ provider "aws" {
 }
 
 variable "values" {
-  type = any object({
+  type = object({
     auto_accept_shared_associations = optional(string)
     igmpv2_support = optional(string)
     static_sources_support = optional(string)
