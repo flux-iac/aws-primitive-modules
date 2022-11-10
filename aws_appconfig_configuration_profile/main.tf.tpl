@@ -57,10 +57,10 @@ resource "aws_appconfig_configuration_profile" "this" {
   {{- end }}
   {{- if $.Values.validator }}
   dynamic "validator" {
-    for_each = var.values.validator
+    for_each = var.values.validator[*]
     content {
-      content = validator.content
-      type = validator.type
+      content = validator.value.content
+      type = validator.value.type
     }
   }
   {{- end }}

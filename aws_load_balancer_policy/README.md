@@ -23,7 +23,7 @@ spec:
   values:
     load_balancer_name: ${aws_elb.wu-tang.name}
     policy_attribute:
-      name: PublicKey
+    - name: PublicKey
       value: ${file("wu-tang-pubkey")}
     policy_name: wu-tang-ca-pubkey-policy
     policy_type_name: PublicKeyPolicyType
@@ -43,7 +43,7 @@ spec:
   values:
     load_balancer_name: ${aws_elb.wu-tang.name}
     policy_attribute:
-      name: PublicKeyPolicyName
+    - name: PublicKeyPolicyName
       value: ${aws_load_balancer_policy.wu-tang-root-ca-pubkey-policy.policy_name}
     policy_name: wu-tang-root-ca-backend-auth-policy
     policy_type_name: BackendServerAuthenticationPolicyType
@@ -85,7 +85,7 @@ spec:
   values:
     load_balancer_name: ${aws_elb.wu-tang.name}
     policy_attribute:
-      name: Reference-Security-Policy
+    - name: Reference-Security-Policy
       value: ELBSecurityPolicy-TLS-1-1-2017-01
     policy_name: wu-tang-ssl
     policy_type_name: SSLNegotiationPolicyType

@@ -68,13 +68,13 @@ resource "aws_elb" "this" {
   {{- end }}
   {{- if $.Values.listener }}
   dynamic "listener" {
-    for_each = var.values.listener
+    for_each = var.values.listener[*]
     content {
-      instance_port = listener.instance_port
-      instance_protocol = listener.instance_protocol
-      lb_port = listener.lb_port
-      lb_protocol = listener.lb_protocol
-      ssl_certificate_id = listener.ssl_certificate_id
+      ssl_certificate_id = listener.value.ssl_certificate_id
+      instance_port = listener.value.instance_port
+      instance_protocol = listener.value.instance_protocol
+      lb_port = listener.value.lb_port
+      lb_protocol = listener.value.lb_protocol
     }
   }
   {{- end }}

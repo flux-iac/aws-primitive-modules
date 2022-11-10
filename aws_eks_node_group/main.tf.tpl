@@ -41,9 +41,9 @@ variable "values" {
     subnet_ids = optional(set(string))
     tags = optional(map(string))
     taint = optional(set(object({
-        key = optional(string)
         value = optional(string)
         effect = optional(string)
+        key = optional(string)
     })))
   })
 }
@@ -97,11 +97,11 @@ resource "aws_eks_node_group" "this" {
   {{- end }}
   {{- if $.Values.taint }}
   dynamic "taint" {
-    for_each = var.values.taint
+    for_each = var.values.taint[*]
     content {
-      key = taint.key
-      value = taint.value
-      effect = taint.effect
+      key = taint.value.key
+      value = taint.value.value
+      effect = taint.value.effect
     }
   }
   {{- end }}

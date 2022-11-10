@@ -22,7 +22,7 @@ spec:
   path: aws_apprunner_vpc_ingress_connection
   values:
     ingress_vpc_configuration:
-      vpc_endpoint_id: << id of an aws_vpc_endpoint >>
+    - vpc_endpoint_id: << id of an aws_vpc_endpoint >>
       vpc_id: << id of an aws_default_vpc >>
     name: example
     service_arn: << arn of an aws_apprunner_service >>

@@ -23,7 +23,7 @@ spec:
   values:
     bucket: << id of an aws_s3_bucket >>
     rule:
-      object_ownership: BucketOwnerPreferred
+    - object_ownership: BucketOwnerPreferred
   sourceRef:
     kind: OCIRepository
     name: aws-package-v4.38.0

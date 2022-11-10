@@ -22,7 +22,7 @@ spec:
   path: aws_appstream_fleet
   values:
     compute_capacity:
-      desired_instances: 1
+    - desired_instances: 1
     description: test fleet
     display_name: test-fleet
     enable_default_internet_access: false
@@ -34,7 +34,9 @@ spec:
     name: test-fleet
     tags:
       TagName: tag-value
-    vpc_config: {}
+    vpc_config:
+    - subnet_ids:
+      - subnet-06e9b13400c225127
   sourceRef:
     kind: OCIRepository
     name: aws-package-v4.38.0

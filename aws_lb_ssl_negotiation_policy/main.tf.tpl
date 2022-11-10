@@ -32,10 +32,10 @@ resource "aws_lb_ssl_negotiation_policy" "this" {
 
   {{- if $.Values.attribute }}
   dynamic "attribute" {
-    for_each = var.values.attribute
+    for_each = var.values.attribute[*]
     content {
-      name = attribute.name
-      value = attribute.value
+      value = attribute.value.value
+      name = attribute.value.name
     }
   }
   {{- end }}

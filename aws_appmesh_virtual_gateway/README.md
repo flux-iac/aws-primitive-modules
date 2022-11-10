@@ -24,9 +24,9 @@ spec:
     mesh_name: example-service-mesh
     name: example-virtual-gateway
     spec:
-      listener:
-        port_mapping:
-          port: 8080
+    - listener:
+      - port_mapping:
+        - port: 8080
           protocol: http
     tags:
       Environment: test

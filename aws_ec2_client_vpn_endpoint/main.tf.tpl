@@ -19,17 +19,17 @@ provider "aws" {
 variable "values" {
   type = object({
     authentication_options = optional(list(object({
+        self_service_saml_provider_arn = optional(string)
+        type = optional(string)
         active_directory_id = optional(string)
         root_certificate_chain_arn = optional(string)
         saml_provider_arn = optional(string)
-        self_service_saml_provider_arn = optional(string)
-        type = optional(string)
     })))
     client_cidr_block = optional(string)
     connection_log_options = optional(list(object({
-        enabled = optional(bool)
         cloudwatch_log_group = optional(string)
         cloudwatch_log_stream = optional(string)
+        enabled = optional(bool)
     })))
     description = optional(string)
     dns_servers = optional(list(string))

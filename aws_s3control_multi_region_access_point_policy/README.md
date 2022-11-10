@@ -22,7 +22,7 @@ spec:
   path: aws_s3control_multi_region_access_point_policy
   values:
     details:
-      name: ${element(split(":", aws_s3control_multi_region_access_point.example.id),
+    - name: ${element(split(":", aws_s3control_multi_region_access_point.example.id),
         1)}
       policy: |-
         ${jsonencode({

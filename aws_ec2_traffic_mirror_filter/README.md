@@ -23,6 +23,8 @@ spec:
   path: aws_ec2_traffic_mirror_filter
   values:
     description: traffic mirror filter - terraform example
+    network_services:
+    - amazon-dns
   sourceRef:
     kind: OCIRepository
     name: aws-package-v4.38.0

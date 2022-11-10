@@ -23,27 +23,30 @@ spec:
   values:
     config_id: example-1
     storage_lens_configuration:
-      account_level:
-        activity_metrics:
-          enabled: true
+    - account_level:
+      - activity_metrics:
+        - enabled: true
         bucket_level:
-          activity_metrics:
-            enabled: true
+        - activity_metrics:
+          - enabled: true
       data_export:
-        cloud_watch_metrics:
-          enabled: true
+      - cloud_watch_metrics:
+        - enabled: true
         s3_bucket_destination:
-          account_id: << current.account_id of a data >>
+        - account_id: << current.account_id of a data >>
           arn: << arn of an aws_s3_bucket >>
           encryption:
-            sse_s3: {}
+          - sse_s3:
+            - {}
           format: CSV
           output_schema_version: V_1
       enabled: true
       exclude:
-        buckets:
+      - buckets:
         - << arn of an aws_s3_bucket >>
         - << arn of an aws_s3_bucket >>
+        regions:
+        - us-east-2
   sourceRef:
     kind: OCIRepository
     name: aws-package-v4.38.0

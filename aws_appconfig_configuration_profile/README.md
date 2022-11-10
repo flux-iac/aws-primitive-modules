@@ -28,7 +28,7 @@ spec:
     tags:
       Type: AppConfig Configuration Profile
     validator:
-      content: << arn of an aws_lambda_function >>
+    - content: << arn of an aws_lambda_function >>
       type: LAMBDA
   sourceRef:
     kind: OCIRepository

@@ -25,8 +25,8 @@ variable "values" {
                 registry_id = optional(string)
             })))
             repository_filter = optional(list(object({
-                filter_type = optional(string)
                 filter = optional(string)
+                filter_type = optional(string)
             })))
         })))
     })))

@@ -24,9 +24,9 @@ spec:
     mesh_name: << id of an aws_appmesh_mesh >>
     name: serviceB
     spec:
-      listener:
-        port_mapping:
-          port: 8080
+    - listener:
+      - port_mapping:
+        - port: 8080
           protocol: http
   sourceRef:
     kind: OCIRepository

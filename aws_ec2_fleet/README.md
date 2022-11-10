@@ -22,11 +22,11 @@ spec:
   path: aws_ec2_fleet
   values:
     launch_template_config:
-      launch_template_specification:
-        launch_template_id: << id of an aws_launch_template >>
+    - launch_template_specification:
+      - launch_template_id: << id of an aws_launch_template >>
         version: << latest_version of an aws_launch_template >>
     target_capacity_specification:
-      default_target_capacity_type: spot
+    - default_target_capacity_type: spot
       total_target_capacity: 5
   sourceRef:
     kind: OCIRepository

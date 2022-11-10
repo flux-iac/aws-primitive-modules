@@ -31,7 +31,7 @@ spec:
   path: aws_elb
   values:
     access_logs:
-      bucket: foo
+    - bucket: foo
       bucket_prefix: bar
       interval: 60
     availability_zones:
@@ -42,12 +42,14 @@ spec:
     connection_draining_timeout: 400
     cross_zone_load_balancing: true
     health_check:
-      healthy_threshold: 2
+    - healthy_threshold: 2
       interval: 30
       target: HTTP:8000/
       timeout: 3
       unhealthy_threshold: 2
     idle_timeout: 400
+    instances:
+    - << id of an aws_instance >>
     listener:
     - instance_port: 8000
       instance_protocol: http

@@ -23,7 +23,7 @@ spec:
   values:
     description: Example Description
     event_filter:
-      source: aws.partner/examplepartner.com
+    - source: aws.partner/examplepartner.com
     eventbridge_bus: default
     name: example-name
     tags:

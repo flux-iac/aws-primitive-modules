@@ -26,7 +26,7 @@ spec:
     name: example
     role_arn: << arn of an aws_iam_role >>
     vpc_config:
-      subnet_ids:
+    - subnet_ids:
       - << id of an aws_subnet >>
       - << id of an aws_subnet >>
   sourceRef:

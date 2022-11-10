@@ -24,10 +24,10 @@ spec:
     bucket: << bucket of an aws_s3_bucket >>
     name: EntireBucket
     storage_class_analysis:
-      data_export:
-        destination:
-          s3_bucket_destination:
-            bucket_arn: << arn of an aws_s3_bucket >>
+    - data_export:
+      - destination:
+        - s3_bucket_destination:
+          - bucket_arn: << arn of an aws_s3_bucket >>
   sourceRef:
     kind: OCIRepository
     name: aws-package-v4.38.0

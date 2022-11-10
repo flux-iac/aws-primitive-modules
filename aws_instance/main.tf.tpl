@@ -28,9 +28,9 @@ variable "values" {
     })))
     ebs_optimized = optional(bool)
     ephemeral_block_device = optional(set(object({
+        virtual_name = optional(string)
         device_name = optional(string)
         no_device = optional(bool)
-        virtual_name = optional(string)
     })))
     get_password_data = optional(bool)
     hibernation = optional(bool)
@@ -43,9 +43,9 @@ variable "values" {
     placement_group = optional(string)
     placement_partition_number = optional(number)
     private_dns_name_options = optional(list(object({
+        hostname_type = optional(string)
         enable_resource_name_dns_aaaa_record = optional(bool)
         enable_resource_name_dns_a_record = optional(bool)
-        hostname_type = optional(string)
     })))
     private_ip = optional(string)
     security_groups = optional(set(string))
@@ -83,11 +83,11 @@ resource "aws_instance" "this" {
   {{- end }}
   {{- if $.Values.ephemeral_block_device }}
   dynamic "ephemeral_block_device" {
-    for_each = var.values.ephemeral_block_device
+    for_each = var.values.ephemeral_block_device[*]
     content {
-      device_name = ephemeral_block_device.device_name
-      no_device = ephemeral_block_device.no_device
-      virtual_name = ephemeral_block_device.virtual_name
+      device_name = ephemeral_block_device.value.device_name
+      no_device = ephemeral_block_device.value.no_device
+      virtual_name = ephemeral_block_device.value.virtual_name
     }
   }
   {{- end }}

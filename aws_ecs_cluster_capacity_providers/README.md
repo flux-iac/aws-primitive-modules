@@ -25,9 +25,11 @@ metadata:
 spec:
   path: aws_ecs_cluster_capacity_providers
   values:
+    capacity_providers:
+    - FARGATE
     cluster_name: << name of an aws_ecs_cluster >>
     default_capacity_provider_strategy:
-      base: 1
+    - base: 1
       capacity_provider: FARGATE
       weight: 100
   sourceRef:

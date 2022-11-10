@@ -39,6 +39,11 @@ variable "values" {
                         enforce = optional(bool)
                         ports = optional(set(number))
                         validation = optional(list(object({
+                            subject_alternative_names = optional(list(object({
+                                match = optional(list(object({
+                                    exact = optional(set(string))
+                                })))
+                            })))
                             trust = optional(list(object({
                                 acm = optional(list(object({
                                     certificate_authority_arns = optional(set(string))
@@ -50,11 +55,6 @@ variable "values" {
                                     secret_name = optional(string)
                                 })))
                             })))
-                            subject_alternative_names = optional(list(object({
-                                match = optional(list(object({
-                                    exact = optional(set(string))
-                                })))
-                            })))
                         })))
                     })))
                 })))
@@ -63,25 +63,6 @@ variable "values" {
         backend_defaults = optional(list(object({
             client_policy = optional(list(object({
                 tls = optional(list(object({
-                    ports = optional(set(number))
-                    validation = optional(list(object({
-                        subject_alternative_names = optional(list(object({
-                            match = optional(list(object({
-                                exact = optional(set(string))
-                            })))
-                        })))
-                        trust = optional(list(object({
-                            sds = optional(list(object({
-                                secret_name = optional(string)
-                            })))
-                            acm = optional(list(object({
-                                certificate_authority_arns = optional(set(string))
-                            })))
-                            file = optional(list(object({
-                                certificate_chain = optional(string)
-                            })))
-                        })))
-                    })))
                     certificate = optional(list(object({
                         file = optional(list(object({
                             certificate_chain = optional(string)
@@ -92,6 +73,25 @@ variable "values" {
                         })))
                     })))
                     enforce = optional(bool)
+                    ports = optional(set(number))
+                    validation = optional(list(object({
+                        subject_alternative_names = optional(list(object({
+                            match = optional(list(object({
+                                exact = optional(set(string))
+                            })))
+                        })))
+                        trust = optional(list(object({
+                            file = optional(list(object({
+                                certificate_chain = optional(string)
+                            })))
+                            sds = optional(list(object({
+                                secret_name = optional(string)
+                            })))
+                            acm = optional(list(object({
+                                certificate_authority_arns = optional(set(string))
+                            })))
+                        })))
+                    })))
                 })))
             })))
         })))
@@ -112,19 +112,19 @@ variable "values" {
                     })))
                 })))
                 http = optional(list(object({
-                    per_request = optional(list(object({
-                        unit = optional(string)
-                        value = optional(number)
-                    })))
                     idle = optional(list(object({
+                        value = optional(number)
+                        unit = optional(string)
+                    })))
+                    per_request = optional(list(object({
                         unit = optional(string)
                         value = optional(number)
                     })))
                 })))
                 http2 = optional(list(object({
                     idle = optional(list(object({
-                        unit = optional(string)
                         value = optional(number)
+                        unit = optional(string)
                     })))
                     per_request = optional(list(object({
                         unit = optional(string)
@@ -139,13 +139,20 @@ variable "values" {
                 })))
             })))
             tls = optional(list(object({
+                certificate = optional(list(object({
+                    acm = optional(list(object({
+                        certificate_arn = optional(string)
+                    })))
+                    file = optional(list(object({
+                        certificate_chain = optional(string)
+                        private_key = optional(string)
+                    })))
+                    sds = optional(list(object({
+                        secret_name = optional(string)
+                    })))
+                })))
                 mode = optional(string)
                 validation = optional(list(object({
-                    subject_alternative_names = optional(list(object({
-                        match = optional(list(object({
-                            exact = optional(set(string))
-                        })))
-                    })))
                     trust = optional(list(object({
                         file = optional(list(object({
                             certificate_chain = optional(string)
@@ -154,17 +161,10 @@ variable "values" {
                             secret_name = optional(string)
                         })))
                     })))
-                })))
-                certificate = optional(list(object({
-                    acm = optional(list(object({
-                        certificate_arn = optional(string)
-                    })))
-                    file = optional(list(object({
-                        private_key = optional(string)
-                        certificate_chain = optional(string)
-                    })))
-                    sds = optional(list(object({
-                        secret_name = optional(string)
+                    subject_alternative_names = optional(list(object({
+                        match = optional(list(object({
+                            exact = optional(set(string))
+                        })))
                     })))
                 })))
             })))
@@ -184,13 +184,13 @@ variable "values" {
                 })))
             })))
             health_check = optional(list(object({
+                healthy_threshold = optional(number)
+                interval_millis = optional(number)
+                path = optional(string)
                 port = optional(number)
                 protocol = optional(string)
                 timeout_millis = optional(number)
                 unhealthy_threshold = optional(number)
-                healthy_threshold = optional(number)
-                interval_millis = optional(number)
-                path = optional(string)
             })))
             outlier_detection = optional(list(object({
                 base_ejection_duration = optional(list(object({
@@ -198,8 +198,8 @@ variable "values" {
                     value = optional(number)
                 })))
                 interval = optional(list(object({
-                    value = optional(number)
                     unit = optional(string)
+                    value = optional(number)
                 })))
                 max_ejection_percent = optional(number)
                 max_server_errors = optional(number)
@@ -214,9 +214,9 @@ variable "values" {
         })))
         service_discovery = optional(list(object({
             aws_cloud_map = optional(list(object({
+                attributes = optional(map(string))
                 namespace_name = optional(string)
                 service_name = optional(string)
-                attributes = optional(map(string))
             })))
             dns = optional(list(object({
                 hostname = optional(string)

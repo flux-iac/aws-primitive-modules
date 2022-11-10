@@ -34,8 +34,10 @@ spec:
       type: "N"
     billing_mode: PROVISIONED
     global_secondary_index:
-      hash_key: GameTitle
+    - hash_key: GameTitle
       name: GameTitleIndex
+      non_key_attributes:
+      - UserId
       projection_type: INCLUDE
       range_key: TopScore
       read_capacity: 10
@@ -48,7 +50,7 @@ spec:
       Environment: production
       Name: dynamodb-table-1
     ttl:
-      attribute_name: TimeToExist
+    - attribute_name: TimeToExist
       enabled: false
     write_capacity: 20
   sourceRef:

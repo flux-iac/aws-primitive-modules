@@ -23,7 +23,7 @@ spec:
   values:
     cluster_name: << name of an aws_eks_cluster >>
     oidc:
-      client_id: your client_id
+    - client_id: your client_id
       identity_provider_config_name: example
       issuer_url: your issuer_url
   sourceRef:

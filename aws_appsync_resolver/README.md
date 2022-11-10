@@ -25,7 +25,7 @@ spec:
     field: pipelineTest
     kind: PIPELINE
     pipeline_config:
-      functions:
+    - functions:
       - << function_id of an aws_appsync_function >>
       - << function_id of an aws_appsync_function >>
       - << function_id of an aws_appsync_function >>
@@ -48,7 +48,7 @@ spec:
   values:
     api_id: << id of an aws_appsync_graphql_api >>
     caching_config:
-      caching_keys:
+    - caching_keys:
       - $context.identity.sub
       - $context.arguments.id
       ttl: 60

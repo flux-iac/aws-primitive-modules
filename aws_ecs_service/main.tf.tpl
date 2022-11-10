@@ -19,9 +19,9 @@ provider "aws" {
 variable "values" {
   type = object({
     capacity_provider_strategy = optional(set(object({
+        base = optional(number)
         capacity_provider = optional(string)
         weight = optional(number)
-        base = optional(number)
     })))
     cluster = optional(string)
     deployment_circuit_breaker = optional(list(object({
@@ -48,9 +48,9 @@ variable "values" {
     })))
     name = optional(string)
     network_configuration = optional(list(object({
+        assign_public_ip = optional(bool)
         security_groups = optional(set(string))
         subnets = optional(set(string))
-        assign_public_ip = optional(bool)
     })))
     ordered_placement_strategy = optional(list(object({
         field = optional(string)
@@ -78,11 +78,11 @@ resource "aws_ecs_service" "this" {
 
   {{- if $.Values.capacity_provider_strategy }}
   dynamic "capacity_provider_strategy" {
-    for_each = var.values.capacity_provider_strategy
+    for_each = var.values.capacity_provider_strategy[*]
     content {
-      weight = capacity_provider_strategy.weight
-      base = capacity_provider_strategy.base
-      capacity_provider = capacity_provider_strategy.capacity_provider
+      base = capacity_provider_strategy.value.base
+      capacity_provider = capacity_provider_strategy.value.capacity_provider
+      weight = capacity_provider_strategy.value.weight
     }
   }
   {{- end }}
@@ -124,12 +124,12 @@ resource "aws_ecs_service" "this" {
   {{- end }}
   {{- if $.Values.load_balancer }}
   dynamic "load_balancer" {
-    for_each = var.values.load_balancer
+    for_each = var.values.load_balancer[*]
     content {
-      container_name = load_balancer.container_name
-      container_port = load_balancer.container_port
-      elb_name = load_balancer.elb_name
-      target_group_arn = load_balancer.target_group_arn
+      elb_name = load_balancer.value.elb_name
+      target_group_arn = load_balancer.value.target_group_arn
+      container_name = load_balancer.value.container_name
+      container_port = load_balancer.value.container_port
     }
   }
   {{- end }}
@@ -144,10 +144,10 @@ resource "aws_ecs_service" "this" {
   {{- end }}
   {{- if $.Values.placement_constraints }}
   dynamic "placement_constraints" {
-    for_each = var.values.placement_constraints
+    for_each = var.values.placement_constraints[*]
     content {
-      expression = placement_constraints.expression
-      type = placement_constraints.type
+      expression = placement_constraints.value.expression
+      type = placement_constraints.value.type
     }
   }
   {{- end }}

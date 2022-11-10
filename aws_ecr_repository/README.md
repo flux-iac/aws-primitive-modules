@@ -22,7 +22,7 @@ spec:
   path: aws_ecr_repository
   values:
     image_scanning_configuration:
-      scan_on_push: true
+    - scan_on_push: true
     image_tag_mutability: MUTABLE
     name: bar
   sourceRef:

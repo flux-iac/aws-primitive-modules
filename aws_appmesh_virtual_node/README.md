@@ -24,16 +24,16 @@ spec:
     mesh_name: << id of an aws_appmesh_mesh >>
     name: serviceBv1
     spec:
-      backend:
-        virtual_service:
-          virtual_service_name: servicea.simpleapp.local
+    - backend:
+      - virtual_service:
+        - virtual_service_name: servicea.simpleapp.local
       listener:
-        port_mapping:
-          port: 8080
+      - port_mapping:
+        - port: 8080
           protocol: http
       service_discovery:
-        dns:
-          hostname: serviceb.simpleapp.local
+      - dns:
+        - hostname: serviceb.simpleapp.local
   sourceRef:
     kind: OCIRepository
     name: aws-package-v4.38.0

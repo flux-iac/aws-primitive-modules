@@ -21,8 +21,8 @@ variable "values" {
     directory_name = optional(string)
     organizational_unit_distinguished_names = optional(set(string))
     service_account_credentials = optional(list(object({
-        account_password = optional(string)
         account_name = optional(string)
+        account_password = optional(string)
     })))
   })
 }

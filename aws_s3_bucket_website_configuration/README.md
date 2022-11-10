@@ -23,14 +23,14 @@ spec:
   values:
     bucket: << bucket of an aws_s3_bucket >>
     error_document:
-      key: error.html
+    - key: error.html
     index_document:
-      suffix: index.html
+    - suffix: index.html
     routing_rule:
-      condition:
-        key_prefix_equals: docs/
+    - condition:
+      - key_prefix_equals: docs/
       redirect:
-        replace_key_prefix_with: documents/
+      - replace_key_prefix_with: documents/
   sourceRef:
     kind: OCIRepository
     name: aws-package-v4.38.0

@@ -22,9 +22,9 @@ spec:
   path: aws_ecr_replication_configuration
   values:
     replication_configuration:
-      rule:
-        destination:
-          region: ${data.aws_regions.example.names[0]}
+    - rule:
+      - destination:
+        - region: ${data.aws_regions.example.names[0]}
           registry_id: << current.account_id of a data >>
   sourceRef:
     kind: OCIRepository

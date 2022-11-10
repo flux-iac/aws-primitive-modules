@@ -22,7 +22,7 @@ spec:
   path: aws_s3control_multi_region_access_point
   values:
     details:
-      name: example
+    - name: example
       region:
       - bucket: << id of an aws_s3_bucket >>
       - bucket: << id of an aws_s3_bucket >>

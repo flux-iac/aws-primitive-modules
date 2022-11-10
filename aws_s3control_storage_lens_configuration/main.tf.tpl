@@ -21,33 +21,6 @@ variable "values" {
     account_id = optional(string)
     config_id = optional(string)
     storage_lens_configuration = optional(list(object({
-        aws_org = optional(list(object({
-            arn = optional(string)
-        })))
-        data_export = optional(list(object({
-            s3_bucket_destination = optional(list(object({
-                account_id = optional(string)
-                arn = optional(string)
-                encryption = optional(list(object({
-                    sse_kms = optional(list(object({
-                        key_id = optional(string)
-                    })))
-                    sse_s3 = optional(list(object({
-                    })))
-                })))
-                format = optional(string)
-                output_schema_version = optional(string)
-                prefix = optional(string)
-            })))
-            cloud_watch_metrics = optional(list(object({
-                enabled = optional(bool)
-            })))
-        })))
-        enabled = optional(bool)
-        exclude = optional(list(object({
-            buckets = optional(set(string))
-            regions = optional(set(string))
-        })))
         include = optional(list(object({
             buckets = optional(set(string))
             regions = optional(set(string))
@@ -57,9 +30,6 @@ variable "values" {
                 enabled = optional(bool)
             })))
             bucket_level = optional(list(object({
-                activity_metrics = optional(list(object({
-                    enabled = optional(bool)
-                })))
                 prefix_level = optional(list(object({
                     storage_metrics = optional(list(object({
                         selection_criteria = optional(list(object({
@@ -70,7 +40,37 @@ variable "values" {
                         enabled = optional(bool)
                     })))
                 })))
+                activity_metrics = optional(list(object({
+                    enabled = optional(bool)
+                })))
             })))
+        })))
+        aws_org = optional(list(object({
+            arn = optional(string)
+        })))
+        data_export = optional(list(object({
+            s3_bucket_destination = optional(list(object({
+                output_schema_version = optional(string)
+                prefix = optional(string)
+                account_id = optional(string)
+                arn = optional(string)
+                encryption = optional(list(object({
+                    sse_kms = optional(list(object({
+                        key_id = optional(string)
+                    })))
+                    sse_s3 = optional(list(object({
+                    })))
+                })))
+                format = optional(string)
+            })))
+            cloud_watch_metrics = optional(list(object({
+                enabled = optional(bool)
+            })))
+        })))
+        enabled = optional(bool)
+        exclude = optional(list(object({
+            buckets = optional(set(string))
+            regions = optional(set(string))
         })))
     })))
     tags = optional(map(string))

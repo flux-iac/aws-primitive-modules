@@ -23,7 +23,7 @@ spec:
   values:
     api_id: << id of an aws_appsync_graphql_api >>
     dynamodb_config:
-      table_name: << name of an aws_dynamodb_table >>
+    - table_name: << name of an aws_dynamodb_table >>
     name: tf_appsync_example
     service_role_arn: << arn of an aws_iam_role >>
     type: AMAZON_DYNAMODB

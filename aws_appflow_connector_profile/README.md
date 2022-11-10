@@ -27,13 +27,13 @@ spec:
   values:
     connection_mode: Public
     connector_profile_config:
-      connector_profile_credentials:
-        redshift:
-          password: << master_password of an aws_redshift_cluster >>
+    - connector_profile_credentials:
+      - redshift:
+        - password: << master_password of an aws_redshift_cluster >>
           username: << master_username of an aws_redshift_cluster >>
       connector_profile_properties:
-        redshift:
-          bucket_name: << name of an aws_s3_bucket >>
+      - redshift:
+        - bucket_name: << name of an aws_s3_bucket >>
           database_url: jdbc:redshift://<< endpoint of an aws_redshift_cluster >>/<< database_name of an aws_redshift_cluster >>
           role_arn: << arn of an aws_iam_role >>
     connector_type: Redshift

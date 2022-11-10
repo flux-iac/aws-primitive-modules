@@ -23,11 +23,13 @@ spec:
   path: aws_s3control_object_lambda_access_point
   values:
     configuration:
-      supporting_access_point: << arn of an aws_s3_access_point >>
+    - supporting_access_point: << arn of an aws_s3_access_point >>
       transformation_configuration:
+      - actions:
+        - GetObject
         content_transformation:
-          aws_lambda:
-            function_arn: << arn of an aws_lambda_function >>
+        - aws_lambda:
+          - function_arn: << arn of an aws_lambda_function >>
     name: example
   sourceRef:
     kind: OCIRepository

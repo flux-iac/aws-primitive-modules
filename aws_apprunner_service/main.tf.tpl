@@ -22,12 +22,12 @@ variable "values" {
         kms_key = optional(string)
     })))
     health_check_configuration = optional(list(object({
-        interval = optional(number)
-        path = optional(string)
-        protocol = optional(string)
         timeout = optional(number)
         unhealthy_threshold = optional(number)
         healthy_threshold = optional(number)
+        interval = optional(number)
+        path = optional(string)
+        protocol = optional(string)
     })))
     observability_configuration = optional(list(object({
         observability_configuration_arn = optional(string)
@@ -42,7 +42,6 @@ variable "values" {
         auto_deployments_enabled = optional(bool)
         code_repository = optional(list(object({
             code_configuration = optional(list(object({
-                configuration_source = optional(string)
                 code_configuration_values = optional(list(object({
                     build_command = optional(string)
                     port = optional(string)
@@ -50,6 +49,7 @@ variable "values" {
                     runtime_environment_variables = optional(map(string))
                     start_command = optional(string)
                 })))
+                configuration_source = optional(string)
             })))
             repository_url = optional(string)
             source_code_version = optional(list(object({
@@ -58,13 +58,13 @@ variable "values" {
             })))
         })))
         image_repository = optional(list(object({
-            image_repository_type = optional(string)
             image_configuration = optional(list(object({
                 port = optional(string)
                 runtime_environment_variables = optional(map(string))
                 start_command = optional(string)
             })))
             image_identifier = optional(string)
+            image_repository_type = optional(string)
         })))
     })))
     tags = optional(map(string))

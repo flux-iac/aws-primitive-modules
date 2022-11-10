@@ -22,24 +22,24 @@ spec:
   path: aws_apprunner_service
   values:
     network_configuration:
-      egress_configuration:
-        egress_type: VPC
+    - egress_configuration:
+      - egress_type: VPC
         vpc_connector_arn: << arn of an aws_apprunner_vpc_connector >>
     service_name: example
     source_configuration:
-      authentication_configuration:
-        connection_arn: << arn of an aws_apprunner_connection >>
+    - authentication_configuration:
+      - connection_arn: << arn of an aws_apprunner_connection >>
       code_repository:
-        code_configuration:
-          code_configuration_values:
-            build_command: python setup.py develop
+      - code_configuration:
+        - code_configuration_values:
+          - build_command: python setup.py develop
             port: "8000"
             runtime: PYTHON_3
             start_command: python runapp.py
           configuration_source: API
         repository_url: https://github.com/example/my-example-python-app
         source_code_version:
-          type: BRANCH
+        - type: BRANCH
           value: main
     tags:
       Name: example-apprunner-service

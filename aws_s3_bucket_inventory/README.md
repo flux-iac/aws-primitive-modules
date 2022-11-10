@@ -23,13 +23,13 @@ spec:
   values:
     bucket: << id of an aws_s3_bucket >>
     destination:
-      bucket:
-        bucket_arn: << arn of an aws_s3_bucket >>
+    - bucket:
+      - bucket_arn: << arn of an aws_s3_bucket >>
         format: ORC
     included_object_versions: All
     name: EntireBucketDaily
     schedule:
-      frequency: Daily
+    - frequency: Daily
   sourceRef:
     kind: OCIRepository
     name: aws-package-v4.38.0

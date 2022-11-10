@@ -22,6 +22,146 @@ variable "values" {
     mesh_owner = optional(string)
     name = optional(string)
     spec = optional(list(object({
+        grpc_route = optional(list(object({
+            match = optional(list(object({
+                metadata = optional(set(object({
+                    invert = optional(bool)
+                    match = optional(list(object({
+                        prefix = optional(string)
+                        range = optional(list(object({
+                            end = optional(number)
+                            start = optional(number)
+                        })))
+                        regex = optional(string)
+                        suffix = optional(string)
+                        exact = optional(string)
+                    })))
+                    name = optional(string)
+                })))
+                method_name = optional(string)
+                prefix = optional(string)
+                service_name = optional(string)
+            })))
+            retry_policy = optional(list(object({
+                tcp_retry_events = optional(set(string))
+                grpc_retry_events = optional(set(string))
+                http_retry_events = optional(set(string))
+                max_retries = optional(number)
+                per_retry_timeout = optional(list(object({
+                    unit = optional(string)
+                    value = optional(number)
+                })))
+            })))
+            timeout = optional(list(object({
+                per_request = optional(list(object({
+                    unit = optional(string)
+                    value = optional(number)
+                })))
+                idle = optional(list(object({
+                    value = optional(number)
+                    unit = optional(string)
+                })))
+            })))
+            action = optional(list(object({
+                weighted_target = optional(set(object({
+                    virtual_node = optional(string)
+                    weight = optional(number)
+                })))
+            })))
+        })))
+        http2_route = optional(list(object({
+            action = optional(list(object({
+                weighted_target = optional(set(object({
+                    virtual_node = optional(string)
+                    weight = optional(number)
+                })))
+            })))
+            match = optional(list(object({
+                header = optional(set(object({
+                    invert = optional(bool)
+                    match = optional(list(object({
+                        regex = optional(string)
+                        suffix = optional(string)
+                        exact = optional(string)
+                        prefix = optional(string)
+                        range = optional(list(object({
+                            end = optional(number)
+                            start = optional(number)
+                        })))
+                    })))
+                    name = optional(string)
+                })))
+                method = optional(string)
+                prefix = optional(string)
+                scheme = optional(string)
+            })))
+            retry_policy = optional(list(object({
+                http_retry_events = optional(set(string))
+                max_retries = optional(number)
+                per_retry_timeout = optional(list(object({
+                    unit = optional(string)
+                    value = optional(number)
+                })))
+                tcp_retry_events = optional(set(string))
+            })))
+            timeout = optional(list(object({
+                idle = optional(list(object({
+                    unit = optional(string)
+                    value = optional(number)
+                })))
+                per_request = optional(list(object({
+                    unit = optional(string)
+                    value = optional(number)
+                })))
+            })))
+        })))
+        http_route = optional(list(object({
+            action = optional(list(object({
+                weighted_target = optional(set(object({
+                    virtual_node = optional(string)
+                    weight = optional(number)
+                })))
+            })))
+            match = optional(list(object({
+                header = optional(set(object({
+                    invert = optional(bool)
+                    match = optional(list(object({
+                        exact = optional(string)
+                        prefix = optional(string)
+                        range = optional(list(object({
+                            end = optional(number)
+                            start = optional(number)
+                        })))
+                        regex = optional(string)
+                        suffix = optional(string)
+                    })))
+                    name = optional(string)
+                })))
+                method = optional(string)
+                prefix = optional(string)
+                scheme = optional(string)
+            })))
+            retry_policy = optional(list(object({
+                per_retry_timeout = optional(list(object({
+                    value = optional(number)
+                    unit = optional(string)
+                })))
+                tcp_retry_events = optional(set(string))
+                http_retry_events = optional(set(string))
+                max_retries = optional(number)
+            })))
+            timeout = optional(list(object({
+                idle = optional(list(object({
+                    unit = optional(string)
+                    value = optional(number)
+                })))
+                per_request = optional(list(object({
+                    unit = optional(string)
+                    value = optional(number)
+                })))
+            })))
+        })))
+        priority = optional(number)
         tcp_route = optional(list(object({
             action = optional(list(object({
                 weighted_target = optional(set(object({
@@ -36,146 +176,6 @@ variable "values" {
                 })))
             })))
         })))
-        grpc_route = optional(list(object({
-            action = optional(list(object({
-                weighted_target = optional(set(object({
-                    virtual_node = optional(string)
-                    weight = optional(number)
-                })))
-            })))
-            match = optional(list(object({
-                metadata = optional(set(object({
-                    invert = optional(bool)
-                    match = optional(list(object({
-                        exact = optional(string)
-                        prefix = optional(string)
-                        range = optional(list(object({
-                            end = optional(number)
-                            start = optional(number)
-                        })))
-                        regex = optional(string)
-                        suffix = optional(string)
-                    })))
-                    name = optional(string)
-                })))
-                method_name = optional(string)
-                prefix = optional(string)
-                service_name = optional(string)
-            })))
-            retry_policy = optional(list(object({
-                per_retry_timeout = optional(list(object({
-                    unit = optional(string)
-                    value = optional(number)
-                })))
-                tcp_retry_events = optional(set(string))
-                grpc_retry_events = optional(set(string))
-                http_retry_events = optional(set(string))
-                max_retries = optional(number)
-            })))
-            timeout = optional(list(object({
-                idle = optional(list(object({
-                    unit = optional(string)
-                    value = optional(number)
-                })))
-                per_request = optional(list(object({
-                    unit = optional(string)
-                    value = optional(number)
-                })))
-            })))
-        })))
-        http2_route = optional(list(object({
-            action = optional(list(object({
-                weighted_target = optional(set(object({
-                    virtual_node = optional(string)
-                    weight = optional(number)
-                })))
-            })))
-            match = optional(list(object({
-                header = optional(set(object({
-                    match = optional(list(object({
-                        exact = optional(string)
-                        prefix = optional(string)
-                        range = optional(list(object({
-                            end = optional(number)
-                            start = optional(number)
-                        })))
-                        regex = optional(string)
-                        suffix = optional(string)
-                    })))
-                    name = optional(string)
-                    invert = optional(bool)
-                })))
-                method = optional(string)
-                prefix = optional(string)
-                scheme = optional(string)
-            })))
-            retry_policy = optional(list(object({
-                http_retry_events = optional(set(string))
-                max_retries = optional(number)
-                per_retry_timeout = optional(list(object({
-                    unit = optional(string)
-                    value = optional(number)
-                })))
-                tcp_retry_events = optional(set(string))
-            })))
-            timeout = optional(list(object({
-                per_request = optional(list(object({
-                    unit = optional(string)
-                    value = optional(number)
-                })))
-                idle = optional(list(object({
-                    unit = optional(string)
-                    value = optional(number)
-                })))
-            })))
-        })))
-        http_route = optional(list(object({
-            action = optional(list(object({
-                weighted_target = optional(set(object({
-                    virtual_node = optional(string)
-                    weight = optional(number)
-                })))
-            })))
-            match = optional(list(object({
-                scheme = optional(string)
-                header = optional(set(object({
-                    invert = optional(bool)
-                    match = optional(list(object({
-                        range = optional(list(object({
-                            end = optional(number)
-                            start = optional(number)
-                        })))
-                        regex = optional(string)
-                        suffix = optional(string)
-                        exact = optional(string)
-                        prefix = optional(string)
-                    })))
-                    name = optional(string)
-                })))
-                method = optional(string)
-                prefix = optional(string)
-            })))
-            retry_policy = optional(list(object({
-                http_retry_events = optional(set(string))
-                max_retries = optional(number)
-                per_retry_timeout = optional(list(object({
-                    value = optional(number)
-                    unit = optional(string)
-                })))
-                tcp_retry_events = optional(set(string))
-            })))
-            timeout = optional(list(object({
-                idle = optional(list(object({
-                    unit = optional(string)
-                    value = optional(number)
-                })))
-                per_request = optional(list(object({
-                    unit = optional(string)
-                    value = optional(number)
-                })))
-            })))
-        })))
-        priority = optional(number)
     })))
     tags = optional(map(string))
     virtual_router_name = optional(string)

@@ -25,11 +25,11 @@ spec:
   path: aws_ec2_client_vpn_endpoint
   values:
     authentication_options:
-      root_certificate_chain_arn: << arn of an aws_acm_certificate >>
+    - root_certificate_chain_arn: << arn of an aws_acm_certificate >>
       type: certificate-authentication
     client_cidr_block: 10.0.0.0/16
     connection_log_options:
-      cloudwatch_log_group: << name of an aws_cloudwatch_log_group >>
+    - cloudwatch_log_group: << name of an aws_cloudwatch_log_group >>
       cloudwatch_log_stream: << name of an aws_cloudwatch_log_stream >>
       enabled: true
     description: terraform-clientvpn-example

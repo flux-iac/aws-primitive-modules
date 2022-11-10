@@ -38,11 +38,11 @@ resource "aws_ecs_cluster_capacity_providers" "this" {
   {{- end }}
   {{- if $.Values.default_capacity_provider_strategy }}
   dynamic "default_capacity_provider_strategy" {
-    for_each = var.values.default_capacity_provider_strategy
+    for_each = var.values.default_capacity_provider_strategy[*]
     content {
-      weight = default_capacity_provider_strategy.weight
-      base = default_capacity_provider_strategy.base
-      capacity_provider = default_capacity_provider_strategy.capacity_provider
+      capacity_provider = default_capacity_provider_strategy.value.capacity_provider
+      weight = default_capacity_provider_strategy.value.weight
+      base = default_capacity_provider_strategy.value.base
     }
   }
   {{- end }}

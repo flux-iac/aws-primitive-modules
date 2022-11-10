@@ -27,6 +27,8 @@ spec:
     - failure
     name: example
     sns_topic_arn: << arn of an aws_sns_topic >>
+    source_ids:
+    - << id of an aws_docdb_cluster >>
     source_type: db-cluster
   sourceRef:
     kind: OCIRepository

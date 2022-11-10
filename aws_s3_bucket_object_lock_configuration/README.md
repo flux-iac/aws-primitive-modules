@@ -27,8 +27,8 @@ spec:
   values:
     bucket: << bucket of an aws_s3_bucket >>
     rule:
-      default_retention:
-        days: 5
+    - default_retention:
+      - days: 5
         mode: COMPLIANCE
   sourceRef:
     kind: OCIRepository

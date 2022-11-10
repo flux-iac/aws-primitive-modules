@@ -23,6 +23,8 @@ spec:
   values:
     instance_port: 443
     load_balancer_name: ${aws_elb.wu-tang.name}
+    policy_names:
+    - ${aws_load_balancer_policy.wu-tang-root-ca-backend-auth-policy.policy_name}
   sourceRef:
     kind: OCIRepository
     name: aws-package-v4.38.0

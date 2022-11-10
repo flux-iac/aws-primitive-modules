@@ -29,7 +29,7 @@ spec:
   path: aws_ami
   values:
     ebs_block_device:
-      device_name: /dev/xvda
+    - device_name: /dev/xvda
       snapshot_id: snap-xxxxxxxx
       volume_size: 8
     imds_support: v2.0

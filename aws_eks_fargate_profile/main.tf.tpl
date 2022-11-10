@@ -43,10 +43,10 @@ resource "aws_eks_fargate_profile" "this" {
   {{- end }}
   {{- if $.Values.selector }}
   dynamic "selector" {
-    for_each = var.values.selector
+    for_each = var.values.selector[*]
     content {
-      labels = selector.labels
-      namespace = selector.namespace
+      labels = selector.value.labels
+      namespace = selector.value.namespace
     }
   }
   {{- end }}

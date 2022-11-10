@@ -24,9 +24,9 @@ spec:
   path: aws_ecs_capacity_provider
   values:
     auto_scaling_group_provider:
-      auto_scaling_group_arn: << arn of an aws_autoscaling_group >>
+    - auto_scaling_group_arn: << arn of an aws_autoscaling_group >>
       managed_scaling:
-        maximum_scaling_step_size: 1000
+      - maximum_scaling_step_size: 1000
         minimum_scaling_step_size: 1
         status: ENABLED
         target_capacity: 10

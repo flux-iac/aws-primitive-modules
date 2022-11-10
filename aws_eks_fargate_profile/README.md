@@ -25,7 +25,7 @@ spec:
     fargate_profile_name: example
     pod_execution_role_arn: << arn of an aws_iam_role >>
     selector:
-      namespace: example
+    - namespace: example
     subnet_ids: ${aws_subnet.example[*].id}
   sourceRef:
     kind: OCIRepository

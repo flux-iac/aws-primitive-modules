@@ -44,6 +44,8 @@ metadata:
 spec:
   path: aws_iam_user_group_membership
   values:
+    groups:
+    - << name of an aws_iam_group >>
     user: << name of an aws_iam_user >>
   sourceRef:
     kind: OCIRepository

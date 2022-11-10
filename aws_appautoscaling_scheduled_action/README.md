@@ -25,7 +25,7 @@ spec:
     resource_id: << resource_id of an aws_appautoscaling_target >>
     scalable_dimension: << scalable_dimension of an aws_appautoscaling_target >>
     scalable_target_action:
-      max_capacity: 200
+    - max_capacity: 200
       min_capacity: 1
     schedule: at(2006-01-02T15:04:05)
     service_namespace: << service_namespace of an aws_appautoscaling_target >>

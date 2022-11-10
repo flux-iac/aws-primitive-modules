@@ -21,6 +21,8 @@ metadata:
 spec:
   path: aws_ec2_transit_gateway_vpc_attachment
   values:
+    subnet_ids:
+    - << id of an aws_subnet >>
     transit_gateway_id: << id of an aws_ec2_transit_gateway >>
     vpc_id: << id of an aws_vpc >>
   sourceRef:

@@ -19,12 +19,11 @@ provider "aws" {
 variable "values" {
   type = object({
     additional_authentication_provider = optional(list(object({
-        authentication_type = optional(string)
         openid_connect_config = optional(list(object({
+            auth_ttl = optional(number)
             client_id = optional(string)
             iat_ttl = optional(number)
             issuer = optional(string)
-            auth_ttl = optional(number)
         })))
         user_pool_config = optional(list(object({
             app_id_client_regex = optional(string)
@@ -32,16 +31,17 @@ variable "values" {
             user_pool_id = optional(string)
         })))
         lambda_authorizer_config = optional(list(object({
-            authorizer_result_ttl_in_seconds = optional(number)
             authorizer_uri = optional(string)
             identity_validation_expression = optional(string)
+            authorizer_result_ttl_in_seconds = optional(number)
         })))
+        authentication_type = optional(string)
     })))
     authentication_type = optional(string)
     lambda_authorizer_config = optional(list(object({
+        authorizer_result_ttl_in_seconds = optional(number)
         authorizer_uri = optional(string)
         identity_validation_expression = optional(string)
-        authorizer_result_ttl_in_seconds = optional(number)
     })))
     log_config = optional(list(object({
         cloudwatch_logs_role_arn = optional(string)

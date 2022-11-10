@@ -21,19 +21,19 @@ variable "values" {
     api_id = optional(string)
     description = optional(string)
     dynamodb_config = optional(list(object({
-        versioned = optional(bool)
-        delta_sync_config = optional(list(object({
-            base_table_ttl = optional(number)
-            delta_sync_table_name = optional(string)
-            delta_sync_table_ttl = optional(number)
-        })))
         region = optional(string)
         table_name = optional(string)
         use_caller_credentials = optional(bool)
+        versioned = optional(bool)
+        delta_sync_config = optional(list(object({
+            delta_sync_table_ttl = optional(number)
+            base_table_ttl = optional(number)
+            delta_sync_table_name = optional(string)
+        })))
     })))
     elasticsearch_config = optional(list(object({
-        endpoint = optional(string)
         region = optional(string)
+        endpoint = optional(string)
     })))
     http_config = optional(list(object({
         endpoint = optional(string)

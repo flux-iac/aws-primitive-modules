@@ -25,7 +25,7 @@ spec:
     family: docdb3.6
     name: example
     parameter:
-      name: tls
+    - name: tls
       value: enabled
   sourceRef:
     kind: OCIRepository

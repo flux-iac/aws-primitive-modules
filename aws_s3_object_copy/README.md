@@ -23,6 +23,8 @@ spec:
   values:
     bucket: destination_bucket
     grant:
+    - permissions:
+      - READ
       type: Group
       uri: http://acs.amazonaws.com/groups/global/AllUsers
     key: destination_key

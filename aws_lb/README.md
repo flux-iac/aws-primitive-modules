@@ -24,13 +24,15 @@ spec:
   path: aws_lb
   values:
     access_logs:
-      bucket: << bucket of an aws_s3_bucket >>
+    - bucket: << bucket of an aws_s3_bucket >>
       enabled: true
       prefix: test-lb
     enable_deletion_protection: true
     internal: false
     load_balancer_type: application
     name: test-lb-tf
+    security_groups:
+    - << id of an aws_security_group >>
     subnets: '${[for subnet in aws_subnet.public : subnet.id]}'
     tags:
       Environment: production

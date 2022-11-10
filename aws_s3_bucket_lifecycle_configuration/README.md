@@ -33,7 +33,7 @@ spec:
   values:
     bucket: << id of an aws_s3_bucket >>
     rule:
-      id: rule-1
+    - id: rule-1
       status: Enabled
   sourceRef:
     kind: OCIRepository

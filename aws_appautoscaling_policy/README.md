@@ -27,8 +27,8 @@ spec:
     scalable_dimension: << scalable_dimension of an aws_appautoscaling_target >>
     service_namespace: << service_namespace of an aws_appautoscaling_target >>
     target_tracking_scaling_policy_configuration:
-      predefined_metric_specification:
-        predefined_metric_type: DynamoDBReadCapacityUtilization
+    - predefined_metric_specification:
+      - predefined_metric_type: DynamoDBReadCapacityUtilization
       target_value: 70
   sourceRef:
     kind: OCIRepository

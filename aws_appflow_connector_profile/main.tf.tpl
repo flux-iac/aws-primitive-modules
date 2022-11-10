@@ -22,115 +22,6 @@ variable "values" {
     connector_label = optional(string)
     connector_profile_config = optional(list(object({
         connector_profile_credentials = optional(list(object({
-            redshift = optional(list(object({
-                password = optional(string)
-                username = optional(string)
-            })))
-            singular = optional(list(object({
-                api_key = optional(string)
-            })))
-            trendmicro = optional(list(object({
-                api_secret_key = optional(string)
-            })))
-            veeva = optional(list(object({
-                username = optional(string)
-                password = optional(string)
-            })))
-            datadog = optional(list(object({
-                api_key = optional(string)
-                application_key = optional(string)
-            })))
-            snowflake = optional(list(object({
-                username = optional(string)
-                password = optional(string)
-            })))
-            zendesk = optional(list(object({
-                oauth_request = optional(list(object({
-                    auth_code = optional(string)
-                    redirect_uri = optional(string)
-                })))
-                access_token = optional(string)
-                client_id = optional(string)
-                client_secret = optional(string)
-            })))
-            sapo_data = optional(list(object({
-                basic_auth_credentials = optional(list(object({
-                    password = optional(string)
-                    username = optional(string)
-                })))
-                oauth_credentials = optional(list(object({
-                    client_id = optional(string)
-                    client_secret = optional(string)
-                    oauth_request = optional(list(object({
-                        auth_code = optional(string)
-                        redirect_uri = optional(string)
-                    })))
-                    refresh_token = optional(string)
-                    access_token = optional(string)
-                })))
-            })))
-            dynatrace = optional(list(object({
-                api_token = optional(string)
-            })))
-            honeycode = optional(list(object({
-                access_token = optional(string)
-                oauth_request = optional(list(object({
-                    redirect_uri = optional(string)
-                    auth_code = optional(string)
-                })))
-                refresh_token = optional(string)
-            })))
-            salesforce = optional(list(object({
-                access_token = optional(string)
-                client_credentials_arn = optional(string)
-                oauth_request = optional(list(object({
-                    auth_code = optional(string)
-                    redirect_uri = optional(string)
-                })))
-                refresh_token = optional(string)
-            })))
-            amplitude = optional(list(object({
-                api_key = optional(string)
-                secret_key = optional(string)
-            })))
-            google_analytics = optional(list(object({
-                access_token = optional(string)
-                client_id = optional(string)
-                client_secret = optional(string)
-                oauth_request = optional(list(object({
-                    auth_code = optional(string)
-                    redirect_uri = optional(string)
-                })))
-                refresh_token = optional(string)
-            })))
-            infor_nexus = optional(list(object({
-                secret_access_key = optional(string)
-                user_id = optional(string)
-                access_key_id = optional(string)
-                datakey = optional(string)
-            })))
-            marketo = optional(list(object({
-                client_secret = optional(string)
-                oauth_request = optional(list(object({
-                    auth_code = optional(string)
-                    redirect_uri = optional(string)
-                })))
-                access_token = optional(string)
-                client_id = optional(string)
-            })))
-            service_now = optional(list(object({
-                password = optional(string)
-                username = optional(string)
-            })))
-            slack = optional(list(object({
-                access_token = optional(string)
-                client_id = optional(string)
-                client_secret = optional(string)
-                oauth_request = optional(list(object({
-                    auth_code = optional(string)
-                    redirect_uri = optional(string)
-                })))
-            })))
             custom_connector = optional(list(object({
                 api_key = optional(list(object({
                     api_key = optional(string)
@@ -156,81 +47,190 @@ variable "values" {
                     })))
                 })))
             })))
-        })))
-        connector_profile_properties = optional(list(object({
-            datadog = optional(list(object({
-                instance_url = optional(string)
+            dynatrace = optional(list(object({
+                api_token = optional(string)
+            })))
+            google_analytics = optional(list(object({
+                client_id = optional(string)
+                client_secret = optional(string)
+                oauth_request = optional(list(object({
+                    auth_code = optional(string)
+                    redirect_uri = optional(string)
+                })))
+                refresh_token = optional(string)
+                access_token = optional(string)
+            })))
+            slack = optional(list(object({
+                access_token = optional(string)
+                client_id = optional(string)
+                client_secret = optional(string)
+                oauth_request = optional(list(object({
+                    auth_code = optional(string)
+                    redirect_uri = optional(string)
+                })))
+            })))
+            service_now = optional(list(object({
+                password = optional(string)
+                username = optional(string)
+            })))
+            honeycode = optional(list(object({
+                access_token = optional(string)
+                oauth_request = optional(list(object({
+                    auth_code = optional(string)
+                    redirect_uri = optional(string)
+                })))
+                refresh_token = optional(string)
+            })))
+            infor_nexus = optional(list(object({
+                access_key_id = optional(string)
+                datakey = optional(string)
+                secret_access_key = optional(string)
+                user_id = optional(string)
             })))
             salesforce = optional(list(object({
+                refresh_token = optional(string)
+                access_token = optional(string)
+                client_credentials_arn = optional(string)
+                oauth_request = optional(list(object({
+                    auth_code = optional(string)
+                    redirect_uri = optional(string)
+                })))
+            })))
+            sapo_data = optional(list(object({
+                basic_auth_credentials = optional(list(object({
+                    password = optional(string)
+                    username = optional(string)
+                })))
+                oauth_credentials = optional(list(object({
+                    access_token = optional(string)
+                    client_id = optional(string)
+                    client_secret = optional(string)
+                    oauth_request = optional(list(object({
+                        auth_code = optional(string)
+                        redirect_uri = optional(string)
+                    })))
+                    refresh_token = optional(string)
+                })))
+            })))
+            marketo = optional(list(object({
+                access_token = optional(string)
+                client_id = optional(string)
+                client_secret = optional(string)
+                oauth_request = optional(list(object({
+                    auth_code = optional(string)
+                    redirect_uri = optional(string)
+                })))
+            })))
+            snowflake = optional(list(object({
+                password = optional(string)
+                username = optional(string)
+            })))
+            veeva = optional(list(object({
+                password = optional(string)
+                username = optional(string)
+            })))
+            trendmicro = optional(list(object({
+                api_secret_key = optional(string)
+            })))
+            zendesk = optional(list(object({
+                access_token = optional(string)
+                client_id = optional(string)
+                client_secret = optional(string)
+                oauth_request = optional(list(object({
+                    auth_code = optional(string)
+                    redirect_uri = optional(string)
+                })))
+            })))
+            amplitude = optional(list(object({
+                api_key = optional(string)
+                secret_key = optional(string)
+            })))
+            datadog = optional(list(object({
+                api_key = optional(string)
+                application_key = optional(string)
+            })))
+            redshift = optional(list(object({
+                password = optional(string)
+                username = optional(string)
+            })))
+            singular = optional(list(object({
+                api_key = optional(string)
+            })))
+        })))
+        connector_profile_properties = optional(list(object({
+            slack = optional(list(object({
                 instance_url = optional(string)
-                is_sandbox_environment = optional(bool)
             })))
             trendmicro = optional(list(object({
             })))
-            veeva = optional(list(object({
-                instance_url = optional(string)
+            google_analytics = optional(list(object({
             })))
-            custom_connector = optional(list(object({
-                profile_properties = optional(map(string))
-                oauth2_properties = optional(list(object({
-                    token_url_custom_properties = optional(map(string))
-                    oauth2_grant_type = optional(string)
-                    token_url = optional(string)
-                })))
+            honeycode = optional(list(object({
             })))
             infor_nexus = optional(list(object({
                 instance_url = optional(string)
             })))
+            marketo = optional(list(object({
+                instance_url = optional(string)
+            })))
+            service_now = optional(list(object({
+                instance_url = optional(string)
+            })))
             singular = optional(list(object({
             })))
-            snowflake = optional(list(object({
-                bucket_name = optional(string)
-                bucket_prefix = optional(string)
-                private_link_service_name = optional(string)
-                region = optional(string)
-                stage = optional(string)
-                warehouse = optional(string)
-                account_name = optional(string)
-            })))
-            amplitude = optional(list(object({
-            })))
-            google_analytics = optional(list(object({
-            })))
-            marketo = optional(list(object({
+            datadog = optional(list(object({
                 instance_url = optional(string)
             })))
             dynatrace = optional(list(object({
                 instance_url = optional(string)
             })))
             redshift = optional(list(object({
+                bucket_name = optional(string)
                 bucket_prefix = optional(string)
                 database_url = optional(string)
                 role_arn = optional(string)
+            })))
+            snowflake = optional(list(object({
+                account_name = optional(string)
                 bucket_name = optional(string)
+                bucket_prefix = optional(string)
+                private_link_service_name = optional(string)
+                region = optional(string)
+                stage = optional(string)
+                warehouse = optional(string)
+            })))
+            zendesk = optional(list(object({
+                instance_url = optional(string)
+            })))
+            amplitude = optional(list(object({
+            })))
+            custom_connector = optional(list(object({
+                oauth2_properties = optional(list(object({
+                    oauth2_grant_type = optional(string)
+                    token_url = optional(string)
+                    token_url_custom_properties = optional(map(string))
+                })))
+                profile_properties = optional(map(string))
+            })))
+            salesforce = optional(list(object({
+                instance_url = optional(string)
+                is_sandbox_environment = optional(bool)
             })))
             sapo_data = optional(list(object({
-                oauth_properties = optional(list(object({
-                    auth_code_url = optional(string)
-                    oauth_scopes = optional(list(string))
-                    token_url = optional(string)
-                })))
                 port_number = optional(number)
                 private_link_service_name = optional(string)
                 application_host_url = optional(string)
                 application_service_path = optional(string)
                 client_number = optional(string)
                 logon_language = optional(string)
+                oauth_properties = optional(list(object({
+                    auth_code_url = optional(string)
+                    oauth_scopes = optional(list(string))
+                    token_url = optional(string)
+                })))
             })))
-            service_now = optional(list(object({
+            veeva = optional(list(object({
                 instance_url = optional(string)
-            })))
-            slack = optional(list(object({
-                instance_url = optional(string)
-            })))
-            zendesk = optional(list(object({
-                instance_url = optional(string)
-            })))
-            honeycode = optional(list(object({
             })))
         })))
     })))

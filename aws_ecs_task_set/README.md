@@ -25,7 +25,7 @@ spec:
   values:
     cluster: << id of an aws_ecs_cluster >>
     load_balancer:
-      container_name: mongo
+    - container_name: mongo
       container_port: 8080
       target_group_arn: << arn of an aws_lb_target_group >>
     service: << id of an aws_ecs_service >>

@@ -47,13 +47,13 @@ spec:
   path: aws_lb_listener_rule
   values:
     action:
-      fixed_response:
-        content_type: text/plain
+    - fixed_response:
+      - content_type: text/plain
         message_body: HEALTHY
         status_code: "200"
       type: fixed-response
     condition:
-      query_string:
+    - query_string:
       - key: health
         value: check
       - value: bar
@@ -73,9 +73,9 @@ spec:
   path: aws_lb_listener_rule
   values:
     action:
-      forward:
-        stickiness:
-          duration: 600
+    - forward:
+      - stickiness:
+        - duration: 600
           enabled: true
         target_group:
         - arn: << arn of an aws_lb_target_group >>
@@ -84,7 +84,9 @@ spec:
           weight: 20
       type: forward
     condition:
-      host_header: {}
+    - host_header:
+      - values:
+        - my-service.*.terraform.io
     listener_arn: << arn of an aws_lb_listener >>
     priority: 99
   sourceRef:
@@ -102,10 +104,12 @@ spec:
   path: aws_lb_listener_rule
   values:
     action:
-      target_group_arn: << arn of an aws_lb_target_group >>
+    - target_group_arn: << arn of an aws_lb_target_group >>
       type: forward
     condition:
-      host_header: {}
+    - host_header:
+      - values:
+        - my-service.*.terraform.io
     listener_arn: << arn of an aws_lb_listener >>
     priority: 99
   sourceRef:
@@ -149,14 +153,16 @@ spec:
   path: aws_lb_listener_rule
   values:
     action:
-      redirect:
-        port: "443"
+    - redirect:
+      - port: "443"
         protocol: HTTPS
         status_code: HTTP_301
       type: redirect
     condition:
-      http_header:
-        http_header_name: X-Forwarded-For
+    - http_header:
+      - http_header_name: X-Forwarded-For
+        values:
+        - 192.168.1.*
     listener_arn: << arn of an aws_lb_listener >>
   sourceRef:
     kind: OCIRepository
@@ -173,7 +179,7 @@ spec:
   path: aws_lb_listener_rule
   values:
     action:
-      target_group_arn: << arn of an aws_lb_target_group >>
+    - target_group_arn: << arn of an aws_lb_target_group >>
       type: forward
     condition:
     - path_pattern:

@@ -24,10 +24,10 @@ spec:
     container_definitions: '[{"cpu":10,"essential":true,"image":"service-first","memory":512,"name":"first","portMappings":[{"containerPort":80,"hostPort":80}]},{"cpu":10,"essential":true,"image":"service-second","memory":256,"name":"second","portMappings":[{"containerPort":443,"hostPort":443}]}]'
     family: service
     placement_constraints:
-      expression: attribute:ecs.availability-zone in [us-west-2a, us-west-2b]
+    - expression: attribute:ecs.availability-zone in [us-west-2a, us-west-2b]
       type: memberOf
     volume:
-      host_path: /ecs/service-storage
+    - host_path: /ecs/service-storage
       name: service-storage
   sourceRef:
     kind: OCIRepository

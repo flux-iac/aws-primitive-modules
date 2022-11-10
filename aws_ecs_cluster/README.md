@@ -25,7 +25,7 @@ spec:
   values:
     name: white-hart
     setting:
-      name: containerInsights
+    - name: containerInsights
       value: enabled
   sourceRef:
     kind: OCIRepository

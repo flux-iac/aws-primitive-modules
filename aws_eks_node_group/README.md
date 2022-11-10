@@ -25,12 +25,12 @@ spec:
     node_group_name: example
     node_role_arn: << arn of an aws_iam_role >>
     scaling_config:
-      desired_size: 1
+    - desired_size: 1
       max_size: 2
       min_size: 1
     subnet_ids: ${aws_subnet.example[*].id}
     update_config:
-      max_unavailable: 1
+    - max_unavailable: 1
   sourceRef:
     kind: OCIRepository
     name: aws-package-v4.38.0

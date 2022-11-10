@@ -19,13 +19,8 @@ provider "aws" {
 variable "values" {
   type = object({
     certificate_authority_configuration = optional(list(object({
-        key_algorithm = optional(string)
-        signing_algorithm = optional(string)
         subject = optional(list(object({
-            country = optional(string)
-            initials = optional(string)
-            organization = optional(string)
-            organizational_unit = optional(string)
+            locality = optional(string)
             pseudonym = optional(string)
             state = optional(string)
             surname = optional(string)
@@ -33,9 +28,14 @@ variable "values" {
             distinguished_name_qualifier = optional(string)
             generation_qualifier = optional(string)
             given_name = optional(string)
-            locality = optional(string)
             title = optional(string)
+            country = optional(string)
+            initials = optional(string)
+            organization = optional(string)
+            organizational_unit = optional(string)
         })))
+        key_algorithm = optional(string)
+        signing_algorithm = optional(string)
     })))
     enabled = optional(bool)
     permanent_deletion_time_in_days = optional(number)

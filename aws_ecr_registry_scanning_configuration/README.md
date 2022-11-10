@@ -22,8 +22,8 @@ spec:
   path: aws_ecr_registry_scanning_configuration
   values:
     rule:
-      repository_filter:
-        filter: example
+    - repository_filter:
+      - filter: example
         filter_type: WILDCARD
       scan_frequency: CONTINUOUS_SCAN
     scan_type: ENHANCED

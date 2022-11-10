@@ -41,10 +41,10 @@ resource "aws_ami_from_instance" "this" {
   {{- end }}
   {{- if $.Values.ephemeral_block_device }}
   dynamic "ephemeral_block_device" {
-    for_each = var.values.ephemeral_block_device
+    for_each = var.values.ephemeral_block_device[*]
     content {
-      device_name = ephemeral_block_device.device_name
-      virtual_name = ephemeral_block_device.virtual_name
+      device_name = ephemeral_block_device.value.device_name
+      virtual_name = ephemeral_block_device.value.virtual_name
     }
   }
   {{- end }}

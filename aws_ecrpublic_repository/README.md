@@ -24,9 +24,13 @@ spec:
   path: aws_ecrpublic_repository
   values:
     catalog_data:
-      about_text: About Text
+    - about_text: About Text
+      architectures:
+      - ARM
       description: Description
       logo_image_blob: ${filebase64(image.png)}
+      operating_systems:
+      - Linux
       usage_text: Usage Text
     provider: aws.us_east_1
     repository_name: bar

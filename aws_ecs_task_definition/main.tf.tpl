@@ -52,11 +52,11 @@ variable "values" {
     task_role_arn = optional(string)
     volume = optional(set(object({
         docker_volume_configuration = optional(list(object({
-            labels = optional(map(string))
-            scope = optional(string)
             autoprovision = optional(bool)
             driver = optional(string)
             driver_opts = optional(map(string))
+            labels = optional(map(string))
+            scope = optional(string)
         })))
         efs_volume_configuration = optional(list(object({
             authorization_config = optional(list(object({
@@ -101,10 +101,10 @@ resource "aws_ecs_task_definition" "this" {
   {{- end }}
   {{- if $.Values.inference_accelerator }}
   dynamic "inference_accelerator" {
-    for_each = var.values.inference_accelerator
+    for_each = var.values.inference_accelerator[*]
     content {
-      device_type = inference_accelerator.device_type
-      device_name = inference_accelerator.device_name
+      device_name = inference_accelerator.value.device_name
+      device_type = inference_accelerator.value.device_type
     }
   }
   {{- end }}
@@ -122,10 +122,10 @@ resource "aws_ecs_task_definition" "this" {
   {{- end }}
   {{- if $.Values.placement_constraints }}
   dynamic "placement_constraints" {
-    for_each = var.values.placement_constraints
+    for_each = var.values.placement_constraints[*]
     content {
-      expression = placement_constraints.expression
-      type = placement_constraints.type
+      expression = placement_constraints.value.expression
+      type = placement_constraints.value.type
     }
   }
   {{- end }}
@@ -149,13 +149,13 @@ resource "aws_ecs_task_definition" "this" {
   {{- end }}
   {{- if $.Values.volume }}
   dynamic "volume" {
-    for_each = var.values.volume
+    for_each = var.values.volume[*]
     content {
-      name = volume.name
-      docker_volume_configuration = volume.docker_volume_configuration
-      efs_volume_configuration = volume.efs_volume_configuration
-      fsx_windows_file_server_volume_configuration = volume.fsx_windows_file_server_volume_configuration
-      host_path = volume.host_path
+      docker_volume_configuration = volume.value.docker_volume_configuration
+      efs_volume_configuration = volume.value.efs_volume_configuration
+      fsx_windows_file_server_volume_configuration = volume.value.fsx_windows_file_server_volume_configuration
+      host_path = volume.value.host_path
+      name = volume.value.name
     }
   }
   {{- end }}

@@ -22,27 +22,29 @@ spec:
   path: aws_appflow_flow
   values:
     destination_flow_config:
-      connector_type: S3
+    - connector_type: S3
       destination_connector_properties:
-        s3:
-          bucket_name: << bucket of an aws_s3_bucket_policy >>
+      - s3:
+        - bucket_name: << bucket of an aws_s3_bucket_policy >>
           s3_output_format_config:
-            prefix_config:
-              prefix_type: PATH
+          - prefix_config:
+            - prefix_type: PATH
     name: example
     source_flow_config:
-      connector_type: S3
+    - connector_type: S3
       source_connector_properties:
-        s3:
-          bucket_name: << bucket of an aws_s3_bucket_policy >>
+      - s3:
+        - bucket_name: << bucket of an aws_s3_bucket_policy >>
           bucket_prefix: example
     task:
-      connector_operator:
-        s3: NO_OP
+    - connector_operator:
+      - s3: NO_OP
       destination_field: exampleField
+      source_fields:
+      - exampleField
       task_type: Map
     trigger_config:
-      trigger_type: OnDemand
+    - trigger_type: OnDemand
   sourceRef:
     kind: OCIRepository
     name: aws-package-v4.38.0

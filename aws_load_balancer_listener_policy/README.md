@@ -23,6 +23,8 @@ spec:
   values:
     load_balancer_name: ${aws_elb.wu-tang.name}
     load_balancer_port: 443
+    policy_names:
+    - ${aws_load_balancer_policy.wu-tang-ssl.policy_name}
   sourceRef:
     kind: OCIRepository
     name: aws-package-v4.38.0

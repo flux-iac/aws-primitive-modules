@@ -27,11 +27,11 @@ spec:
     provider: aws.central
     role: << arn of an aws_iam_role >>
     rule:
-      destination:
-        bucket: << arn of an aws_s3_bucket >>
+    - destination:
+      - bucket: << arn of an aws_s3_bucket >>
         storage_class: STANDARD
       filter:
-        prefix: foo
+      - prefix: foo
       id: foobar
       status: Enabled
   sourceRef:

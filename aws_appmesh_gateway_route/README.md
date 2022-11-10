@@ -24,13 +24,13 @@ spec:
     mesh_name: example-service-mesh
     name: example-gateway-route
     spec:
-      http_route:
-        action:
-          target:
-            virtual_service:
-              virtual_service_name: << name of an aws_appmesh_virtual_service >>
+    - http_route:
+      - action:
+        - target:
+          - virtual_service:
+            - virtual_service_name: << name of an aws_appmesh_virtual_service >>
         match:
-          prefix: /
+        - prefix: /
     tags:
       Environment: test
     virtual_gateway_name: << name of an aws_appmesh_virtual_gateway >>

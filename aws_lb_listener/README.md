@@ -25,7 +25,7 @@ spec:
   values:
     certificate_arn: arn:aws:iam::187416307283:server-certificate/test_cert_rab3wuqwgja25ct3n4jdj2tzu4
     default_action:
-      target_group_arn: << arn of an aws_lb_target_group >>
+    - target_group_arn: << arn of an aws_lb_target_group >>
       type: forward
     load_balancer_arn: << arn of an aws_lb >>
     port: "443"

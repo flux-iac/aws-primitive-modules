@@ -24,9 +24,9 @@ spec:
     mesh_name: << id of an aws_appmesh_mesh >>
     name: servicea.simpleapp.local
     spec:
-      provider:
-        virtual_node:
-          virtual_node_name: << name of an aws_appmesh_virtual_node >>
+    - provider:
+      - virtual_node:
+        - virtual_node_name: << name of an aws_appmesh_virtual_node >>
   sourceRef:
     kind: OCIRepository
     name: aws-package-v4.38.0

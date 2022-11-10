@@ -19,15 +19,15 @@ provider "aws" {
 variable "values" {
   type = object({
     access_endpoint = optional(set(object({
-        endpoint_type = optional(string)
         vpce_id = optional(string)
+        endpoint_type = optional(string)
     })))
     appstream_agent_version = optional(string)
     description = optional(string)
     display_name = optional(string)
     domain_join_info = optional(list(object({
-        organizational_unit_distinguished_name = optional(string)
         directory_name = optional(string)
+        organizational_unit_distinguished_name = optional(string)
     })))
     enable_default_internet_access = optional(bool)
     iam_role_arn = optional(string)
@@ -47,10 +47,10 @@ resource "aws_appstream_image_builder" "this" {
 
   {{- if $.Values.access_endpoint }}
   dynamic "access_endpoint" {
-    for_each = var.values.access_endpoint
+    for_each = var.values.access_endpoint[*]
     content {
-      endpoint_type = access_endpoint.endpoint_type
-      vpce_id = access_endpoint.vpce_id
+      endpoint_type = access_endpoint.value.endpoint_type
+      vpce_id = access_endpoint.value.vpce_id
     }
   }
   {{- end }}

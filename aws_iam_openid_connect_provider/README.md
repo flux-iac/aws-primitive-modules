@@ -21,6 +21,8 @@ metadata:
 spec:
   path: aws_iam_openid_connect_provider
   values:
+    client_id_list:
+    - 266362248691-342342xasdasdasda-apps.googleusercontent.com
     thumbprint_list: []
     url: https://accounts.google.com
   sourceRef:

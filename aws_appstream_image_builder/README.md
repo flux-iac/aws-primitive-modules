@@ -29,7 +29,9 @@ spec:
     name: Name
     tags:
       Name: Example Image Builder
-    vpc_config: {}
+    vpc_config:
+    - subnet_ids:
+      - << id of an aws_subnet >>
   sourceRef:
     kind: OCIRepository
     name: aws-package-v4.38.0

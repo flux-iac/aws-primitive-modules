@@ -24,7 +24,7 @@ spec:
     application_id: << id of an aws_appconfig_application >>
     description: Example AppConfig Environment
     monitor:
-      alarm_arn: << arn of an aws_cloudwatch_metric_alarm >>
+    - alarm_arn: << arn of an aws_cloudwatch_metric_alarm >>
       alarm_role_arn: << arn of an aws_iam_role >>
     name: example-environment-tf
     tags:

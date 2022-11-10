@@ -21,7 +21,12 @@ variable "values" {
     bucket = optional(string)
     role = optional(string)
     rule = optional(list(object({
+        status = optional(string)
+        delete_marker_replication = optional(list(object({
+            status = optional(string)
+        })))
         destination = optional(list(object({
+            storage_class = optional(string)
             access_control_translation = optional(list(object({
                 owner = optional(string)
             })))
@@ -42,27 +47,8 @@ variable "values" {
                     minutes = optional(number)
                 })))
             })))
-            storage_class = optional(string)
-        })))
-        existing_object_replication = optional(list(object({
-            status = optional(string)
-        })))
-        id = optional(string)
-        priority = optional(number)
-        source_selection_criteria = optional(list(object({
-            replica_modifications = optional(list(object({
-                status = optional(string)
-            })))
-            sse_kms_encrypted_objects = optional(list(object({
-                status = optional(string)
-            })))
-        })))
-        status = optional(string)
-        delete_marker_replication = optional(list(object({
-            status = optional(string)
         })))
         filter = optional(list(object({
-            prefix = optional(string)
             tag = optional(list(object({
                 key = optional(string)
                 value = optional(string)
@@ -71,8 +57,22 @@ variable "values" {
                 prefix = optional(string)
                 tags = optional(map(string))
             })))
+            prefix = optional(string)
         })))
+        priority = optional(number)
+        existing_object_replication = optional(list(object({
+            status = optional(string)
+        })))
+        id = optional(string)
         prefix = optional(string)
+        source_selection_criteria = optional(list(object({
+            replica_modifications = optional(list(object({
+                status = optional(string)
+            })))
+            sse_kms_encrypted_objects = optional(list(object({
+                status = optional(string)
+            })))
+        })))
     })))
     token = optional(string)
   })

@@ -38,14 +38,14 @@ resource "aws_s3_bucket_cors_configuration" "this" {
   {{- end }}
   {{- if $.Values.cors_rule }}
   dynamic "cors_rule" {
-    for_each = var.values.cors_rule
+    for_each = var.values.cors_rule[*]
     content {
-      allowed_headers = cors_rule.allowed_headers
-      allowed_methods = cors_rule.allowed_methods
-      allowed_origins = cors_rule.allowed_origins
-      expose_headers = cors_rule.expose_headers
-      id = cors_rule.id
-      max_age_seconds = cors_rule.max_age_seconds
+      id = cors_rule.value.id
+      max_age_seconds = cors_rule.value.max_age_seconds
+      allowed_headers = cors_rule.value.allowed_headers
+      allowed_methods = cors_rule.value.allowed_methods
+      allowed_origins = cors_rule.value.allowed_origins
+      expose_headers = cors_rule.value.expose_headers
     }
   }
   {{- end }}

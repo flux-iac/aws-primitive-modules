@@ -27,8 +27,14 @@ metadata:
 spec:
   path: aws_iam_policy_attachment
   values:
+    groups:
+    - << name of an aws_iam_group >>
     name: test-attachment
     policy_arn: << arn of an aws_iam_policy >>
+    roles:
+    - << name of an aws_iam_role >>
+    users:
+    - << name of an aws_iam_user >>
   sourceRef:
     kind: OCIRepository
     name: aws-package-v4.38.0

@@ -29,7 +29,7 @@ spec:
   values:
     bucket: << id of an aws_s3_bucket >>
     versioning_configuration:
-      status: Enabled
+    - status: Enabled
   sourceRef:
     kind: OCIRepository
     name: aws-package-v4.38.0

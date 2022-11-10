@@ -22,6 +22,43 @@ variable "values" {
     mesh_owner = optional(string)
     name = optional(string)
     spec = optional(list(object({
+        grpc_route = optional(list(object({
+            action = optional(list(object({
+                target = optional(list(object({
+                    virtual_service = optional(list(object({
+                        virtual_service_name = optional(string)
+                    })))
+                })))
+            })))
+            match = optional(list(object({
+                service_name = optional(string)
+            })))
+        })))
+        http2_route = optional(list(object({
+            match = optional(list(object({
+                prefix = optional(string)
+                hostname = optional(list(object({
+                    exact = optional(string)
+                    suffix = optional(string)
+                })))
+            })))
+            action = optional(list(object({
+                target = optional(list(object({
+                    virtual_service = optional(list(object({
+                        virtual_service_name = optional(string)
+                    })))
+                })))
+                rewrite = optional(list(object({
+                    hostname = optional(list(object({
+                        default_target_hostname = optional(string)
+                    })))
+                    prefix = optional(list(object({
+                        default_prefix = optional(string)
+                        value = optional(string)
+                    })))
+                })))
+            })))
+        })))
         http_route = optional(list(object({
             action = optional(list(object({
                 target = optional(list(object({
@@ -42,45 +79,8 @@ variable "values" {
             match = optional(list(object({
                 prefix = optional(string)
                 hostname = optional(list(object({
-                    exact = optional(string)
                     suffix = optional(string)
-                })))
-            })))
-        })))
-        grpc_route = optional(list(object({
-            action = optional(list(object({
-                target = optional(list(object({
-                    virtual_service = optional(list(object({
-                        virtual_service_name = optional(string)
-                    })))
-                })))
-            })))
-            match = optional(list(object({
-                service_name = optional(string)
-            })))
-        })))
-        http2_route = optional(list(object({
-            action = optional(list(object({
-                target = optional(list(object({
-                    virtual_service = optional(list(object({
-                        virtual_service_name = optional(string)
-                    })))
-                })))
-                rewrite = optional(list(object({
-                    hostname = optional(list(object({
-                        default_target_hostname = optional(string)
-                    })))
-                    prefix = optional(list(object({
-                        default_prefix = optional(string)
-                        value = optional(string)
-                    })))
-                })))
-            })))
-            match = optional(list(object({
-                prefix = optional(string)
-                hostname = optional(list(object({
                     exact = optional(string)
-                    suffix = optional(string)
                 })))
             })))
         })))

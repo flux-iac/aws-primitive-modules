@@ -29,15 +29,15 @@ spec:
     desired_count: 3
     iam_role: << arn of an aws_iam_role >>
     load_balancer:
-      container_name: mongo
+    - container_name: mongo
       container_port: 8080
       target_group_arn: << arn of an aws_lb_target_group >>
     name: mongodb
     ordered_placement_strategy:
-      field: cpu
+    - field: cpu
       type: binpack
     placement_constraints:
-      expression: attribute:ecs.availability-zone in [us-west-2a, us-west-2b]
+    - expression: attribute:ecs.availability-zone in [us-west-2a, us-west-2b]
       type: memberOf
     task_definition: << arn of an aws_ecs_task_definition >>
   sourceRef:

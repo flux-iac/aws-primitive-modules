@@ -25,6 +25,8 @@ spec:
   values:
     bucket: << id of an aws_s3_bucket >>
     topic:
+    - events:
+      - s3:ObjectCreated:*
       filter_suffix: .log
       topic_arn: << arn of an aws_sns_topic >>
   sourceRef:

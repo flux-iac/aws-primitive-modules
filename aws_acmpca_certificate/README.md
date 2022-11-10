@@ -30,7 +30,7 @@ spec:
     certificate_signing_request: << cert_request_pem of a tls_cert_request >>
     signing_algorithm: SHA256WITHRSA
     validity:
-      type: YEARS
+    - type: YEARS
       value: 1
   sourceRef:
     kind: OCIRepository

@@ -22,7 +22,7 @@ spec:
   path: aws_appstream_stack
   values:
     application_settings:
-      enabled: true
+    - enabled: true
       settings_group: SettingsGroup
     description: stack description
     display_name: stack display name
@@ -30,7 +30,7 @@ spec:
     name: stack name
     redirect_url: http://your-domain/redirect
     storage_connectors:
-      connector_type: HOMEFOLDERS
+    - connector_type: HOMEFOLDERS
     tags:
       TagName: TagValue
     user_settings:

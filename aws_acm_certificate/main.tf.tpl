@@ -31,8 +31,8 @@ variable "values" {
     tags = optional(map(string))
     validation_method = optional(string)
     validation_option = optional(set(object({
-        domain_name = optional(string)
         validation_domain = optional(string)
+        domain_name = optional(string)
     })))
   })
 }
@@ -71,10 +71,10 @@ resource "aws_acm_certificate" "this" {
   {{- end }}
   {{- if $.Values.validation_option }}
   dynamic "validation_option" {
-    for_each = var.values.validation_option
+    for_each = var.values.validation_option[*]
     content {
-      domain_name = validation_option.domain_name
-      validation_domain = validation_option.validation_domain
+      domain_name = validation_option.value.domain_name
+      validation_domain = validation_option.value.validation_domain
     }
   }
   {{- end }}

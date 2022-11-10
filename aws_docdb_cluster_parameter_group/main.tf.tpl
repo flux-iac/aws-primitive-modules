@@ -47,11 +47,11 @@ resource "aws_docdb_cluster_parameter_group" "this" {
   {{- end }}
   {{- if $.Values.parameter }}
   dynamic "parameter" {
-    for_each = var.values.parameter
+    for_each = var.values.parameter[*]
     content {
-      value = parameter.value
-      apply_method = parameter.apply_method
-      name = parameter.name
+      name = parameter.value.name
+      value = parameter.value.value
+      apply_method = parameter.value.apply_method
     }
   }
   {{- end }}

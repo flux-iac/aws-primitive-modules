@@ -24,15 +24,15 @@ spec:
     mesh_name: << id of an aws_appmesh_mesh >>
     name: serviceB-route
     spec:
-      http_route:
-        action:
-          weighted_target:
+    - http_route:
+      - action:
+        - weighted_target:
           - virtual_node: << name of an aws_appmesh_virtual_node >>
             weight: 90
           - virtual_node: << name of an aws_appmesh_virtual_node >>
             weight: 10
         match:
-          prefix: /
+        - prefix: /
     virtual_router_name: << name of an aws_appmesh_virtual_router >>
   sourceRef:
     kind: OCIRepository

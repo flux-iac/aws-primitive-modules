@@ -23,8 +23,8 @@ spec:
   values:
     bucket: << bucket of an aws_s3_bucket >>
     rule:
-      apply_server_side_encryption_by_default:
-        kms_master_key_id: << arn of an aws_kms_key >>
+    - apply_server_side_encryption_by_default:
+      - kms_master_key_id: << arn of an aws_kms_key >>
         sse_algorithm: aws:kms
   sourceRef:
     kind: OCIRepository

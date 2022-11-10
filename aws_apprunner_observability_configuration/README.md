@@ -25,7 +25,7 @@ spec:
     tags:
       Name: example-apprunner-observability-configuration
     trace_configuration:
-      vendor: AWSXRAY
+    - vendor: AWSXRAY
   sourceRef:
     kind: OCIRepository
     name: aws-package-v4.38.0

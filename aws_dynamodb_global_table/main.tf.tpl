@@ -32,9 +32,9 @@ resource "aws_dynamodb_global_table" "this" {
   {{- end }}
   {{- if $.Values.replica }}
   dynamic "replica" {
-    for_each = var.values.replica
+    for_each = var.values.replica[*]
     content {
-      region_name = replica.region_name
+      region_name = replica.value.region_name
     }
   }
   {{- end }}
