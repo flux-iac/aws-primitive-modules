@@ -27,8 +27,8 @@ variable "values" {
         suffix = optional(string)
     })))
     redirect_all_requests_to = optional(list(object({
-        protocol = optional(string)
         host_name = optional(string)
+        protocol = optional(string)
     })))
   })
 }

@@ -20,20 +20,20 @@ variable "values" {
   type = object({
     bucket = optional(string)
     rule = optional(set(object({
+        filter = optional(list(object({
+            prefix = optional(string)
+            tags = optional(map(string))
+        })))
+        id = optional(string)
+        status = optional(string)
         abort_incomplete_multipart_upload = optional(list(object({
             days_after_initiation = optional(number)
         })))
         expiration = optional(list(object({
-            expired_object_delete_marker = optional(bool)
             date = optional(string)
             days = optional(number)
+            expired_object_delete_marker = optional(bool)
         })))
-        filter = optional(list(object({
-            tags = optional(map(string))
-            prefix = optional(string)
-        })))
-        id = optional(string)
-        status = optional(string)
     })))
   })
 }

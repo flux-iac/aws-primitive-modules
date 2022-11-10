@@ -35,14 +35,14 @@ resource "aws_ecr_registry_scanning_configuration" "this" {
   dynamic "rule" {
     for_each = var.values.rule[*]
     content {
-      scan_frequency = rule.value.scan_frequency
       dynamic "repository_filter" {
         for_each = rule.value.repository_filter[*]
         content {
-          filter_type = repository_filter.value.filter_type
           filter = repository_filter.value.filter
+          filter_type = repository_filter.value.filter_type
         }
       }
+      scan_frequency = rule.value.scan_frequency
     }
   }
   {{- end }}

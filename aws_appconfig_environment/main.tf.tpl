@@ -21,8 +21,8 @@ variable "values" {
     application_id = optional(string)
     description = optional(string)
     monitor = optional(set(object({
-        alarm_role_arn = optional(string)
         alarm_arn = optional(string)
+        alarm_role_arn = optional(string)
     })))
     name = optional(string)
     tags = optional(map(string))

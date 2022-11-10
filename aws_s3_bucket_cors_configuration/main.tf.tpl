@@ -20,12 +20,12 @@ variable "values" {
   type = object({
     bucket = optional(string)
     cors_rule = optional(set(object({
+        id = optional(string)
+        max_age_seconds = optional(number)
         allowed_headers = optional(set(string))
         allowed_methods = optional(set(string))
         allowed_origins = optional(set(string))
         expose_headers = optional(set(string))
-        id = optional(string)
-        max_age_seconds = optional(number)
     })))
     expected_bucket_owner = optional(string)
   })
@@ -40,12 +40,12 @@ resource "aws_s3_bucket_cors_configuration" "this" {
   dynamic "cors_rule" {
     for_each = var.values.cors_rule[*]
     content {
-      id = cors_rule.value.id
-      max_age_seconds = cors_rule.value.max_age_seconds
-      allowed_headers = cors_rule.value.allowed_headers
       allowed_methods = cors_rule.value.allowed_methods
       allowed_origins = cors_rule.value.allowed_origins
       expose_headers = cors_rule.value.expose_headers
+      id = cors_rule.value.id
+      max_age_seconds = cors_rule.value.max_age_seconds
+      allowed_headers = cors_rule.value.allowed_headers
     }
   }
   {{- end }}

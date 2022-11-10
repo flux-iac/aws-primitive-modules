@@ -37,11 +37,11 @@ variable "values" {
     name_prefix = optional(string)
     preserve_host_header = optional(bool)
     subnet_mapping = optional(set(object({
+        subnet_id = optional(string)
         ipv6_address = optional(string)
         outpost_id = optional(string)
         allocation_id = optional(string)
         private_ipv4_address = optional(string)
-        subnet_id = optional(string)
     })))
     tags = optional(map(string))
   })
@@ -95,11 +95,11 @@ resource "aws_lb" "this" {
   dynamic "subnet_mapping" {
     for_each = var.values.subnet_mapping[*]
     content {
-      allocation_id = subnet_mapping.value.allocation_id
-      private_ipv4_address = subnet_mapping.value.private_ipv4_address
       subnet_id = subnet_mapping.value.subnet_id
       ipv6_address = subnet_mapping.value.ipv6_address
       outpost_id = subnet_mapping.value.outpost_id
+      allocation_id = subnet_mapping.value.allocation_id
+      private_ipv4_address = subnet_mapping.value.private_ipv4_address
     }
   }
   {{- end }}

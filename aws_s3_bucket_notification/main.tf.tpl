@@ -21,18 +21,18 @@ variable "values" {
     bucket = optional(string)
     eventbridge = optional(bool)
     lambda_function = optional(list(object({
-        id = optional(string)
         filter_prefix = optional(string)
         filter_suffix = optional(string)
         lambda_function_arn = optional(string)
         events = optional(set(string))
+        id = optional(string)
     })))
     queue = optional(list(object({
+        events = optional(set(string))
         id = optional(string)
         filter_prefix = optional(string)
         filter_suffix = optional(string)
         queue_arn = optional(string)
-        events = optional(set(string))
     })))
     topic = optional(list(object({
         id = optional(string)

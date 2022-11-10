@@ -49,8 +49,8 @@ resource "aws_appstream_image_builder" "this" {
   dynamic "access_endpoint" {
     for_each = var.values.access_endpoint[*]
     content {
-      endpoint_type = access_endpoint.value.endpoint_type
       vpce_id = access_endpoint.value.vpce_id
+      endpoint_type = access_endpoint.value.endpoint_type
     }
   }
   {{- end }}

@@ -23,8 +23,8 @@ variable "values" {
     destination_outpost_arn = optional(string)
     encrypted = optional(bool)
     ephemeral_block_device = optional(set(object({
-        virtual_name = optional(string)
         device_name = optional(string)
+        virtual_name = optional(string)
     })))
     kms_key_id = optional(string)
     name = optional(string)

@@ -35,13 +35,6 @@ variable "values" {
             })))
         })))
         http2_route = optional(list(object({
-            match = optional(list(object({
-                prefix = optional(string)
-                hostname = optional(list(object({
-                    exact = optional(string)
-                    suffix = optional(string)
-                })))
-            })))
             action = optional(list(object({
                 target = optional(list(object({
                     virtual_service = optional(list(object({
@@ -56,6 +49,13 @@ variable "values" {
                         default_prefix = optional(string)
                         value = optional(string)
                     })))
+                })))
+            })))
+            match = optional(list(object({
+                prefix = optional(string)
+                hostname = optional(list(object({
+                    exact = optional(string)
+                    suffix = optional(string)
                 })))
             })))
         })))
@@ -71,16 +71,16 @@ variable "values" {
                         default_target_hostname = optional(string)
                     })))
                     prefix = optional(list(object({
-                        default_prefix = optional(string)
                         value = optional(string)
+                        default_prefix = optional(string)
                     })))
                 })))
             })))
             match = optional(list(object({
                 prefix = optional(string)
                 hostname = optional(list(object({
-                    suffix = optional(string)
                     exact = optional(string)
+                    suffix = optional(string)
                 })))
             })))
         })))

@@ -19,8 +19,8 @@ provider "aws" {
 variable "values" {
   type = object({
     attribute = optional(set(object({
-        name = optional(string)
         value = optional(string)
+        name = optional(string)
     })))
     lb_port = optional(number)
     load_balancer = optional(string)
@@ -34,8 +34,8 @@ resource "aws_lb_ssl_negotiation_policy" "this" {
   dynamic "attribute" {
     for_each = var.values.attribute[*]
     content {
-      value = attribute.value.value
       name = attribute.value.name
+      value = attribute.value.value
     }
   }
   {{- end }}

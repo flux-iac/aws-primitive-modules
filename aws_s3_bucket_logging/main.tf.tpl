@@ -24,11 +24,11 @@ variable "values" {
     target_grant = optional(set(object({
         permission = optional(string)
         grantee = optional(list(object({
-            display_name = optional(string)
             email_address = optional(string)
             id = optional(string)
             type = optional(string)
             uri = optional(string)
+            display_name = optional(string)
         })))
     })))
     target_prefix = optional(string)

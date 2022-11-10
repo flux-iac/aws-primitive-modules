@@ -19,64 +19,57 @@ provider "aws" {
 variable "values" {
   type = object({
     action = optional(list(object({
-        type = optional(string)
         order = optional(number)
         target_group_arn = optional(string)
         forward = optional(list(object({
-            target_group = optional(set(object({
-                weight = optional(number)
-                arn = optional(string)
-            })))
             stickiness = optional(list(object({
                 enabled = optional(bool)
                 duration = optional(number)
             })))
+            target_group = optional(set(object({
+                arn = optional(string)
+                weight = optional(number)
+            })))
         })))
         redirect = optional(list(object({
-            host = optional(string)
             path = optional(string)
             port = optional(string)
             protocol = optional(string)
             query = optional(string)
             status_code = optional(string)
+            host = optional(string)
         })))
         fixed_response = optional(list(object({
+            message_body = optional(string)
             status_code = optional(string)
             content_type = optional(string)
-            message_body = optional(string)
         })))
         authenticate_cognito = optional(list(object({
+            scope = optional(string)
+            session_cookie_name = optional(string)
+            session_timeout = optional(number)
             user_pool_arn = optional(string)
             user_pool_client_id = optional(string)
             user_pool_domain = optional(string)
             authentication_request_extra_params = optional(map(string))
             on_unauthenticated_request = optional(string)
-            scope = optional(string)
-            session_cookie_name = optional(string)
-            session_timeout = optional(number)
         })))
         authenticate_oidc = optional(list(object({
+            authentication_request_extra_params = optional(map(string))
             client_id = optional(string)
-            client_secret = optional(string)
             issuer = optional(string)
-            scope = optional(string)
+            on_unauthenticated_request = optional(string)
             session_timeout = optional(number)
             token_endpoint = optional(string)
-            authentication_request_extra_params = optional(map(string))
             authorization_endpoint = optional(string)
-            user_info_endpoint = optional(string)
-            on_unauthenticated_request = optional(string)
+            client_secret = optional(string)
+            scope = optional(string)
             session_cookie_name = optional(string)
+            user_info_endpoint = optional(string)
         })))
+        type = optional(string)
     })))
     condition = optional(set(object({
-        host_header = optional(list(object({
-            values = optional(set(string))
-        })))
-        http_header = optional(list(object({
-            http_header_name = optional(string)
-            values = optional(set(string))
-        })))
         http_request_method = optional(list(object({
             values = optional(set(string))
         })))
@@ -89,6 +82,13 @@ variable "values" {
         })))
         source_ip = optional(list(object({
             values = optional(set(string))
+        })))
+        host_header = optional(list(object({
+            values = optional(set(string))
+        })))
+        http_header = optional(list(object({
+            values = optional(set(string))
+            http_header_name = optional(string)
         })))
     })))
     listener_arn = optional(string)
@@ -105,6 +105,11 @@ resource "aws_lb_listener_rule" "this" {
   dynamic "condition" {
     for_each = var.values.condition[*]
     content {
+      source_ip = condition.value.source_ip
+      host_header = condition.value.host_header
+      http_header = condition.value.http_header
+      http_request_method = condition.value.http_request_method
+      path_pattern = condition.value.path_pattern
       dynamic "query_string" {
         for_each = condition.value.query_string[*]
         content {
@@ -112,11 +117,6 @@ resource "aws_lb_listener_rule" "this" {
           value = query_string.value.value
         }
       }
-      source_ip = condition.value.source_ip
-      host_header = condition.value.host_header
-      http_header = condition.value.http_header
-      http_request_method = condition.value.http_request_method
-      path_pattern = condition.value.path_pattern
     }
   }
   {{- end }}

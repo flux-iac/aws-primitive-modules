@@ -19,11 +19,11 @@ provider "aws" {
 variable "values" {
   type = object({
     authentication_options = optional(list(object({
+        saml_provider_arn = optional(string)
         self_service_saml_provider_arn = optional(string)
         type = optional(string)
         active_directory_id = optional(string)
         root_certificate_chain_arn = optional(string)
-        saml_provider_arn = optional(string)
     })))
     client_cidr_block = optional(string)
     connection_log_options = optional(list(object({

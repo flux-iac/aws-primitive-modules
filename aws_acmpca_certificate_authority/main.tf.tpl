@@ -19,33 +19,33 @@ provider "aws" {
 variable "values" {
   type = object({
     certificate_authority_configuration = optional(list(object({
+        key_algorithm = optional(string)
+        signing_algorithm = optional(string)
         subject = optional(list(object({
-            locality = optional(string)
             pseudonym = optional(string)
             state = optional(string)
             surname = optional(string)
             common_name = optional(string)
-            distinguished_name_qualifier = optional(string)
+            country = optional(string)
             generation_qualifier = optional(string)
             given_name = optional(string)
-            title = optional(string)
-            country = optional(string)
-            initials = optional(string)
-            organization = optional(string)
             organizational_unit = optional(string)
+            title = optional(string)
+            distinguished_name_qualifier = optional(string)
+            initials = optional(string)
+            locality = optional(string)
+            organization = optional(string)
         })))
-        key_algorithm = optional(string)
-        signing_algorithm = optional(string)
     })))
     enabled = optional(bool)
     permanent_deletion_time_in_days = optional(number)
     revocation_configuration = optional(list(object({
         crl_configuration = optional(list(object({
-            custom_cname = optional(string)
-            enabled = optional(bool)
             expiration_in_days = optional(number)
             s3_bucket_name = optional(string)
             s3_object_acl = optional(string)
+            custom_cname = optional(string)
+            enabled = optional(bool)
         })))
         ocsp_configuration = optional(list(object({
             enabled = optional(bool)

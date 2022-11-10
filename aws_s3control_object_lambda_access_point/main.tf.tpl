@@ -20,9 +20,6 @@ variable "values" {
   type = object({
     account_id = optional(string)
     configuration = optional(list(object({
-        allowed_features = optional(set(string))
-        cloud_watch_metrics_enabled = optional(bool)
-        supporting_access_point = optional(string)
         transformation_configuration = optional(set(object({
             actions = optional(set(string))
             content_transformation = optional(list(object({
@@ -32,6 +29,9 @@ variable "values" {
                 })))
             })))
         })))
+        allowed_features = optional(set(string))
+        cloud_watch_metrics_enabled = optional(bool)
+        supporting_access_point = optional(string)
     })))
     name = optional(string)
   })

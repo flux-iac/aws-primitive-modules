@@ -28,9 +28,9 @@ variable "values" {
     })))
     ebs_optimized = optional(bool)
     ephemeral_block_device = optional(set(object({
+        no_device = optional(bool)
         virtual_name = optional(string)
         device_name = optional(string)
-        no_device = optional(bool)
     })))
     get_password_data = optional(bool)
     hibernation = optional(bool)
@@ -43,9 +43,9 @@ variable "values" {
     placement_group = optional(string)
     placement_partition_number = optional(number)
     private_dns_name_options = optional(list(object({
+        enable_resource_name_dns_a_record = optional(bool)
         hostname_type = optional(string)
         enable_resource_name_dns_aaaa_record = optional(bool)
-        enable_resource_name_dns_a_record = optional(bool)
     })))
     private_ip = optional(string)
     security_groups = optional(set(string))

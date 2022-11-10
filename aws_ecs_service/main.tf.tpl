@@ -41,10 +41,10 @@ variable "values" {
     iam_role = optional(string)
     launch_type = optional(string)
     load_balancer = optional(set(object({
+        target_group_arn = optional(string)
         container_name = optional(string)
         container_port = optional(number)
         elb_name = optional(string)
-        target_group_arn = optional(string)
     })))
     name = optional(string)
     network_configuration = optional(list(object({
@@ -53,8 +53,8 @@ variable "values" {
         subnets = optional(set(string))
     })))
     ordered_placement_strategy = optional(list(object({
-        field = optional(string)
         type = optional(string)
+        field = optional(string)
     })))
     placement_constraints = optional(set(object({
         expression = optional(string)
@@ -63,10 +63,10 @@ variable "values" {
     propagate_tags = optional(string)
     scheduling_strategy = optional(string)
     service_registries = optional(list(object({
-        container_name = optional(string)
-        container_port = optional(number)
         port = optional(number)
         registry_arn = optional(string)
+        container_name = optional(string)
+        container_port = optional(number)
     })))
     tags = optional(map(string))
     task_definition = optional(string)
@@ -126,10 +126,10 @@ resource "aws_ecs_service" "this" {
   dynamic "load_balancer" {
     for_each = var.values.load_balancer[*]
     content {
+      container_port = load_balancer.value.container_port
       elb_name = load_balancer.value.elb_name
       target_group_arn = load_balancer.value.target_group_arn
       container_name = load_balancer.value.container_name
-      container_port = load_balancer.value.container_port
     }
   }
   {{- end }}

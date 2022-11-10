@@ -21,37 +21,14 @@ variable "values" {
     account_id = optional(string)
     config_id = optional(string)
     storage_lens_configuration = optional(list(object({
-        include = optional(list(object({
-            buckets = optional(set(string))
-            regions = optional(set(string))
-        })))
-        account_level = optional(list(object({
-            activity_metrics = optional(list(object({
-                enabled = optional(bool)
-            })))
-            bucket_level = optional(list(object({
-                prefix_level = optional(list(object({
-                    storage_metrics = optional(list(object({
-                        selection_criteria = optional(list(object({
-                            delimiter = optional(string)
-                            max_depth = optional(number)
-                            min_storage_bytes_percentage = optional(number)
-                        })))
-                        enabled = optional(bool)
-                    })))
-                })))
-                activity_metrics = optional(list(object({
-                    enabled = optional(bool)
-                })))
-            })))
-        })))
         aws_org = optional(list(object({
             arn = optional(string)
         })))
         data_export = optional(list(object({
+            cloud_watch_metrics = optional(list(object({
+                enabled = optional(bool)
+            })))
             s3_bucket_destination = optional(list(object({
-                output_schema_version = optional(string)
-                prefix = optional(string)
                 account_id = optional(string)
                 arn = optional(string)
                 encryption = optional(list(object({
@@ -62,15 +39,38 @@ variable "values" {
                     })))
                 })))
                 format = optional(string)
-            })))
-            cloud_watch_metrics = optional(list(object({
-                enabled = optional(bool)
+                output_schema_version = optional(string)
+                prefix = optional(string)
             })))
         })))
         enabled = optional(bool)
         exclude = optional(list(object({
             buckets = optional(set(string))
             regions = optional(set(string))
+        })))
+        include = optional(list(object({
+            buckets = optional(set(string))
+            regions = optional(set(string))
+        })))
+        account_level = optional(list(object({
+            activity_metrics = optional(list(object({
+                enabled = optional(bool)
+            })))
+            bucket_level = optional(list(object({
+                activity_metrics = optional(list(object({
+                    enabled = optional(bool)
+                })))
+                prefix_level = optional(list(object({
+                    storage_metrics = optional(list(object({
+                        enabled = optional(bool)
+                        selection_criteria = optional(list(object({
+                            delimiter = optional(string)
+                            max_depth = optional(number)
+                            min_storage_bytes_percentage = optional(number)
+                        })))
+                    })))
+                })))
+            })))
         })))
     })))
     tags = optional(map(string))

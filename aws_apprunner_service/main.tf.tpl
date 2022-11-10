@@ -22,12 +22,12 @@ variable "values" {
         kms_key = optional(string)
     })))
     health_check_configuration = optional(list(object({
+        path = optional(string)
+        protocol = optional(string)
         timeout = optional(number)
         unhealthy_threshold = optional(number)
         healthy_threshold = optional(number)
         interval = optional(number)
-        path = optional(string)
-        protocol = optional(string)
     })))
     observability_configuration = optional(list(object({
         observability_configuration_arn = optional(string)
@@ -43,11 +43,11 @@ variable "values" {
         code_repository = optional(list(object({
             code_configuration = optional(list(object({
                 code_configuration_values = optional(list(object({
+                    start_command = optional(string)
                     build_command = optional(string)
                     port = optional(string)
                     runtime = optional(string)
                     runtime_environment_variables = optional(map(string))
-                    start_command = optional(string)
                 })))
                 configuration_source = optional(string)
             })))

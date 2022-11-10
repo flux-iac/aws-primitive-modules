@@ -22,8 +22,8 @@ variable "values" {
     expected_bucket_owner = optional(string)
     rule = optional(set(object({
         apply_server_side_encryption_by_default = optional(list(object({
-            sse_algorithm = optional(string)
             kms_master_key_id = optional(string)
+            sse_algorithm = optional(string)
         })))
         bucket_key_enabled = optional(bool)
     })))

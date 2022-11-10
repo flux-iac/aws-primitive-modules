@@ -26,9 +26,9 @@ variable "values" {
         use_caller_credentials = optional(bool)
         versioned = optional(bool)
         delta_sync_config = optional(list(object({
-            delta_sync_table_ttl = optional(number)
             base_table_ttl = optional(number)
             delta_sync_table_name = optional(string)
+            delta_sync_table_ttl = optional(number)
         })))
     })))
     elasticsearch_config = optional(list(object({
@@ -38,11 +38,11 @@ variable "values" {
     http_config = optional(list(object({
         endpoint = optional(string)
         authorization_config = optional(list(object({
-            authorization_type = optional(string)
             aws_iam_config = optional(list(object({
                 signing_region = optional(string)
                 signing_service_name = optional(string)
             })))
+            authorization_type = optional(string)
         })))
     })))
     lambda_config = optional(list(object({
@@ -50,14 +50,14 @@ variable "values" {
     })))
     name = optional(string)
     relational_database_config = optional(list(object({
-        source_type = optional(string)
         http_endpoint_config = optional(list(object({
+            aws_secret_store_arn = optional(string)
             database_name = optional(string)
             region = optional(string)
             schema = optional(string)
             db_cluster_identifier = optional(string)
-            aws_secret_store_arn = optional(string)
         })))
+        source_type = optional(string)
     })))
     service_role_arn = optional(string)
     type = optional(string)

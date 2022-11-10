@@ -24,6 +24,8 @@ variable "values" {
     scalable_dimension = optional(string)
     service_namespace = optional(string)
     step_scaling_policy_configuration = optional(list(object({
+        adjustment_type = optional(string)
+        cooldown = optional(number)
         metric_aggregation_type = optional(string)
         min_adjustment_magnitude = optional(number)
         step_adjustment = optional(set(object({
@@ -31,19 +33,17 @@ variable "values" {
             metric_interval_lower_bound = optional(string)
             metric_interval_upper_bound = optional(string)
         })))
-        adjustment_type = optional(string)
-        cooldown = optional(number)
     })))
     target_tracking_scaling_policy_configuration = optional(list(object({
         customized_metric_specification = optional(list(object({
+            statistic = optional(string)
+            unit = optional(string)
             dimensions = optional(set(object({
                 name = optional(string)
                 value = optional(string)
             })))
             metric_name = optional(string)
             namespace = optional(string)
-            statistic = optional(string)
-            unit = optional(string)
         })))
         disable_scale_in = optional(bool)
         predefined_metric_specification = optional(list(object({

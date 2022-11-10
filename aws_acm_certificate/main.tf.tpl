@@ -31,8 +31,8 @@ variable "values" {
     tags = optional(map(string))
     validation_method = optional(string)
     validation_option = optional(set(object({
-        validation_domain = optional(string)
         domain_name = optional(string)
+        validation_domain = optional(string)
     })))
   })
 }

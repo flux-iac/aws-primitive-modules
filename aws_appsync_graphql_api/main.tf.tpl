@@ -19,6 +19,12 @@ provider "aws" {
 variable "values" {
   type = object({
     additional_authentication_provider = optional(list(object({
+        lambda_authorizer_config = optional(list(object({
+            authorizer_result_ttl_in_seconds = optional(number)
+            authorizer_uri = optional(string)
+            identity_validation_expression = optional(string)
+        })))
+        authentication_type = optional(string)
         openid_connect_config = optional(list(object({
             auth_ttl = optional(number)
             client_id = optional(string)
@@ -30,12 +36,6 @@ variable "values" {
             aws_region = optional(string)
             user_pool_id = optional(string)
         })))
-        lambda_authorizer_config = optional(list(object({
-            authorizer_uri = optional(string)
-            identity_validation_expression = optional(string)
-            authorizer_result_ttl_in_seconds = optional(number)
-        })))
-        authentication_type = optional(string)
     })))
     authentication_type = optional(string)
     lambda_authorizer_config = optional(list(object({
@@ -50,10 +50,10 @@ variable "values" {
     })))
     name = optional(string)
     openid_connect_config = optional(list(object({
-        client_id = optional(string)
-        iat_ttl = optional(number)
         issuer = optional(string)
         auth_ttl = optional(number)
+        client_id = optional(string)
+        iat_ttl = optional(number)
     })))
     schema = optional(string)
     tags = optional(map(string))

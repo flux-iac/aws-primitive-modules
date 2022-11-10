@@ -52,29 +52,29 @@ variable "values" {
     task_role_arn = optional(string)
     volume = optional(set(object({
         docker_volume_configuration = optional(list(object({
-            autoprovision = optional(bool)
             driver = optional(string)
             driver_opts = optional(map(string))
             labels = optional(map(string))
             scope = optional(string)
+            autoprovision = optional(bool)
         })))
         efs_volume_configuration = optional(list(object({
-            authorization_config = optional(list(object({
-                access_point_id = optional(string)
-                iam = optional(string)
-            })))
             file_system_id = optional(string)
             root_directory = optional(string)
             transit_encryption = optional(string)
             transit_encryption_port = optional(number)
+            authorization_config = optional(list(object({
+                access_point_id = optional(string)
+                iam = optional(string)
+            })))
         })))
         fsx_windows_file_server_volume_configuration = optional(list(object({
+            root_directory = optional(string)
             authorization_config = optional(list(object({
                 credentials_parameter = optional(string)
                 domain = optional(string)
             })))
             file_system_id = optional(string)
-            root_directory = optional(string)
         })))
         host_path = optional(string)
         name = optional(string)
@@ -124,8 +124,8 @@ resource "aws_ecs_task_definition" "this" {
   dynamic "placement_constraints" {
     for_each = var.values.placement_constraints[*]
     content {
-      expression = placement_constraints.value.expression
       type = placement_constraints.value.type
+      expression = placement_constraints.value.expression
     }
   }
   {{- end }}

@@ -26,15 +26,15 @@ variable "values" {
     name = optional(string)
     storage_class_analysis = optional(list(object({
         data_export = optional(list(object({
+            output_schema_version = optional(string)
             destination = optional(list(object({
                 s3_bucket_destination = optional(list(object({
-                    prefix = optional(string)
-                    bucket_arn = optional(string)
                     bucket_account_id = optional(string)
                     format = optional(string)
+                    prefix = optional(string)
+                    bucket_arn = optional(string)
                 })))
             })))
-            output_schema_version = optional(string)
         })))
     })))
   })

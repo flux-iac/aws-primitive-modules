@@ -21,6 +21,10 @@ variable "values" {
     bucket = optional(string)
     destination = optional(list(object({
         bucket = optional(list(object({
+            format = optional(string)
+            bucket_arn = optional(string)
+            account_id = optional(string)
+            prefix = optional(string)
             encryption = optional(list(object({
                 sse_kms = optional(list(object({
                     key_id = optional(string)
@@ -28,10 +32,6 @@ variable "values" {
                 sse_s3 = optional(list(object({
                 })))
             })))
-            format = optional(string)
-            bucket_arn = optional(string)
-            account_id = optional(string)
-            prefix = optional(string)
         })))
     })))
     enabled = optional(bool)

@@ -23,9 +23,9 @@ variable "values" {
     object_lock_enabled = optional(string)
     rule = optional(list(object({
         default_retention = optional(list(object({
+            days = optional(number)
             mode = optional(string)
             years = optional(number)
-            days = optional(number)
         })))
     })))
     token = optional(string)

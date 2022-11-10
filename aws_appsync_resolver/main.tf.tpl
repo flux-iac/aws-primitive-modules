@@ -33,11 +33,11 @@ variable "values" {
     request_template = optional(string)
     response_template = optional(string)
     sync_config = optional(list(object({
-        conflict_detection = optional(string)
-        conflict_handler = optional(string)
         lambda_conflict_handler_config = optional(list(object({
             lambda_conflict_handler_arn = optional(string)
         })))
+        conflict_detection = optional(string)
+        conflict_handler = optional(string)
     })))
     type = optional(string)
   })

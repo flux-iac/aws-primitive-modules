@@ -19,9 +19,9 @@ provider "aws" {
 variable "values" {
   type = object({
     capacity_provider_strategy = optional(set(object({
+        weight = optional(number)
         base = optional(number)
         capacity_provider = optional(string)
-        weight = optional(number)
     })))
     cluster = optional(string)
     external_id = optional(string)
@@ -34,17 +34,17 @@ variable "values" {
         container_port = optional(number)
     })))
     network_configuration = optional(list(object({
+        security_groups = optional(set(string))
         subnets = optional(set(string))
         assign_public_ip = optional(bool)
-        security_groups = optional(set(string))
     })))
     platform_version = optional(string)
     service = optional(string)
     service_registries = optional(list(object({
+        registry_arn = optional(string)
         container_name = optional(string)
         container_port = optional(number)
         port = optional(number)
-        registry_arn = optional(string)
     })))
     tags = optional(map(string))
     task_definition = optional(string)
@@ -59,9 +59,9 @@ resource "aws_ecs_task_set" "this" {
   dynamic "capacity_provider_strategy" {
     for_each = var.values.capacity_provider_strategy[*]
     content {
-      base = capacity_provider_strategy.value.base
       capacity_provider = capacity_provider_strategy.value.capacity_provider
       weight = capacity_provider_strategy.value.weight
+      base = capacity_provider_strategy.value.base
     }
   }
   {{- end }}
@@ -81,10 +81,10 @@ resource "aws_ecs_task_set" "this" {
   dynamic "load_balancer" {
     for_each = var.values.load_balancer[*]
     content {
+      container_port = load_balancer.value.container_port
       load_balancer_name = load_balancer.value.load_balancer_name
       target_group_arn = load_balancer.value.target_group_arn
       container_name = load_balancer.value.container_name
-      container_port = load_balancer.value.container_port
     }
   }
   {{- end }}
