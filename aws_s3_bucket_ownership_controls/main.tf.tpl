@@ -19,9 +19,9 @@ provider "aws" {
 variable "values" {
   type = object({
     bucket = optional(string)
-    rule = optional(list({
+    rule = optional(list(object({
         object_ownership = optional(string)
-    }))
+    })))
   })
 }
 

@@ -18,25 +18,34 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    capacity_provider_strategy = optional(set(any))
+    capacity_provider_strategy = optional(set(object({
+        weight = optional(number)
+        base = optional(number)
+        capacity_provider = optional(string)
+    })))
     cluster = optional(string)
     external_id = optional(string)
     force_delete = optional(bool)
     launch_type = optional(string)
-    load_balancer = optional(set(any))
-    network_configuration = optional(list({
-        assign_public_ip = optional(bool)
+    load_balancer = optional(set(object({
+        load_balancer_name = optional(string)
+        target_group_arn = optional(string)
+        container_name = optional(string)
+        container_port = optional(number)
+    })))
+    network_configuration = optional(list(object({
         security_groups = optional(set(string))
         subnets = optional(set(string))
-    }))
+        assign_public_ip = optional(bool)
+    })))
     platform_version = optional(string)
     service = optional(string)
-    service_registries = optional(list({
+    service_registries = optional(list(object({
+        container_name = optional(string)
         container_port = optional(number)
         port = optional(number)
         registry_arn = optional(string)
-        container_name = optional(string)
-    }))
+    })))
     tags = optional(map(string))
     task_definition = optional(string)
     wait_until_stable = optional(bool)
@@ -47,7 +56,14 @@ variable "values" {
 resource "aws_ecs_task_set" "this" {
 
   {{- if $.Values.capacity_provider_strategy }}
-  capacity_provider_strategy = var.values.capacity_provider_strategy
+  dynamic "capacity_provider_strategy" {
+    for_each = var.values.capacity_provider_strategy
+    content {
+      base = capacity_provider_strategy.base
+      capacity_provider = capacity_provider_strategy.capacity_provider
+      weight = capacity_provider_strategy.weight
+    }
+  }
   {{- end }}
   {{- if $.Values.cluster }}
   cluster = var.values.cluster
@@ -62,7 +78,15 @@ resource "aws_ecs_task_set" "this" {
   launch_type = var.values.launch_type
   {{- end }}
   {{- if $.Values.load_balancer }}
-  load_balancer = var.values.load_balancer
+  dynamic "load_balancer" {
+    for_each = var.values.load_balancer
+    content {
+      load_balancer_name = load_balancer.load_balancer_name
+      target_group_arn = load_balancer.target_group_arn
+      container_name = load_balancer.container_name
+      container_port = load_balancer.container_port
+    }
+  }
   {{- end }}
   {{- if $.Values.network_configuration }}
   network_configuration = var.values.network_configuration

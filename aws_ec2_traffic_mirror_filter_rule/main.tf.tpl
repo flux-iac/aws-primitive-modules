@@ -20,18 +20,18 @@ variable "values" {
   type = object({
     description = optional(string)
     destination_cidr_block = optional(string)
-    destination_port_range = optional(list({
+    destination_port_range = optional(list(object({
         from_port = optional(number)
         to_port = optional(number)
-    }))
+    })))
     protocol = optional(number)
     rule_action = optional(string)
     rule_number = optional(number)
     source_cidr_block = optional(string)
-    source_port_range = optional(list({
+    source_port_range = optional(list(object({
         from_port = optional(number)
         to_port = optional(number)
-    }))
+    })))
     traffic_direction = optional(string)
     traffic_mirror_filter_id = optional(string)
   })

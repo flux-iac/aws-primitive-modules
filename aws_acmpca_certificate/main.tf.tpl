@@ -22,10 +22,10 @@ variable "values" {
     certificate_signing_request = optional(string)
     signing_algorithm = optional(string)
     template_arn = optional(string)
-    validity = optional(list({
-        type = optional(string)
+    validity = optional(list(object({
         value = optional(string)
-    }))
+        type = optional(string)
+    })))
   })
 }
 

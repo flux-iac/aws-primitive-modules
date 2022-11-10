@@ -21,70 +21,70 @@ variable "values" {
     mesh_name = optional(string)
     mesh_owner = optional(string)
     name = optional(string)
-    spec = optional(list({
-        grpc_route = optional(list({
-            match = optional(list({
+    spec = optional(list(object({
+        http_route = optional(list(object({
+            action = optional(list(object({
+                target = optional(list(object({
+                    virtual_service = optional(list(object({
+                        virtual_service_name = optional(string)
+                    })))
+                })))
+                rewrite = optional(list(object({
+                    hostname = optional(list(object({
+                        default_target_hostname = optional(string)
+                    })))
+                    prefix = optional(list(object({
+                        default_prefix = optional(string)
+                        value = optional(string)
+                    })))
+                })))
+            })))
+            match = optional(list(object({
+                prefix = optional(string)
+                hostname = optional(list(object({
+                    exact = optional(string)
+                    suffix = optional(string)
+                })))
+            })))
+        })))
+        grpc_route = optional(list(object({
+            action = optional(list(object({
+                target = optional(list(object({
+                    virtual_service = optional(list(object({
+                        virtual_service_name = optional(string)
+                    })))
+                })))
+            })))
+            match = optional(list(object({
                 service_name = optional(string)
-            }))
-            action = optional(list({
-                target = optional(list({
-                    virtual_service = optional(list({
+            })))
+        })))
+        http2_route = optional(list(object({
+            action = optional(list(object({
+                target = optional(list(object({
+                    virtual_service = optional(list(object({
                         virtual_service_name = optional(string)
-                    }))
-                }))
-            }))
-        }))
-        http2_route = optional(list({
-            action = optional(list({
-                target = optional(list({
-                    virtual_service = optional(list({
-                        virtual_service_name = optional(string)
-                    }))
-                }))
-                rewrite = optional(list({
-                    hostname = optional(list({
+                    })))
+                })))
+                rewrite = optional(list(object({
+                    hostname = optional(list(object({
                         default_target_hostname = optional(string)
-                    }))
-                    prefix = optional(list({
+                    })))
+                    prefix = optional(list(object({
                         default_prefix = optional(string)
                         value = optional(string)
-                    }))
-                }))
-            }))
-            match = optional(list({
+                    })))
+                })))
+            })))
+            match = optional(list(object({
                 prefix = optional(string)
-                hostname = optional(list({
-                    suffix = optional(string)
-                    exact = optional(string)
-                }))
-            }))
-        }))
-        http_route = optional(list({
-            action = optional(list({
-                target = optional(list({
-                    virtual_service = optional(list({
-                        virtual_service_name = optional(string)
-                    }))
-                }))
-                rewrite = optional(list({
-                    prefix = optional(list({
-                        default_prefix = optional(string)
-                        value = optional(string)
-                    }))
-                    hostname = optional(list({
-                        default_target_hostname = optional(string)
-                    }))
-                }))
-            }))
-            match = optional(list({
-                hostname = optional(list({
+                hostname = optional(list(object({
                     exact = optional(string)
                     suffix = optional(string)
-                }))
-                prefix = optional(string)
-            }))
-        }))
-    }))
+                })))
+            })))
+        })))
+    })))
     tags = optional(map(string))
     virtual_gateway_name = optional(string)
   })

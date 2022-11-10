@@ -18,55 +18,79 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    action = optional(list({
-        authenticate_cognito = optional(list({
-            session_timeout = optional(number)
-            user_pool_arn = optional(string)
-            user_pool_client_id = optional(string)
-            user_pool_domain = optional(string)
-            authentication_request_extra_params = optional(map(string))
-            on_unauthenticated_request = optional(string)
-            scope = optional(string)
-            session_cookie_name = optional(string)
-        }))
-        authenticate_oidc = optional(list({
-            session_timeout = optional(number)
-            token_endpoint = optional(string)
-            authentication_request_extra_params = optional(map(string))
+    action = optional(list(object({
+        authenticate_oidc = optional(list(object({
             authorization_endpoint = optional(string)
             on_unauthenticated_request = optional(string)
             scope = optional(string)
-            session_cookie_name = optional(string)
+            session_timeout = optional(number)
+            authentication_request_extra_params = optional(map(string))
             client_id = optional(string)
             client_secret = optional(string)
             issuer = optional(string)
+            session_cookie_name = optional(string)
+            token_endpoint = optional(string)
             user_info_endpoint = optional(string)
-        }))
+        })))
         type = optional(string)
         order = optional(number)
         target_group_arn = optional(string)
-        forward = optional(list({
-            target_group = optional(set(any))
-            stickiness = optional(list({
-                enabled = optional(bool)
+        forward = optional(list(object({
+            target_group = optional(set(object({
+                arn = optional(string)
+                weight = optional(number)
+            })))
+            stickiness = optional(list(object({
                 duration = optional(number)
-            }))
-        }))
-        redirect = optional(list({
-            path = optional(string)
+                enabled = optional(bool)
+            })))
+        })))
+        redirect = optional(list(object({
             port = optional(string)
             protocol = optional(string)
             query = optional(string)
             status_code = optional(string)
             host = optional(string)
-        }))
-        fixed_response = optional(list({
+            path = optional(string)
+        })))
+        fixed_response = optional(list(object({
             content_type = optional(string)
             message_body = optional(string)
             status_code = optional(string)
-        }))
-    }))
-    condition = optional(set(any))
+        })))
+        authenticate_cognito = optional(list(object({
+            authentication_request_extra_params = optional(map(string))
+            on_unauthenticated_request = optional(string)
+            scope = optional(string)
+            session_cookie_name = optional(string)
+            session_timeout = optional(number)
+            user_pool_arn = optional(string)
+            user_pool_client_id = optional(string)
+            user_pool_domain = optional(string)
+        })))
+    })))
+    condition = optional(set(object({
+        query_string = optional(set(object({
+            key = optional(string)
+            value = optional(string)
+        })))
+        source_ip = optional(list(object({
+            values = optional(set(string))
+        })))
+        host_header = optional(list(object({
+            values = optional(set(string))
+        })))
+        http_header = optional(list(object({
+            values = optional(set(string))
+            http_header_name = optional(string)
+        })))
+        http_request_method = optional(list(object({
+            values = optional(set(string))
+        })))
+        path_pattern = optional(list(object({
+            values = optional(set(string))
+        })))
+    })))
     listener_arn = optional(string)
     tags = optional(map(string))
   })
@@ -78,7 +102,23 @@ resource "aws_lb_listener_rule" "this" {
   action = var.values.action
   {{- end }}
   {{- if $.Values.condition }}
-  condition = var.values.condition
+  dynamic "condition" {
+    for_each = var.values.condition
+    content {
+      host_header = condition.host_header
+      http_header = condition.http_header
+      http_request_method = condition.http_request_method
+      path_pattern = condition.path_pattern
+      dynamic "query_string" {
+        for_each = condition.query_string
+        content {
+          key = query_string.key
+          value = query_string.value
+        }
+      }
+      source_ip = condition.source_ip
+    }
+  }
   {{- end }}
   {{- if $.Values.listener_arn }}
   listener_arn = var.values.listener_arn

@@ -18,18 +18,18 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    replication_configuration = optional(list({
-        rule = optional(list({
-            destination = optional(list({
+    replication_configuration = optional(list(object({
+        rule = optional(list(object({
+            destination = optional(list(object({
                 region = optional(string)
                 registry_id = optional(string)
-            }))
-            repository_filter = optional(list({
-                filter = optional(string)
+            })))
+            repository_filter = optional(list(object({
                 filter_type = optional(string)
-            }))
-        }))
-    }))
+                filter = optional(string)
+            })))
+        })))
+    })))
   })
 }
 

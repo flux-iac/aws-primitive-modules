@@ -18,17 +18,17 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    auto_scaling_group_provider = optional(list({
+    auto_scaling_group_provider = optional(list(object({
         auto_scaling_group_arn = optional(string)
-        managed_scaling = optional(list({
+        managed_scaling = optional(list(object({
+            status = optional(string)
+            target_capacity = optional(number)
             instance_warmup_period = optional(number)
             maximum_scaling_step_size = optional(number)
             minimum_scaling_step_size = optional(number)
-            status = optional(string)
-            target_capacity = optional(number)
-        }))
+        })))
         managed_termination_protection = optional(string)
-    }))
+    })))
     name = optional(string)
     tags = optional(map(string))
   })

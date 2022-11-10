@@ -19,17 +19,17 @@ provider "aws" {
 variable "values" {
   type = object({
     bucket = optional(string)
-    error_document = optional(list({
+    error_document = optional(list(object({
         key = optional(string)
-    }))
+    })))
     expected_bucket_owner = optional(string)
-    index_document = optional(list({
+    index_document = optional(list(object({
         suffix = optional(string)
-    }))
-    redirect_all_requests_to = optional(list({
+    })))
+    redirect_all_requests_to = optional(list(object({
         host_name = optional(string)
         protocol = optional(string)
-    }))
+    })))
   })
 }
 

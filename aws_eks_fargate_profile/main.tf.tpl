@@ -21,7 +21,10 @@ variable "values" {
     cluster_name = optional(string)
     fargate_profile_name = optional(string)
     pod_execution_role_arn = optional(string)
-    selector = optional(set(any))
+    selector = optional(set(object({
+        labels = optional(map(string))
+        namespace = optional(string)
+    })))
     subnet_ids = optional(set(string))
     tags = optional(map(string))
   })
@@ -39,7 +42,13 @@ resource "aws_eks_fargate_profile" "this" {
   pod_execution_role_arn = var.values.pod_execution_role_arn
   {{- end }}
   {{- if $.Values.selector }}
-  selector = var.values.selector
+  dynamic "selector" {
+    for_each = var.values.selector
+    content {
+      labels = selector.labels
+      namespace = selector.namespace
+    }
+  }
   {{- end }}
   {{- if $.Values.subnet_ids }}
   subnet_ids = var.values.subnet_ids

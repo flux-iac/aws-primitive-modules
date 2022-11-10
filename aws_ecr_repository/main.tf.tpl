@@ -18,14 +18,14 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    encryption_configuration = optional(list({
+    encryption_configuration = optional(list(object({
         encryption_type = optional(string)
         kms_key = optional(string)
-    }))
+    })))
     force_delete = optional(bool)
-    image_scanning_configuration = optional(list({
+    image_scanning_configuration = optional(list(object({
         scan_on_push = optional(bool)
-    }))
+    })))
     image_tag_mutability = optional(string)
     name = optional(string)
     tags = optional(map(string))

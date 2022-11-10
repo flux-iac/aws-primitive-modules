@@ -18,11 +18,11 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    access_logs = optional(list({
+    access_logs = optional(list(object({
         bucket = optional(string)
         prefix = optional(string)
         enabled = optional(bool)
-    }))
+    })))
     customer_owned_ipv4_pool = optional(string)
     desync_mitigation_mode = optional(string)
     drop_invalid_header_fields = optional(bool)
@@ -36,7 +36,13 @@ variable "values" {
     name = optional(string)
     name_prefix = optional(string)
     preserve_host_header = optional(bool)
-    subnet_mapping = optional(set(any))
+    subnet_mapping = optional(set(object({
+        subnet_id = optional(string)
+        ipv6_address = optional(string)
+        outpost_id = optional(string)
+        allocation_id = optional(string)
+        private_ipv4_address = optional(string)
+    })))
     tags = optional(map(string))
   })
 }
@@ -86,7 +92,16 @@ resource "aws_lb" "this" {
   preserve_host_header = var.values.preserve_host_header
   {{- end }}
   {{- if $.Values.subnet_mapping }}
-  subnet_mapping = var.values.subnet_mapping
+  dynamic "subnet_mapping" {
+    for_each = var.values.subnet_mapping
+    content {
+      subnet_id = subnet_mapping.subnet_id
+      ipv6_address = subnet_mapping.ipv6_address
+      outpost_id = subnet_mapping.outpost_id
+      allocation_id = subnet_mapping.allocation_id
+      private_ipv4_address = subnet_mapping.private_ipv4_address
+    }
+  }
   {{- end }}
   {{- if $.Values.tags }}
   tags = var.values.tags

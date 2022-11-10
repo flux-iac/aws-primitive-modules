@@ -20,31 +20,65 @@ variable "values" {
   type = object({
     container_definitions = optional(string)
     cpu = optional(string)
-    ephemeral_storage = optional(list({
+    ephemeral_storage = optional(list(object({
         size_in_gib = optional(number)
-    }))
+    })))
     execution_role_arn = optional(string)
     family = optional(string)
-    inference_accelerator = optional(set(any))
+    inference_accelerator = optional(set(object({
+        device_name = optional(string)
+        device_type = optional(string)
+    })))
     ipc_mode = optional(string)
     memory = optional(string)
     network_mode = optional(string)
     pid_mode = optional(string)
-    placement_constraints = optional(set(any))
-    proxy_configuration = optional(list({
+    placement_constraints = optional(set(object({
+        expression = optional(string)
+        type = optional(string)
+    })))
+    proxy_configuration = optional(list(object({
         container_name = optional(string)
         properties = optional(map(string))
         type = optional(string)
-    }))
+    })))
     requires_compatibilities = optional(set(string))
-    runtime_platform = optional(list({
+    runtime_platform = optional(list(object({
         cpu_architecture = optional(string)
         operating_system_family = optional(string)
-    }))
+    })))
     skip_destroy = optional(bool)
     tags = optional(map(string))
     task_role_arn = optional(string)
-    volume = optional(set(any))
+    volume = optional(set(object({
+        docker_volume_configuration = optional(list(object({
+            labels = optional(map(string))
+            scope = optional(string)
+            autoprovision = optional(bool)
+            driver = optional(string)
+            driver_opts = optional(map(string))
+        })))
+        efs_volume_configuration = optional(list(object({
+            authorization_config = optional(list(object({
+                access_point_id = optional(string)
+                iam = optional(string)
+            })))
+            file_system_id = optional(string)
+            root_directory = optional(string)
+            transit_encryption = optional(string)
+            transit_encryption_port = optional(number)
+        })))
+        fsx_windows_file_server_volume_configuration = optional(list(object({
+            authorization_config = optional(list(object({
+                credentials_parameter = optional(string)
+                domain = optional(string)
+            })))
+            file_system_id = optional(string)
+            root_directory = optional(string)
+        })))
+        host_path = optional(string)
+        name = optional(string)
+    })))
   })
 }
 
@@ -66,7 +100,13 @@ resource "aws_ecs_task_definition" "this" {
   family = var.values.family
   {{- end }}
   {{- if $.Values.inference_accelerator }}
-  inference_accelerator = var.values.inference_accelerator
+  dynamic "inference_accelerator" {
+    for_each = var.values.inference_accelerator
+    content {
+      device_type = inference_accelerator.device_type
+      device_name = inference_accelerator.device_name
+    }
+  }
   {{- end }}
   {{- if $.Values.ipc_mode }}
   ipc_mode = var.values.ipc_mode
@@ -81,7 +121,13 @@ resource "aws_ecs_task_definition" "this" {
   pid_mode = var.values.pid_mode
   {{- end }}
   {{- if $.Values.placement_constraints }}
-  placement_constraints = var.values.placement_constraints
+  dynamic "placement_constraints" {
+    for_each = var.values.placement_constraints
+    content {
+      expression = placement_constraints.expression
+      type = placement_constraints.type
+    }
+  }
   {{- end }}
   {{- if $.Values.proxy_configuration }}
   proxy_configuration = var.values.proxy_configuration
@@ -102,7 +148,16 @@ resource "aws_ecs_task_definition" "this" {
   task_role_arn = var.values.task_role_arn
   {{- end }}
   {{- if $.Values.volume }}
-  volume = var.values.volume
+  dynamic "volume" {
+    for_each = var.values.volume
+    content {
+      name = volume.name
+      docker_volume_configuration = volume.docker_volume_configuration
+      efs_volume_configuration = volume.efs_volume_configuration
+      fsx_windows_file_server_volume_configuration = volume.fsx_windows_file_server_volume_configuration
+      host_path = volume.host_path
+    }
+  }
   {{- end }}
 
 

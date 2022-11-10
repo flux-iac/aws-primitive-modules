@@ -19,11 +19,11 @@ provider "aws" {
 variable "values" {
   type = object({
     name = optional(string)
-    spec = optional(list({
-        egress_filter = optional(list({
+    spec = optional(list(object({
+        egress_filter = optional(list(object({
             type = optional(string)
-        }))
-    }))
+        })))
+    })))
     tags = optional(map(string))
   })
 }

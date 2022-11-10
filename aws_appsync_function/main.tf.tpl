@@ -26,13 +26,13 @@ variable "values" {
     name = optional(string)
     request_mapping_template = optional(string)
     response_mapping_template = optional(string)
-    sync_config = optional(list({
-        conflict_handler = optional(string)
-        lambda_conflict_handler_config = optional(list({
-            lambda_conflict_handler_arn = optional(string)
-        }))
+    sync_config = optional(list(object({
         conflict_detection = optional(string)
-    }))
+        conflict_handler = optional(string)
+        lambda_conflict_handler_config = optional(list(object({
+            lambda_conflict_handler_arn = optional(string)
+        })))
+    })))
   })
 }
 

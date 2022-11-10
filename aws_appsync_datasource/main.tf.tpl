@@ -20,45 +20,45 @@ variable "values" {
   type = object({
     api_id = optional(string)
     description = optional(string)
-    dynamodb_config = optional(list({
+    dynamodb_config = optional(list(object({
+        versioned = optional(bool)
+        delta_sync_config = optional(list(object({
+            base_table_ttl = optional(number)
+            delta_sync_table_name = optional(string)
+            delta_sync_table_ttl = optional(number)
+        })))
         region = optional(string)
         table_name = optional(string)
         use_caller_credentials = optional(bool)
-        versioned = optional(bool)
-        delta_sync_config = optional(list({
-            delta_sync_table_ttl = optional(number)
-            base_table_ttl = optional(number)
-            delta_sync_table_name = optional(string)
-        }))
-    }))
-    elasticsearch_config = optional(list({
+    })))
+    elasticsearch_config = optional(list(object({
+        endpoint = optional(string)
         region = optional(string)
+    })))
+    http_config = optional(list(object({
         endpoint = optional(string)
-    }))
-    http_config = optional(list({
-        endpoint = optional(string)
-        authorization_config = optional(list({
+        authorization_config = optional(list(object({
             authorization_type = optional(string)
-            aws_iam_config = optional(list({
+            aws_iam_config = optional(list(object({
                 signing_region = optional(string)
                 signing_service_name = optional(string)
-            }))
-        }))
-    }))
-    lambda_config = optional(list({
+            })))
+        })))
+    })))
+    lambda_config = optional(list(object({
         function_arn = optional(string)
-    }))
+    })))
     name = optional(string)
-    relational_database_config = optional(list({
+    relational_database_config = optional(list(object({
         source_type = optional(string)
-        http_endpoint_config = optional(list({
+        http_endpoint_config = optional(list(object({
+            database_name = optional(string)
             region = optional(string)
             schema = optional(string)
             db_cluster_identifier = optional(string)
             aws_secret_store_arn = optional(string)
-            database_name = optional(string)
-        }))
-    }))
+        })))
+    })))
     service_role_arn = optional(string)
     type = optional(string)
   })

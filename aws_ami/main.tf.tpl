@@ -23,7 +23,10 @@ variable "values" {
     deprecation_time = optional(string)
     description = optional(string)
     ena_support = optional(bool)
-    ephemeral_block_device = optional(set(any))
+    ephemeral_block_device = optional(set(object({
+        virtual_name = optional(string)
+        device_name = optional(string)
+    })))
     image_location = optional(string)
     imds_support = optional(string)
     kernel_id = optional(string)
@@ -55,7 +58,13 @@ resource "aws_ami" "this" {
   ena_support = var.values.ena_support
   {{- end }}
   {{- if $.Values.ephemeral_block_device }}
-  ephemeral_block_device = var.values.ephemeral_block_device
+  dynamic "ephemeral_block_device" {
+    for_each = var.values.ephemeral_block_device
+    content {
+      device_name = ephemeral_block_device.device_name
+      virtual_name = ephemeral_block_device.virtual_name
+    }
+  }
   {{- end }}
   {{- if $.Values.image_location }}
   image_location = var.values.image_location

@@ -21,16 +21,16 @@ variable "values" {
     mesh_name = optional(string)
     mesh_owner = optional(string)
     name = optional(string)
-    spec = optional(list({
-        provider = optional(list({
-            virtual_node = optional(list({
+    spec = optional(list(object({
+        provider = optional(list(object({
+            virtual_node = optional(list(object({
                 virtual_node_name = optional(string)
-            }))
-            virtual_router = optional(list({
+            })))
+            virtual_router = optional(list(object({
                 virtual_router_name = optional(string)
-            }))
-        }))
-    }))
+            })))
+        })))
+    })))
     tags = optional(map(string))
   })
 }

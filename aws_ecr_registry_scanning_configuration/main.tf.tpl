@@ -18,7 +18,13 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    rule = optional(set(any))
+    rule = optional(set(object({
+        repository_filter = optional(set(object({
+            filter = optional(string)
+            filter_type = optional(string)
+        })))
+        scan_frequency = optional(string)
+    })))
     scan_type = optional(string)
   })
 }
@@ -26,7 +32,19 @@ variable "values" {
 resource "aws_ecr_registry_scanning_configuration" "this" {
 
   {{- if $.Values.rule }}
-  rule = var.values.rule
+  dynamic "rule" {
+    for_each = var.values.rule
+    content {
+      dynamic "repository_filter" {
+        for_each = rule.repository_filter
+        content {
+          filter = repository_filter.filter
+          filter_type = repository_filter.filter_type
+        }
+      }
+      scan_frequency = rule.scan_frequency
+    }
+  }
   {{- end }}
   {{- if $.Values.scan_type }}
   scan_type = var.values.scan_type

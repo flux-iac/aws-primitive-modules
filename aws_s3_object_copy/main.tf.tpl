@@ -29,7 +29,13 @@ variable "values" {
     expected_source_bucket_owner = optional(string)
     expires = optional(string)
     force_destroy = optional(bool)
-    grant = optional(set(any))
+    grant = optional(set(object({
+        type = optional(string)
+        uri = optional(string)
+        email = optional(string)
+        id = optional(string)
+        permissions = optional(set(string))
+    })))
     key = optional(string)
     metadata_directive = optional(string)
     request_payer = optional(string)
@@ -78,7 +84,16 @@ resource "aws_s3_object_copy" "this" {
   force_destroy = var.values.force_destroy
   {{- end }}
   {{- if $.Values.grant }}
-  grant = var.values.grant
+  dynamic "grant" {
+    for_each = var.values.grant
+    content {
+      uri = grant.uri
+      email = grant.email
+      id = grant.id
+      permissions = grant.permissions
+      type = grant.type
+    }
+  }
   {{- end }}
   {{- if $.Values.key }}
   key = var.values.key

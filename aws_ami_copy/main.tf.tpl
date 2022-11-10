@@ -22,7 +22,10 @@ variable "values" {
     description = optional(string)
     destination_outpost_arn = optional(string)
     encrypted = optional(bool)
-    ephemeral_block_device = optional(set(any))
+    ephemeral_block_device = optional(set(object({
+        device_name = optional(string)
+        virtual_name = optional(string)
+    })))
     kms_key_id = optional(string)
     name = optional(string)
     source_ami_id = optional(string)
@@ -46,7 +49,13 @@ resource "aws_ami_copy" "this" {
   encrypted = var.values.encrypted
   {{- end }}
   {{- if $.Values.ephemeral_block_device }}
-  ephemeral_block_device = var.values.ephemeral_block_device
+  dynamic "ephemeral_block_device" {
+    for_each = var.values.ephemeral_block_device
+    content {
+      virtual_name = ephemeral_block_device.virtual_name
+      device_name = ephemeral_block_device.device_name
+    }
+  }
   {{- end }}
   {{- if $.Values.kms_key_id }}
   kms_key_id = var.values.kms_key_id

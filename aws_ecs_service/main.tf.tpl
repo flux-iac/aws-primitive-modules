@@ -18,15 +18,19 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    capacity_provider_strategy = optional(set(any))
+    capacity_provider_strategy = optional(set(object({
+        capacity_provider = optional(string)
+        weight = optional(number)
+        base = optional(number)
+    })))
     cluster = optional(string)
-    deployment_circuit_breaker = optional(list({
+    deployment_circuit_breaker = optional(list(object({
         enable = optional(bool)
         rollback = optional(bool)
-    }))
-    deployment_controller = optional(list({
+    })))
+    deployment_controller = optional(list(object({
         type = optional(string)
-    }))
+    })))
     deployment_maximum_percent = optional(number)
     deployment_minimum_healthy_percent = optional(number)
     desired_count = optional(number)
@@ -36,26 +40,34 @@ variable "values" {
     health_check_grace_period_seconds = optional(number)
     iam_role = optional(string)
     launch_type = optional(string)
-    load_balancer = optional(set(any))
+    load_balancer = optional(set(object({
+        container_name = optional(string)
+        container_port = optional(number)
+        elb_name = optional(string)
+        target_group_arn = optional(string)
+    })))
     name = optional(string)
-    network_configuration = optional(list({
-        assign_public_ip = optional(bool)
+    network_configuration = optional(list(object({
         security_groups = optional(set(string))
         subnets = optional(set(string))
-    }))
-    ordered_placement_strategy = optional(list({
+        assign_public_ip = optional(bool)
+    })))
+    ordered_placement_strategy = optional(list(object({
         field = optional(string)
         type = optional(string)
-    }))
-    placement_constraints = optional(set(any))
+    })))
+    placement_constraints = optional(set(object({
+        expression = optional(string)
+        type = optional(string)
+    })))
     propagate_tags = optional(string)
     scheduling_strategy = optional(string)
-    service_registries = optional(list({
+    service_registries = optional(list(object({
         container_name = optional(string)
         container_port = optional(number)
         port = optional(number)
         registry_arn = optional(string)
-    }))
+    })))
     tags = optional(map(string))
     task_definition = optional(string)
     wait_for_steady_state = optional(bool)
@@ -65,7 +77,14 @@ variable "values" {
 resource "aws_ecs_service" "this" {
 
   {{- if $.Values.capacity_provider_strategy }}
-  capacity_provider_strategy = var.values.capacity_provider_strategy
+  dynamic "capacity_provider_strategy" {
+    for_each = var.values.capacity_provider_strategy
+    content {
+      weight = capacity_provider_strategy.weight
+      base = capacity_provider_strategy.base
+      capacity_provider = capacity_provider_strategy.capacity_provider
+    }
+  }
   {{- end }}
   {{- if $.Values.cluster }}
   cluster = var.values.cluster
@@ -104,7 +123,15 @@ resource "aws_ecs_service" "this" {
   launch_type = var.values.launch_type
   {{- end }}
   {{- if $.Values.load_balancer }}
-  load_balancer = var.values.load_balancer
+  dynamic "load_balancer" {
+    for_each = var.values.load_balancer
+    content {
+      container_name = load_balancer.container_name
+      container_port = load_balancer.container_port
+      elb_name = load_balancer.elb_name
+      target_group_arn = load_balancer.target_group_arn
+    }
+  }
   {{- end }}
   {{- if $.Values.name }}
   name = var.values.name
@@ -116,7 +143,13 @@ resource "aws_ecs_service" "this" {
   ordered_placement_strategy = var.values.ordered_placement_strategy
   {{- end }}
   {{- if $.Values.placement_constraints }}
-  placement_constraints = var.values.placement_constraints
+  dynamic "placement_constraints" {
+    for_each = var.values.placement_constraints
+    content {
+      expression = placement_constraints.expression
+      type = placement_constraints.type
+    }
+  }
   {{- end }}
   {{- if $.Values.propagate_tags }}
   propagate_tags = var.values.propagate_tags

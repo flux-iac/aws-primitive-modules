@@ -18,55 +18,55 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    encryption_configuration = optional(list({
+    encryption_configuration = optional(list(object({
         kms_key = optional(string)
-    }))
-    health_check_configuration = optional(list({
-        unhealthy_threshold = optional(number)
-        healthy_threshold = optional(number)
+    })))
+    health_check_configuration = optional(list(object({
         interval = optional(number)
         path = optional(string)
         protocol = optional(string)
         timeout = optional(number)
-    }))
-    observability_configuration = optional(list({
+        unhealthy_threshold = optional(number)
+        healthy_threshold = optional(number)
+    })))
+    observability_configuration = optional(list(object({
         observability_configuration_arn = optional(string)
         observability_enabled = optional(bool)
-    }))
+    })))
     service_name = optional(string)
-    source_configuration = optional(list({
+    source_configuration = optional(list(object({
+        authentication_configuration = optional(list(object({
+            access_role_arn = optional(string)
+            connection_arn = optional(string)
+        })))
         auto_deployments_enabled = optional(bool)
-        code_repository = optional(list({
-            code_configuration = optional(list({
-                code_configuration_values = optional(list({
+        code_repository = optional(list(object({
+            code_configuration = optional(list(object({
+                configuration_source = optional(string)
+                code_configuration_values = optional(list(object({
                     build_command = optional(string)
                     port = optional(string)
                     runtime = optional(string)
                     runtime_environment_variables = optional(map(string))
                     start_command = optional(string)
-                }))
-                configuration_source = optional(string)
-            }))
+                })))
+            })))
             repository_url = optional(string)
-            source_code_version = optional(list({
+            source_code_version = optional(list(object({
                 type = optional(string)
                 value = optional(string)
-            }))
-        }))
-        image_repository = optional(list({
-            image_configuration = optional(list({
+            })))
+        })))
+        image_repository = optional(list(object({
+            image_repository_type = optional(string)
+            image_configuration = optional(list(object({
                 port = optional(string)
                 runtime_environment_variables = optional(map(string))
                 start_command = optional(string)
-            }))
+            })))
             image_identifier = optional(string)
-            image_repository_type = optional(string)
-        }))
-        authentication_configuration = optional(list({
-            access_role_arn = optional(string)
-            connection_arn = optional(string)
-        }))
-    }))
+        })))
+    })))
     tags = optional(map(string))
   })
 }

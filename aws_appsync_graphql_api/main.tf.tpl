@@ -18,51 +18,51 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    additional_authentication_provider = optional(list({
-        openid_connect_config = optional(list({
-            auth_ttl = optional(number)
+    additional_authentication_provider = optional(list(object({
+        authentication_type = optional(string)
+        openid_connect_config = optional(list(object({
             client_id = optional(string)
             iat_ttl = optional(number)
             issuer = optional(string)
-        }))
-        user_pool_config = optional(list({
+            auth_ttl = optional(number)
+        })))
+        user_pool_config = optional(list(object({
             app_id_client_regex = optional(string)
             aws_region = optional(string)
             user_pool_id = optional(string)
-        }))
-        lambda_authorizer_config = optional(list({
+        })))
+        lambda_authorizer_config = optional(list(object({
             authorizer_result_ttl_in_seconds = optional(number)
             authorizer_uri = optional(string)
             identity_validation_expression = optional(string)
-        }))
-        authentication_type = optional(string)
-    }))
+        })))
+    })))
     authentication_type = optional(string)
-    lambda_authorizer_config = optional(list({
-        authorizer_result_ttl_in_seconds = optional(number)
+    lambda_authorizer_config = optional(list(object({
         authorizer_uri = optional(string)
         identity_validation_expression = optional(string)
-    }))
-    log_config = optional(list({
+        authorizer_result_ttl_in_seconds = optional(number)
+    })))
+    log_config = optional(list(object({
         cloudwatch_logs_role_arn = optional(string)
         field_log_level = optional(string)
         exclude_verbose_content = optional(bool)
-    }))
+    })))
     name = optional(string)
-    openid_connect_config = optional(list({
-        auth_ttl = optional(number)
+    openid_connect_config = optional(list(object({
         client_id = optional(string)
         iat_ttl = optional(number)
         issuer = optional(string)
-    }))
+        auth_ttl = optional(number)
+    })))
     schema = optional(string)
     tags = optional(map(string))
-    user_pool_config = optional(list({
+    user_pool_config = optional(list(object({
         app_id_client_regex = optional(string)
         aws_region = optional(string)
         default_action = optional(string)
         user_pool_id = optional(string)
-    }))
+    })))
     xray_enabled = optional(bool)
   })
 }

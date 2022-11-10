@@ -23,14 +23,17 @@ variable "values" {
     certificate_chain = optional(string)
     domain_name = optional(string)
     early_renewal_duration = optional(string)
-    options = optional(list({
+    options = optional(list(object({
         certificate_transparency_logging_preference = optional(string)
-    }))
+    })))
     private_key = optional(string)
     subject_alternative_names = optional(set(string))
     tags = optional(map(string))
     validation_method = optional(string)
-    validation_option = optional(set(any))
+    validation_option = optional(set(object({
+        domain_name = optional(string)
+        validation_domain = optional(string)
+    })))
   })
 }
 
@@ -67,7 +70,13 @@ resource "aws_acm_certificate" "this" {
   validation_method = var.values.validation_method
   {{- end }}
   {{- if $.Values.validation_option }}
-  validation_option = var.values.validation_option
+  dynamic "validation_option" {
+    for_each = var.values.validation_option
+    content {
+      domain_name = validation_option.domain_name
+      validation_domain = validation_option.validation_domain
+    }
+  }
   {{- end }}
 
 

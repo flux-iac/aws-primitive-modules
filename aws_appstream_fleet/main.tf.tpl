@@ -18,12 +18,12 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    compute_capacity = optional(list({
+    compute_capacity = optional(list(object({
         available = optional(number)
         desired_instances = optional(number)
         in_use = optional(number)
         running = optional(number)
-    }))
+    })))
     fleet_type = optional(string)
     idle_disconnect_timeout_in_seconds = optional(number)
     instance_type = optional(string)

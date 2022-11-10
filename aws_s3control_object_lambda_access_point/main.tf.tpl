@@ -19,12 +19,20 @@ provider "aws" {
 variable "values" {
   type = object({
     account_id = optional(string)
-    configuration = optional(list({
+    configuration = optional(list(object({
         allowed_features = optional(set(string))
         cloud_watch_metrics_enabled = optional(bool)
         supporting_access_point = optional(string)
-        transformation_configuration = optional(set(any))
-    }))
+        transformation_configuration = optional(set(object({
+            actions = optional(set(string))
+            content_transformation = optional(list(object({
+                aws_lambda = optional(list(object({
+                    function_arn = optional(string)
+                    function_payload = optional(string)
+                })))
+            })))
+        })))
+    })))
     name = optional(string)
   })
 }

@@ -20,7 +20,10 @@ variable "values" {
   type = object({
     application_id = optional(string)
     description = optional(string)
-    monitor = optional(set(any))
+    monitor = optional(set(object({
+        alarm_arn = optional(string)
+        alarm_role_arn = optional(string)
+    })))
     name = optional(string)
     tags = optional(map(string))
   })
@@ -35,7 +38,13 @@ resource "aws_appconfig_environment" "this" {
   description = var.values.description
   {{- end }}
   {{- if $.Values.monitor }}
-  monitor = var.values.monitor
+  dynamic "monitor" {
+    for_each = var.values.monitor
+    content {
+      alarm_arn = monitor.alarm_arn
+      alarm_role_arn = monitor.alarm_role_arn
+    }
+  }
   {{- end }}
   {{- if $.Values.name }}
   name = var.values.name

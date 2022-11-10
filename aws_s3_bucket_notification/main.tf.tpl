@@ -20,27 +20,27 @@ variable "values" {
   type = object({
     bucket = optional(string)
     eventbridge = optional(bool)
-    lambda_function = optional(list({
+    lambda_function = optional(list(object({
+        lambda_function_arn = optional(string)
+        events = optional(set(string))
         id = optional(string)
         filter_prefix = optional(string)
         filter_suffix = optional(string)
-        lambda_function_arn = optional(string)
-        events = optional(set(string))
-    }))
-    queue = optional(list({
-        id = optional(string)
-        filter_prefix = optional(string)
+    })))
+    queue = optional(list(object({
         filter_suffix = optional(string)
         queue_arn = optional(string)
         events = optional(set(string))
-    }))
-    topic = optional(list({
         id = optional(string)
         filter_prefix = optional(string)
+    })))
+    topic = optional(list(object({
         filter_suffix = optional(string)
         topic_arn = optional(string)
         events = optional(set(string))
-    }))
+        id = optional(string)
+        filter_prefix = optional(string)
+    })))
   })
 }
 

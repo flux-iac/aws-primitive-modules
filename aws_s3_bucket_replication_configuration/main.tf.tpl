@@ -20,60 +20,60 @@ variable "values" {
   type = object({
     bucket = optional(string)
     role = optional(string)
-    rule = optional(list({
-        status = optional(string)
-        delete_marker_replication = optional(list({
-            status = optional(string)
-        }))
-        existing_object_replication = optional(list({
-            status = optional(string)
-        }))
-        id = optional(string)
-        prefix = optional(string)
-        priority = optional(number)
-        source_selection_criteria = optional(list({
-            sse_kms_encrypted_objects = optional(list({
-                status = optional(string)
-            }))
-            replica_modifications = optional(list({
-                status = optional(string)
-            }))
-        }))
-        destination = optional(list({
+    rule = optional(list(object({
+        destination = optional(list(object({
+            access_control_translation = optional(list(object({
+                owner = optional(string)
+            })))
             account = optional(string)
             bucket = optional(string)
-            encryption_configuration = optional(list({
+            encryption_configuration = optional(list(object({
                 replica_kms_key_id = optional(string)
-            }))
-            metrics = optional(list({
-                event_threshold = optional(list({
+            })))
+            metrics = optional(list(object({
+                event_threshold = optional(list(object({
                     minutes = optional(number)
-                }))
+                })))
                 status = optional(string)
-            }))
-            replication_time = optional(list({
+            })))
+            replication_time = optional(list(object({
                 status = optional(string)
-                time = optional(list({
+                time = optional(list(object({
                     minutes = optional(number)
-                }))
-            }))
+                })))
+            })))
             storage_class = optional(string)
-            access_control_translation = optional(list({
-                owner = optional(string)
-            }))
-        }))
-        filter = optional(list({
-            and = optional(list({
-                prefix = optional(string)
-                tags = optional(map(string))
-            }))
+        })))
+        existing_object_replication = optional(list(object({
+            status = optional(string)
+        })))
+        id = optional(string)
+        priority = optional(number)
+        source_selection_criteria = optional(list(object({
+            replica_modifications = optional(list(object({
+                status = optional(string)
+            })))
+            sse_kms_encrypted_objects = optional(list(object({
+                status = optional(string)
+            })))
+        })))
+        status = optional(string)
+        delete_marker_replication = optional(list(object({
+            status = optional(string)
+        })))
+        filter = optional(list(object({
             prefix = optional(string)
-            tag = optional(list({
+            tag = optional(list(object({
                 key = optional(string)
                 value = optional(string)
-            }))
-        }))
-    }))
+            })))
+            and = optional(list(object({
+                prefix = optional(string)
+                tags = optional(map(string))
+            })))
+        })))
+        prefix = optional(string)
+    })))
     token = optional(string)
   })
 }

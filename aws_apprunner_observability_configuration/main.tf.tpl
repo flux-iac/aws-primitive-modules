@@ -20,9 +20,9 @@ variable "values" {
   type = object({
     observability_configuration_name = optional(string)
     tags = optional(map(string))
-    trace_configuration = optional(list({
+    trace_configuration = optional(list(object({
         vendor = optional(string)
-    }))
+    })))
   })
 }
 

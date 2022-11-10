@@ -19,9 +19,9 @@ provider "aws" {
 variable "values" {
   type = object({
     description = optional(string)
-    event_filter = optional(list({
+    event_filter = optional(list(object({
         source = optional(string)
-    }))
+    })))
     eventbridge_bus = optional(string)
     name = optional(string)
     tags = optional(map(string))

@@ -18,19 +18,25 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    access_logs = optional(list({
+    access_logs = optional(list(object({
         interval = optional(number)
         bucket = optional(string)
         bucket_prefix = optional(string)
         enabled = optional(bool)
-    }))
+    })))
     connection_draining = optional(bool)
     connection_draining_timeout = optional(number)
     cross_zone_load_balancing = optional(bool)
     desync_mitigation_mode = optional(string)
     idle_timeout = optional(number)
     internal = optional(bool)
-    listener = optional(set(any))
+    listener = optional(set(object({
+        instance_port = optional(number)
+        instance_protocol = optional(string)
+        lb_port = optional(number)
+        lb_protocol = optional(string)
+        ssl_certificate_id = optional(string)
+    })))
     name = optional(string)
     name_prefix = optional(string)
     tags = optional(map(string))
@@ -61,7 +67,16 @@ resource "aws_elb" "this" {
   internal = var.values.internal
   {{- end }}
   {{- if $.Values.listener }}
-  listener = var.values.listener
+  dynamic "listener" {
+    for_each = var.values.listener
+    content {
+      instance_port = listener.instance_port
+      instance_protocol = listener.instance_protocol
+      lb_port = listener.lb_port
+      lb_protocol = listener.lb_protocol
+      ssl_certificate_id = listener.ssl_certificate_id
+    }
+  }
   {{- end }}
   {{- if $.Values.name }}
   name = var.values.name

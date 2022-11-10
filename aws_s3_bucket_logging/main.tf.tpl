@@ -21,7 +21,16 @@ variable "values" {
     bucket = optional(string)
     expected_bucket_owner = optional(string)
     target_bucket = optional(string)
-    target_grant = optional(set(any))
+    target_grant = optional(set(object({
+        grantee = optional(list(object({
+            id = optional(string)
+            type = optional(string)
+            uri = optional(string)
+            display_name = optional(string)
+            email_address = optional(string)
+        })))
+        permission = optional(string)
+    })))
     target_prefix = optional(string)
   })
 }
@@ -38,7 +47,13 @@ resource "aws_s3_bucket_logging" "this" {
   target_bucket = var.values.target_bucket
   {{- end }}
   {{- if $.Values.target_grant }}
-  target_grant = var.values.target_grant
+  dynamic "target_grant" {
+    for_each = var.values.target_grant
+    content {
+      grantee = target_grant.grantee
+      permission = target_grant.permission
+    }
+  }
   {{- end }}
   {{- if $.Values.target_prefix }}
   target_prefix = var.values.target_prefix

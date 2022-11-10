@@ -22,7 +22,11 @@ variable "values" {
     family = optional(string)
     name = optional(string)
     name_prefix = optional(string)
-    parameter = optional(set(any))
+    parameter = optional(set(object({
+        name = optional(string)
+        value = optional(string)
+        apply_method = optional(string)
+    })))
     tags = optional(map(string))
   })
 }
@@ -42,7 +46,14 @@ resource "aws_docdb_cluster_parameter_group" "this" {
   name_prefix = var.values.name_prefix
   {{- end }}
   {{- if $.Values.parameter }}
-  parameter = var.values.parameter
+  dynamic "parameter" {
+    for_each = var.values.parameter
+    content {
+      value = parameter.value
+      apply_method = parameter.apply_method
+      name = parameter.name
+    }
+  }
   {{- end }}
   {{- if $.Values.tags }}
   tags = var.values.tags

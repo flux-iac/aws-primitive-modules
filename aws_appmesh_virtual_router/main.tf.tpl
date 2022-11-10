@@ -21,14 +21,14 @@ variable "values" {
     mesh_name = optional(string)
     mesh_owner = optional(string)
     name = optional(string)
-    spec = optional(list({
-        listener = optional(list({
-            port_mapping = optional(list({
+    spec = optional(list(object({
+        listener = optional(list(object({
+            port_mapping = optional(list(object({
                 port = optional(number)
                 protocol = optional(string)
-            }))
-        }))
-    }))
+            })))
+        })))
+    })))
     tags = optional(map(string))
   })
 }

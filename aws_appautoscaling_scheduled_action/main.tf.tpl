@@ -22,10 +22,10 @@ variable "values" {
     name = optional(string)
     resource_id = optional(string)
     scalable_dimension = optional(string)
-    scalable_target_action = optional(list({
+    scalable_target_action = optional(list(object({
         max_capacity = optional(string)
         min_capacity = optional(string)
-    }))
+    })))
     schedule = optional(string)
     service_namespace = optional(string)
     start_time = optional(string)

@@ -21,171 +21,208 @@ variable "values" {
     mesh_name = optional(string)
     mesh_owner = optional(string)
     name = optional(string)
-    spec = optional(list({
-        backend = optional(set(any))
-        backend_defaults = optional(list({
-            client_policy = optional(list({
-                tls = optional(list({
-                    validation = optional(list({
-                        subject_alternative_names = optional(list({
-                            match = optional(list({
-                                exact = optional(set(string))
-                            }))
-                        }))
-                        trust = optional(list({
-                            acm = optional(list({
-                                certificate_authority_arns = optional(set(string))
-                            }))
-                            file = optional(list({
+    spec = optional(list(object({
+        backend = optional(set(object({
+            virtual_service = optional(list(object({
+                virtual_service_name = optional(string)
+                client_policy = optional(list(object({
+                    tls = optional(list(object({
+                        certificate = optional(list(object({
+                            file = optional(list(object({
                                 certificate_chain = optional(string)
-                            }))
-                            sds = optional(list({
+                                private_key = optional(string)
+                            })))
+                            sds = optional(list(object({
                                 secret_name = optional(string)
-                            }))
-                        }))
-                    }))
-                    certificate = optional(list({
-                        sds = optional(list({
-                            secret_name = optional(string)
-                        }))
-                        file = optional(list({
+                            })))
+                        })))
+                        enforce = optional(bool)
+                        ports = optional(set(number))
+                        validation = optional(list(object({
+                            trust = optional(list(object({
+                                acm = optional(list(object({
+                                    certificate_authority_arns = optional(set(string))
+                                })))
+                                file = optional(list(object({
+                                    certificate_chain = optional(string)
+                                })))
+                                sds = optional(list(object({
+                                    secret_name = optional(string)
+                                })))
+                            })))
+                            subject_alternative_names = optional(list(object({
+                                match = optional(list(object({
+                                    exact = optional(set(string))
+                                })))
+                            })))
+                        })))
+                    })))
+                })))
+            })))
+        })))
+        backend_defaults = optional(list(object({
+            client_policy = optional(list(object({
+                tls = optional(list(object({
+                    ports = optional(set(number))
+                    validation = optional(list(object({
+                        subject_alternative_names = optional(list(object({
+                            match = optional(list(object({
+                                exact = optional(set(string))
+                            })))
+                        })))
+                        trust = optional(list(object({
+                            sds = optional(list(object({
+                                secret_name = optional(string)
+                            })))
+                            acm = optional(list(object({
+                                certificate_authority_arns = optional(set(string))
+                            })))
+                            file = optional(list(object({
+                                certificate_chain = optional(string)
+                            })))
+                        })))
+                    })))
+                    certificate = optional(list(object({
+                        file = optional(list(object({
                             certificate_chain = optional(string)
                             private_key = optional(string)
-                        }))
-                    }))
+                        })))
+                        sds = optional(list(object({
+                            secret_name = optional(string)
+                        })))
+                    })))
                     enforce = optional(bool)
-                    ports = optional(set(number))
-                }))
-            }))
-        }))
-        listener = optional(list({
-            connection_pool = optional(list({
-                grpc = optional(list({
+                })))
+            })))
+        })))
+        listener = optional(list(object({
+            port_mapping = optional(list(object({
+                port = optional(number)
+                protocol = optional(string)
+            })))
+            timeout = optional(list(object({
+                grpc = optional(list(object({
+                    idle = optional(list(object({
+                        unit = optional(string)
+                        value = optional(number)
+                    })))
+                    per_request = optional(list(object({
+                        unit = optional(string)
+                        value = optional(number)
+                    })))
+                })))
+                http = optional(list(object({
+                    per_request = optional(list(object({
+                        unit = optional(string)
+                        value = optional(number)
+                    })))
+                    idle = optional(list(object({
+                        unit = optional(string)
+                        value = optional(number)
+                    })))
+                })))
+                http2 = optional(list(object({
+                    idle = optional(list(object({
+                        unit = optional(string)
+                        value = optional(number)
+                    })))
+                    per_request = optional(list(object({
+                        unit = optional(string)
+                        value = optional(number)
+                    })))
+                })))
+                tcp = optional(list(object({
+                    idle = optional(list(object({
+                        unit = optional(string)
+                        value = optional(number)
+                    })))
+                })))
+            })))
+            tls = optional(list(object({
+                mode = optional(string)
+                validation = optional(list(object({
+                    subject_alternative_names = optional(list(object({
+                        match = optional(list(object({
+                            exact = optional(set(string))
+                        })))
+                    })))
+                    trust = optional(list(object({
+                        file = optional(list(object({
+                            certificate_chain = optional(string)
+                        })))
+                        sds = optional(list(object({
+                            secret_name = optional(string)
+                        })))
+                    })))
+                })))
+                certificate = optional(list(object({
+                    acm = optional(list(object({
+                        certificate_arn = optional(string)
+                    })))
+                    file = optional(list(object({
+                        private_key = optional(string)
+                        certificate_chain = optional(string)
+                    })))
+                    sds = optional(list(object({
+                        secret_name = optional(string)
+                    })))
+                })))
+            })))
+            connection_pool = optional(list(object({
+                grpc = optional(list(object({
                     max_requests = optional(number)
-                }))
-                http = optional(list({
+                })))
+                http = optional(list(object({
                     max_connections = optional(number)
                     max_pending_requests = optional(number)
-                }))
-                http2 = optional(list({
+                })))
+                http2 = optional(list(object({
                     max_requests = optional(number)
-                }))
-                tcp = optional(list({
+                })))
+                tcp = optional(list(object({
                     max_connections = optional(number)
-                }))
-            }))
-            health_check = optional(list({
+                })))
+            })))
+            health_check = optional(list(object({
+                port = optional(number)
                 protocol = optional(string)
                 timeout_millis = optional(number)
                 unhealthy_threshold = optional(number)
                 healthy_threshold = optional(number)
                 interval_millis = optional(number)
                 path = optional(string)
-                port = optional(number)
-            }))
-            outlier_detection = optional(list({
+            })))
+            outlier_detection = optional(list(object({
+                base_ejection_duration = optional(list(object({
+                    unit = optional(string)
+                    value = optional(number)
+                })))
+                interval = optional(list(object({
+                    value = optional(number)
+                    unit = optional(string)
+                })))
                 max_ejection_percent = optional(number)
                 max_server_errors = optional(number)
-                base_ejection_duration = optional(list({
-                    value = optional(number)
-                    unit = optional(string)
-                }))
-                interval = optional(list({
-                    unit = optional(string)
-                    value = optional(number)
-                }))
-            }))
-            port_mapping = optional(list({
-                protocol = optional(string)
-                port = optional(number)
-            }))
-            timeout = optional(list({
-                grpc = optional(list({
-                    idle = optional(list({
-                        unit = optional(string)
-                        value = optional(number)
-                    }))
-                    per_request = optional(list({
-                        value = optional(number)
-                        unit = optional(string)
-                    }))
-                }))
-                http = optional(list({
-                    idle = optional(list({
-                        unit = optional(string)
-                        value = optional(number)
-                    }))
-                    per_request = optional(list({
-                        unit = optional(string)
-                        value = optional(number)
-                    }))
-                }))
-                http2 = optional(list({
-                    idle = optional(list({
-                        value = optional(number)
-                        unit = optional(string)
-                    }))
-                    per_request = optional(list({
-                        unit = optional(string)
-                        value = optional(number)
-                    }))
-                }))
-                tcp = optional(list({
-                    idle = optional(list({
-                        unit = optional(string)
-                        value = optional(number)
-                    }))
-                }))
-            }))
-            tls = optional(list({
-                certificate = optional(list({
-                    acm = optional(list({
-                        certificate_arn = optional(string)
-                    }))
-                    file = optional(list({
-                        certificate_chain = optional(string)
-                        private_key = optional(string)
-                    }))
-                    sds = optional(list({
-                        secret_name = optional(string)
-                    }))
-                }))
-                mode = optional(string)
-                validation = optional(list({
-                    subject_alternative_names = optional(list({
-                        match = optional(list({
-                            exact = optional(set(string))
-                        }))
-                    }))
-                    trust = optional(list({
-                        file = optional(list({
-                            certificate_chain = optional(string)
-                        }))
-                        sds = optional(list({
-                            secret_name = optional(string)
-                        }))
-                    }))
-                }))
-            }))
-        }))
-        logging = optional(list({
-            access_log = optional(list({
-                file = optional(list({
+            })))
+        })))
+        logging = optional(list(object({
+            access_log = optional(list(object({
+                file = optional(list(object({
                     path = optional(string)
-                }))
-            }))
-        }))
-        service_discovery = optional(list({
-            aws_cloud_map = optional(list({
+                })))
+            })))
+        })))
+        service_discovery = optional(list(object({
+            aws_cloud_map = optional(list(object({
+                namespace_name = optional(string)
                 service_name = optional(string)
                 attributes = optional(map(string))
-                namespace_name = optional(string)
-            }))
-            dns = optional(list({
+            })))
+            dns = optional(list(object({
                 hostname = optional(string)
-            }))
-        }))
-    }))
+            })))
+        })))
+    })))
     tags = optional(map(string))
   })
 }

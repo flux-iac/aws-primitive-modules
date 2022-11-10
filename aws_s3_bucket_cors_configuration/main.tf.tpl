@@ -19,7 +19,14 @@ provider "aws" {
 variable "values" {
   type = object({
     bucket = optional(string)
-    cors_rule = optional(set(any))
+    cors_rule = optional(set(object({
+        allowed_headers = optional(set(string))
+        allowed_methods = optional(set(string))
+        allowed_origins = optional(set(string))
+        expose_headers = optional(set(string))
+        id = optional(string)
+        max_age_seconds = optional(number)
+    })))
     expected_bucket_owner = optional(string)
   })
 }
@@ -30,7 +37,17 @@ resource "aws_s3_bucket_cors_configuration" "this" {
   bucket = var.values.bucket
   {{- end }}
   {{- if $.Values.cors_rule }}
-  cors_rule = var.values.cors_rule
+  dynamic "cors_rule" {
+    for_each = var.values.cors_rule
+    content {
+      allowed_headers = cors_rule.allowed_headers
+      allowed_methods = cors_rule.allowed_methods
+      allowed_origins = cors_rule.allowed_origins
+      expose_headers = cors_rule.expose_headers
+      id = cors_rule.id
+      max_age_seconds = cors_rule.max_age_seconds
+    }
+  }
   {{- end }}
   {{- if $.Values.expected_bucket_owner }}
   expected_bucket_owner = var.values.expected_bucket_owner

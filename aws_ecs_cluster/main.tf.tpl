@@ -18,19 +18,19 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    configuration = optional(list({
-        execute_command_configuration = optional(list({
+    configuration = optional(list(object({
+        execute_command_configuration = optional(list(object({
             kms_key_id = optional(string)
-            log_configuration = optional(list({
+            log_configuration = optional(list(object({
                 cloud_watch_encryption_enabled = optional(bool)
                 cloud_watch_log_group_name = optional(string)
                 s3_bucket_name = optional(string)
                 s3_bucket_encryption_enabled = optional(bool)
                 s3_key_prefix = optional(string)
-            }))
+            })))
             logging = optional(string)
-        }))
-    }))
+        })))
+    })))
     name = optional(string)
     tags = optional(map(string))
   })

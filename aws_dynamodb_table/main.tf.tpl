@@ -18,14 +18,35 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    attribute = optional(set(any))
+    attribute = optional(set(object({
+        name = optional(string)
+        type = optional(string)
+    })))
     billing_mode = optional(string)
-    global_secondary_index = optional(set(any))
+    global_secondary_index = optional(set(object({
+        write_capacity = optional(number)
+        hash_key = optional(string)
+        name = optional(string)
+        non_key_attributes = optional(set(string))
+        projection_type = optional(string)
+        range_key = optional(string)
+        read_capacity = optional(number)
+    })))
     hash_key = optional(string)
-    local_secondary_index = optional(set(any))
+    local_secondary_index = optional(set(object({
+        projection_type = optional(string)
+        range_key = optional(string)
+        name = optional(string)
+        non_key_attributes = optional(list(string))
+    })))
     name = optional(string)
     range_key = optional(string)
-    replica = optional(set(any))
+    replica = optional(set(object({
+        kms_key_arn = optional(string)
+        point_in_time_recovery = optional(bool)
+        propagate_tags = optional(bool)
+        region_name = optional(string)
+    })))
     restore_date_time = optional(string)
     restore_source_name = optional(string)
     restore_to_latest_time = optional(bool)
@@ -38,19 +59,44 @@ variable "values" {
 resource "aws_dynamodb_table" "this" {
 
   {{- if $.Values.attribute }}
-  attribute = var.values.attribute
+  dynamic "attribute" {
+    for_each = var.values.attribute
+    content {
+      name = attribute.name
+      type = attribute.type
+    }
+  }
   {{- end }}
   {{- if $.Values.billing_mode }}
   billing_mode = var.values.billing_mode
   {{- end }}
   {{- if $.Values.global_secondary_index }}
-  global_secondary_index = var.values.global_secondary_index
+  dynamic "global_secondary_index" {
+    for_each = var.values.global_secondary_index
+    content {
+      name = global_secondary_index.name
+      non_key_attributes = global_secondary_index.non_key_attributes
+      projection_type = global_secondary_index.projection_type
+      range_key = global_secondary_index.range_key
+      read_capacity = global_secondary_index.read_capacity
+      write_capacity = global_secondary_index.write_capacity
+      hash_key = global_secondary_index.hash_key
+    }
+  }
   {{- end }}
   {{- if $.Values.hash_key }}
   hash_key = var.values.hash_key
   {{- end }}
   {{- if $.Values.local_secondary_index }}
-  local_secondary_index = var.values.local_secondary_index
+  dynamic "local_secondary_index" {
+    for_each = var.values.local_secondary_index
+    content {
+      name = local_secondary_index.name
+      non_key_attributes = local_secondary_index.non_key_attributes
+      projection_type = local_secondary_index.projection_type
+      range_key = local_secondary_index.range_key
+    }
+  }
   {{- end }}
   {{- if $.Values.name }}
   name = var.values.name
@@ -59,7 +105,15 @@ resource "aws_dynamodb_table" "this" {
   range_key = var.values.range_key
   {{- end }}
   {{- if $.Values.replica }}
-  replica = var.values.replica
+  dynamic "replica" {
+    for_each = var.values.replica
+    content {
+      region_name = replica.region_name
+      kms_key_arn = replica.kms_key_arn
+      point_in_time_recovery = replica.point_in_time_recovery
+      propagate_tags = replica.propagate_tags
+    }
+  }
   {{- end }}
   {{- if $.Values.restore_date_time }}
   restore_date_time = var.values.restore_date_time

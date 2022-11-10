@@ -19,26 +19,26 @@ provider "aws" {
 variable "values" {
   type = object({
     api_id = optional(string)
-    caching_config = optional(list({
+    caching_config = optional(list(object({
         caching_keys = optional(set(string))
         ttl = optional(number)
-    }))
+    })))
     data_source = optional(string)
     field = optional(string)
     kind = optional(string)
     max_batch_size = optional(number)
-    pipeline_config = optional(list({
+    pipeline_config = optional(list(object({
         functions = optional(list(string))
-    }))
+    })))
     request_template = optional(string)
     response_template = optional(string)
-    sync_config = optional(list({
+    sync_config = optional(list(object({
         conflict_detection = optional(string)
         conflict_handler = optional(string)
-        lambda_conflict_handler_config = optional(list({
+        lambda_conflict_handler_config = optional(list(object({
             lambda_conflict_handler_arn = optional(string)
-        }))
-    }))
+        })))
+    })))
     type = optional(string)
   })
 }

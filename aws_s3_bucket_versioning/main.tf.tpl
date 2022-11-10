@@ -21,10 +21,10 @@ variable "values" {
     bucket = optional(string)
     expected_bucket_owner = optional(string)
     mfa = optional(string)
-    versioning_configuration = optional(list({
+    versioning_configuration = optional(list(object({
         mfa_delete = optional(string)
         status = optional(string)
-    }))
+    })))
   })
 }
 

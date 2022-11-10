@@ -29,18 +29,22 @@ variable "values" {
     node_group_name = optional(string)
     node_group_name_prefix = optional(string)
     node_role_arn = optional(string)
-    remote_access = optional(list({
+    remote_access = optional(list(object({
         ec2_ssh_key = optional(string)
         source_security_group_ids = optional(set(string))
-    }))
-    scaling_config = optional(list({
+    })))
+    scaling_config = optional(list(object({
         desired_size = optional(number)
         max_size = optional(number)
         min_size = optional(number)
-    }))
+    })))
     subnet_ids = optional(set(string))
     tags = optional(map(string))
-    taint = optional(set(any))
+    taint = optional(set(object({
+        key = optional(string)
+        value = optional(string)
+        effect = optional(string)
+    })))
   })
 }
 
@@ -92,7 +96,14 @@ resource "aws_eks_node_group" "this" {
   tags = var.values.tags
   {{- end }}
   {{- if $.Values.taint }}
-  taint = var.values.taint
+  dynamic "taint" {
+    for_each = var.values.taint
+    content {
+      key = taint.key
+      value = taint.value
+      effect = taint.effect
+    }
+  }
   {{- end }}
 
 

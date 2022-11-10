@@ -19,31 +19,31 @@ provider "aws" {
 variable "values" {
   type = object({
     bucket = optional(string)
-    destination = optional(list({
-        bucket = optional(list({
+    destination = optional(list(object({
+        bucket = optional(list(object({
             format = optional(string)
             bucket_arn = optional(string)
             account_id = optional(string)
             prefix = optional(string)
-            encryption = optional(list({
-                sse_kms = optional(list({
+            encryption = optional(list(object({
+                sse_kms = optional(list(object({
                     key_id = optional(string)
-                }))
-                sse_s3 = optional(list({
-                }))
-            }))
-        }))
-    }))
+                })))
+                sse_s3 = optional(list(object({
+                })))
+            })))
+        })))
+    })))
     enabled = optional(bool)
-    filter = optional(list({
+    filter = optional(list(object({
         prefix = optional(string)
-    }))
+    })))
     included_object_versions = optional(string)
     name = optional(string)
     optional_fields = optional(set(string))
-    schedule = optional(list({
+    schedule = optional(list(object({
         frequency = optional(string)
-    }))
+    })))
   })
 }
 

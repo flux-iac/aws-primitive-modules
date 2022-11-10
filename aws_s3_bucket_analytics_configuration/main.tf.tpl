@@ -19,24 +19,24 @@ provider "aws" {
 variable "values" {
   type = object({
     bucket = optional(string)
-    filter = optional(list({
+    filter = optional(list(object({
         prefix = optional(string)
         tags = optional(map(string))
-    }))
+    })))
     name = optional(string)
-    storage_class_analysis = optional(list({
-        data_export = optional(list({
+    storage_class_analysis = optional(list(object({
+        data_export = optional(list(object({
             output_schema_version = optional(string)
-            destination = optional(list({
-                s3_bucket_destination = optional(list({
+            destination = optional(list(object({
+                s3_bucket_destination = optional(list(object({
                     bucket_arn = optional(string)
                     bucket_account_id = optional(string)
                     format = optional(string)
                     prefix = optional(string)
-                }))
-            }))
-        }))
-    }))
+                })))
+            })))
+        })))
+    })))
   })
 }
 

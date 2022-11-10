@@ -20,90 +20,90 @@ variable "values" {
   type = object({
     context = optional(string)
     excess_capacity_termination_policy = optional(string)
-    launch_template_config = optional(list({
-        launch_template_specification = optional(list({
+    launch_template_config = optional(list(object({
+        launch_template_specification = optional(list(object({
             launch_template_id = optional(string)
             launch_template_name = optional(string)
             version = optional(string)
-        }))
-        override = optional(list({
+        })))
+        override = optional(list(object({
             subnet_id = optional(string)
             weighted_capacity = optional(number)
             availability_zone = optional(string)
-            instance_requirements = optional(list({
-                accelerator_total_memory_mib = optional(list({
-                    max = optional(number)
-                    min = optional(number)
-                }))
-                accelerator_types = optional(set(string))
+            instance_requirements = optional(list(object({
                 excluded_instance_types = optional(set(string))
-                instance_generations = optional(set(string))
-                local_storage = optional(string)
-                local_storage_types = optional(set(string))
-                memory_gib_per_vcpu = optional(list({
+                memory_mib = optional(list(object({
                     max = optional(number)
                     min = optional(number)
-                }))
-                network_interface_count = optional(list({
-                    max = optional(number)
-                    min = optional(number)
-                }))
-                bare_metal = optional(string)
-                burstable_performance = optional(string)
-                cpu_manufacturers = optional(set(string))
-                memory_mib = optional(list({
-                    max = optional(number)
-                    min = optional(number)
-                }))
-                on_demand_max_price_percentage_over_lowest_price = optional(number)
-                total_local_storage_gb = optional(list({
-                    max = optional(number)
-                    min = optional(number)
-                }))
-                vcpu_count = optional(list({
-                    max = optional(number)
-                    min = optional(number)
-                }))
-                accelerator_manufacturers = optional(set(string))
-                baseline_ebs_bandwidth_mbps = optional(list({
-                    min = optional(number)
-                    max = optional(number)
-                }))
-                spot_max_price_percentage_over_lowest_price = optional(number)
-                accelerator_count = optional(list({
-                    min = optional(number)
-                    max = optional(number)
-                }))
-                accelerator_names = optional(set(string))
+                })))
                 require_hibernate_support = optional(bool)
-            }))
+                spot_max_price_percentage_over_lowest_price = optional(number)
+                total_local_storage_gb = optional(list(object({
+                    max = optional(number)
+                    min = optional(number)
+                })))
+                bare_metal = optional(string)
+                accelerator_names = optional(set(string))
+                accelerator_total_memory_mib = optional(list(object({
+                    max = optional(number)
+                    min = optional(number)
+                })))
+                cpu_manufacturers = optional(set(string))
+                local_storage = optional(string)
+                memory_gib_per_vcpu = optional(list(object({
+                    max = optional(number)
+                    min = optional(number)
+                })))
+                network_interface_count = optional(list(object({
+                    max = optional(number)
+                    min = optional(number)
+                })))
+                on_demand_max_price_percentage_over_lowest_price = optional(number)
+                accelerator_manufacturers = optional(set(string))
+                local_storage_types = optional(set(string))
+                vcpu_count = optional(list(object({
+                    min = optional(number)
+                    max = optional(number)
+                })))
+                instance_generations = optional(set(string))
+                accelerator_types = optional(set(string))
+                baseline_ebs_bandwidth_mbps = optional(list(object({
+                    max = optional(number)
+                    min = optional(number)
+                })))
+                burstable_performance = optional(string)
+                accelerator_count = optional(list(object({
+                    max = optional(number)
+                    min = optional(number)
+                })))
+            })))
             instance_type = optional(string)
             max_price = optional(string)
             priority = optional(number)
-        }))
-    }))
-    on_demand_options = optional(list({
+        })))
+    })))
+    on_demand_options = optional(list(object({
         allocation_strategy = optional(string)
-    }))
+    })))
     replace_unhealthy_instances = optional(bool)
-    spot_options = optional(list({
+    spot_options = optional(list(object({
+        maintenance_strategies = optional(list(object({
+            capacity_rebalance = optional(list(object({
+                replacement_strategy = optional(string)
+            })))
+        })))
         allocation_strategy = optional(string)
         instance_interruption_behavior = optional(string)
         instance_pools_to_use_count = optional(number)
-        maintenance_strategies = optional(list({
-            capacity_rebalance = optional(list({
-                replacement_strategy = optional(string)
-            }))
-        }))
-    }))
+    })))
     tags = optional(map(string))
-    target_capacity_specification = optional(list({
-        target_capacity_unit_type = optional(string)
-        total_target_capacity = optional(number)
+    target_capacity_specification = optional(list(object({
         default_target_capacity_type = optional(string)
         on_demand_target_capacity = optional(number)
         spot_target_capacity = optional(number)
-    }))
+        target_capacity_unit_type = optional(string)
+        total_target_capacity = optional(number)
+    })))
     terminate_instances = optional(bool)
     terminate_instances_with_expiration = optional(bool)
     type = optional(string)

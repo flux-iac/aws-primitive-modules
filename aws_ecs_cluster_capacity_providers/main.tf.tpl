@@ -20,7 +20,11 @@ variable "values" {
   type = object({
     capacity_providers = optional(set(string))
     cluster_name = optional(string)
-    default_capacity_provider_strategy = optional(set(any))
+    default_capacity_provider_strategy = optional(set(object({
+        base = optional(number)
+        capacity_provider = optional(string)
+        weight = optional(number)
+    })))
   })
 }
 
@@ -33,7 +37,14 @@ resource "aws_ecs_cluster_capacity_providers" "this" {
   cluster_name = var.values.cluster_name
   {{- end }}
   {{- if $.Values.default_capacity_provider_strategy }}
-  default_capacity_provider_strategy = var.values.default_capacity_provider_strategy
+  dynamic "default_capacity_provider_strategy" {
+    for_each = var.values.default_capacity_provider_strategy
+    content {
+      weight = default_capacity_provider_strategy.weight
+      base = default_capacity_provider_strategy.base
+      capacity_provider = default_capacity_provider_strategy.capacity_provider
+    }
+  }
   {{- end }}
 
 

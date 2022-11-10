@@ -20,7 +20,13 @@ variable "values" {
   type = object({
     bucket = optional(string)
     expected_bucket_owner = optional(string)
-    rule = optional(set(any))
+    rule = optional(set(object({
+        apply_server_side_encryption_by_default = optional(list(object({
+            kms_master_key_id = optional(string)
+            sse_algorithm = optional(string)
+        })))
+        bucket_key_enabled = optional(bool)
+    })))
   })
 }
 
@@ -33,7 +39,13 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
   expected_bucket_owner = var.values.expected_bucket_owner
   {{- end }}
   {{- if $.Values.rule }}
-  rule = var.values.rule
+  dynamic "rule" {
+    for_each = var.values.rule
+    content {
+      apply_server_side_encryption_by_default = rule.apply_server_side_encryption_by_default
+      bucket_key_enabled = rule.bucket_key_enabled
+    }
+  }
   {{- end }}
 
 

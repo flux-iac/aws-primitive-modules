@@ -20,40 +20,48 @@ variable "values" {
   type = object({
     bucket = optional(string)
     expected_bucket_owner = optional(string)
-    rule = optional(list({
-        noncurrent_version_transition = optional(set(any))
-        status = optional(string)
-        transition = optional(set(any))
-        abort_incomplete_multipart_upload = optional(list({
-            days_after_initiation = optional(number)
-        }))
-        id = optional(string)
-        noncurrent_version_expiration = optional(list({
-            newer_noncurrent_versions = optional(string)
-            noncurrent_days = optional(number)
-        }))
-        prefix = optional(string)
-        expiration = optional(list({
-            date = optional(string)
-            days = optional(number)
-            expired_object_delete_marker = optional(bool)
-        }))
-        filter = optional(list({
-            and = optional(list({
-                tags = optional(map(string))
+    rule = optional(list(object({
+        filter = optional(list(object({
+            and = optional(list(object({
                 object_size_greater_than = optional(number)
                 object_size_less_than = optional(number)
                 prefix = optional(string)
-            }))
+                tags = optional(map(string))
+            })))
             object_size_greater_than = optional(string)
             object_size_less_than = optional(string)
             prefix = optional(string)
-            tag = optional(list({
+            tag = optional(list(object({
                 key = optional(string)
                 value = optional(string)
-            }))
-        }))
-    }))
+            })))
+        })))
+        noncurrent_version_expiration = optional(list(object({
+            newer_noncurrent_versions = optional(string)
+            noncurrent_days = optional(number)
+        })))
+        status = optional(string)
+        abort_incomplete_multipart_upload = optional(list(object({
+            days_after_initiation = optional(number)
+        })))
+        expiration = optional(list(object({
+            date = optional(string)
+            days = optional(number)
+            expired_object_delete_marker = optional(bool)
+        })))
+        id = optional(string)
+        noncurrent_version_transition = optional(set(object({
+            newer_noncurrent_versions = optional(string)
+            noncurrent_days = optional(number)
+            storage_class = optional(string)
+        })))
+        prefix = optional(string)
+        transition = optional(set(object({
+            date = optional(string)
+            days = optional(number)
+            storage_class = optional(string)
+        })))
+    })))
   })
 }
 

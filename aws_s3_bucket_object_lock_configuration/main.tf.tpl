@@ -21,13 +21,13 @@ variable "values" {
     bucket = optional(string)
     expected_bucket_owner = optional(string)
     object_lock_enabled = optional(string)
-    rule = optional(list({
-        default_retention = optional(list({
+    rule = optional(list(object({
+        default_retention = optional(list(object({
             days = optional(number)
             mode = optional(string)
             years = optional(number)
-        }))
-    }))
+        })))
+    })))
     token = optional(string)
   })
 }

@@ -23,11 +23,15 @@ variable "values" {
     availability_zone = optional(string)
     cpu_core_count = optional(number)
     cpu_threads_per_core = optional(number)
-    credit_specification = optional(list({
+    credit_specification = optional(list(object({
         cpu_credits = optional(string)
-    }))
+    })))
     ebs_optimized = optional(bool)
-    ephemeral_block_device = optional(set(any))
+    ephemeral_block_device = optional(set(object({
+        device_name = optional(string)
+        no_device = optional(bool)
+        virtual_name = optional(string)
+    })))
     get_password_data = optional(bool)
     hibernation = optional(bool)
     host_id = optional(string)
@@ -38,11 +42,11 @@ variable "values" {
     launch_template = optional(list(string))
     placement_group = optional(string)
     placement_partition_number = optional(number)
-    private_dns_name_options = optional(list({
+    private_dns_name_options = optional(list(object({
         enable_resource_name_dns_aaaa_record = optional(bool)
         enable_resource_name_dns_a_record = optional(bool)
         hostname_type = optional(string)
-    }))
+    })))
     private_ip = optional(string)
     security_groups = optional(set(string))
     source_dest_check = optional(bool)
@@ -78,7 +82,14 @@ resource "aws_instance" "this" {
   ebs_optimized = var.values.ebs_optimized
   {{- end }}
   {{- if $.Values.ephemeral_block_device }}
-  ephemeral_block_device = var.values.ephemeral_block_device
+  dynamic "ephemeral_block_device" {
+    for_each = var.values.ephemeral_block_device
+    content {
+      device_name = ephemeral_block_device.device_name
+      no_device = ephemeral_block_device.no_device
+      virtual_name = ephemeral_block_device.virtual_name
+    }
+  }
   {{- end }}
   {{- if $.Values.get_password_data }}
   get_password_data = var.values.get_password_data

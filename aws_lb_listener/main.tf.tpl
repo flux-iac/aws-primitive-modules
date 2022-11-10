@@ -20,54 +20,57 @@ variable "values" {
   type = object({
     alpn_policy = optional(string)
     certificate_arn = optional(string)
-    default_action = optional(list({
+    default_action = optional(list(object({
         order = optional(number)
-        redirect = optional(list({
-            port = optional(string)
+        redirect = optional(list(object({
             protocol = optional(string)
             query = optional(string)
             status_code = optional(string)
             host = optional(string)
             path = optional(string)
-        }))
+            port = optional(string)
+        })))
         target_group_arn = optional(string)
         type = optional(string)
-        authenticate_cognito = optional(list({
-            session_timeout = optional(number)
-            user_pool_arn = optional(string)
+        authenticate_cognito = optional(list(object({
             user_pool_client_id = optional(string)
             user_pool_domain = optional(string)
             authentication_request_extra_params = optional(map(string))
             on_unauthenticated_request = optional(string)
             scope = optional(string)
             session_cookie_name = optional(string)
-        }))
-        authenticate_oidc = optional(list({
-            authorization_endpoint = optional(string)
-            client_id = optional(string)
+            session_timeout = optional(number)
+            user_pool_arn = optional(string)
+        })))
+        authenticate_oidc = optional(list(object({
+            on_unauthenticated_request = optional(string)
             scope = optional(string)
             session_cookie_name = optional(string)
-            session_timeout = optional(number)
+            token_endpoint = optional(string)
             authentication_request_extra_params = optional(map(string))
+            authorization_endpoint = optional(string)
             client_secret = optional(string)
             issuer = optional(string)
-            on_unauthenticated_request = optional(string)
-            token_endpoint = optional(string)
             user_info_endpoint = optional(string)
-        }))
-        fixed_response = optional(list({
-            status_code = optional(string)
+            client_id = optional(string)
+            session_timeout = optional(number)
+        })))
+        fixed_response = optional(list(object({
             content_type = optional(string)
             message_body = optional(string)
-        }))
-        forward = optional(list({
-            stickiness = optional(list({
+            status_code = optional(string)
+        })))
+        forward = optional(list(object({
+            target_group = optional(set(object({
+                arn = optional(string)
+                weight = optional(number)
+            })))
+            stickiness = optional(list(object({
                 duration = optional(number)
                 enabled = optional(bool)
-            }))
-            target_group = optional(set(any))
-        }))
-    }))
+            })))
+        })))
+    })))
     load_balancer_arn = optional(string)
     port = optional(number)
     tags = optional(map(string))

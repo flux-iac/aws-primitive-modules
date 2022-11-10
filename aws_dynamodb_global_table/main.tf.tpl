@@ -19,7 +19,9 @@ provider "aws" {
 variable "values" {
   type = object({
     name = optional(string)
-    replica = optional(set(any))
+    replica = optional(set(object({
+        region_name = optional(string)
+    })))
   })
 }
 
@@ -29,7 +31,12 @@ resource "aws_dynamodb_global_table" "this" {
   name = var.values.name
   {{- end }}
   {{- if $.Values.replica }}
-  replica = var.values.replica
+  dynamic "replica" {
+    for_each = var.values.replica
+    content {
+      region_name = replica.region_name
+    }
+  }
   {{- end }}
 
 

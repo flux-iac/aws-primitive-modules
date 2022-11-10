@@ -18,40 +18,40 @@ provider "aws" {
 
 variable "values" {
   type = object({
-    certificate_authority_configuration = optional(list({
-        subject = optional(list({
+    certificate_authority_configuration = optional(list(object({
+        key_algorithm = optional(string)
+        signing_algorithm = optional(string)
+        subject = optional(list(object({
+            country = optional(string)
+            initials = optional(string)
             organization = optional(string)
             organizational_unit = optional(string)
             pseudonym = optional(string)
             state = optional(string)
+            surname = optional(string)
             common_name = optional(string)
             distinguished_name_qualifier = optional(string)
-            initials = optional(string)
-            locality = optional(string)
-            surname = optional(string)
-            title = optional(string)
-            country = optional(string)
             generation_qualifier = optional(string)
             given_name = optional(string)
-        }))
-        key_algorithm = optional(string)
-        signing_algorithm = optional(string)
-    }))
+            locality = optional(string)
+            title = optional(string)
+        })))
+    })))
     enabled = optional(bool)
     permanent_deletion_time_in_days = optional(number)
-    revocation_configuration = optional(list({
-        crl_configuration = optional(list({
+    revocation_configuration = optional(list(object({
+        crl_configuration = optional(list(object({
             custom_cname = optional(string)
             enabled = optional(bool)
             expiration_in_days = optional(number)
             s3_bucket_name = optional(string)
             s3_object_acl = optional(string)
-        }))
-        ocsp_configuration = optional(list({
+        })))
+        ocsp_configuration = optional(list(object({
             enabled = optional(bool)
             ocsp_custom_cname = optional(string)
-        }))
-    }))
+        })))
+    })))
     tags = optional(map(string))
     type = optional(string)
   })

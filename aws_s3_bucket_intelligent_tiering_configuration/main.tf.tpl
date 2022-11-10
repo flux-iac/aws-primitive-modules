@@ -19,13 +19,16 @@ provider "aws" {
 variable "values" {
   type = object({
     bucket = optional(string)
-    filter = optional(list({
+    filter = optional(list(object({
         prefix = optional(string)
         tags = optional(map(string))
-    }))
+    })))
     name = optional(string)
     status = optional(string)
-    tiering = optional(set(any))
+    tiering = optional(set(object({
+        access_tier = optional(string)
+        days = optional(number)
+    })))
   })
 }
 
@@ -44,7 +47,13 @@ resource "aws_s3_bucket_intelligent_tiering_configuration" "this" {
   status = var.values.status
   {{- end }}
   {{- if $.Values.tiering }}
-  tiering = var.values.tiering
+  dynamic "tiering" {
+    for_each = var.values.tiering
+    content {
+      access_tier = tiering.access_tier
+      days = tiering.days
+    }
+  }
   {{- end }}
 
 

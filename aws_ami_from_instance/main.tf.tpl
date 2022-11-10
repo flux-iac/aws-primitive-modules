@@ -20,7 +20,10 @@ variable "values" {
   type = object({
     deprecation_time = optional(string)
     description = optional(string)
-    ephemeral_block_device = optional(set(any))
+    ephemeral_block_device = optional(set(object({
+        device_name = optional(string)
+        virtual_name = optional(string)
+    })))
     name = optional(string)
     snapshot_without_reboot = optional(bool)
     source_instance_id = optional(string)
@@ -37,7 +40,13 @@ resource "aws_ami_from_instance" "this" {
   description = var.values.description
   {{- end }}
   {{- if $.Values.ephemeral_block_device }}
-  ephemeral_block_device = var.values.ephemeral_block_device
+  dynamic "ephemeral_block_device" {
+    for_each = var.values.ephemeral_block_device
+    content {
+      device_name = ephemeral_block_device.device_name
+      virtual_name = ephemeral_block_device.virtual_name
+    }
+  }
   {{- end }}
   {{- if $.Values.name }}
   name = var.values.name

@@ -25,7 +25,10 @@ variable "values" {
     retrieval_role_arn = optional(string)
     tags = optional(map(string))
     type = optional(string)
-    validator = optional(set(any))
+    validator = optional(set(object({
+        content = optional(string)
+        type = optional(string)
+    })))
   })
 }
 
@@ -53,7 +56,13 @@ resource "aws_appconfig_configuration_profile" "this" {
   type = var.values.type
   {{- end }}
   {{- if $.Values.validator }}
-  validator = var.values.validator
+  dynamic "validator" {
+    for_each = var.values.validator
+    content {
+      content = validator.content
+      type = validator.type
+    }
+  }
   {{- end }}
 
 
