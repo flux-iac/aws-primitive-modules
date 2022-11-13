@@ -10,6 +10,7 @@ Currently, this repository contains resources prefixed by:
   - `aws_ami`
   - `aws_app`
   - `aws_docdb`
+  - `aws_dynamodb`
   - `aws_ec2`
   - `aws_ecr`
   - `aws_ecs`
@@ -40,13 +41,13 @@ cat << EOF | kubectl apply -f -
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: OCIRepository
 metadata:
-  name: aws-package-v4.33.0
+  name: aws-package
   namespace: flux-system
 spec:
   interval: 30s
   url: oci://ghcr.io/tf-controller/aws-primitive-modules
   ref:
-    tag: v4.33.0-v1alpha2
+    tag: v4.38.0-v1alpha9
 EOF
 ```
 
@@ -99,7 +100,7 @@ spec:
       Name: My bucket
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.33.0
+    name: aws-package
   approvePlan: auto
   interval: 1h0m
   destroyResourcesOnDeletion: true
