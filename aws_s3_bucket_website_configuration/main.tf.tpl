@@ -39,16 +39,32 @@ resource "aws_s3_bucket_website_configuration" "this" {
   bucket = var.values.bucket
   {{- end }}
   {{- if $.Values.error_document }}
-  error_document = var.values.error_document
+  dynamic "error_document" {
+    for_each = var.values.error_document[*]
+    content {
+      key = error_document.value.key
+    }
+  }
   {{- end }}
   {{- if $.Values.expected_bucket_owner }}
   expected_bucket_owner = var.values.expected_bucket_owner
   {{- end }}
   {{- if $.Values.index_document }}
-  index_document = var.values.index_document
+  dynamic "index_document" {
+    for_each = var.values.index_document[*]
+    content {
+      suffix = index_document.value.suffix
+    }
+  }
   {{- end }}
   {{- if $.Values.redirect_all_requests_to }}
-  redirect_all_requests_to = var.values.redirect_all_requests_to
+  dynamic "redirect_all_requests_to" {
+    for_each = var.values.redirect_all_requests_to[*]
+    content {
+      host_name = redirect_all_requests_to.value.host_name
+      protocol = redirect_all_requests_to.value.protocol
+    }
+  }
   {{- end }}
 
 

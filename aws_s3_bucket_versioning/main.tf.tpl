@@ -40,7 +40,13 @@ resource "aws_s3_bucket_versioning" "this" {
   mfa = var.values.mfa
   {{- end }}
   {{- if $.Values.versioning_configuration }}
-  versioning_configuration = var.values.versioning_configuration
+  dynamic "versioning_configuration" {
+    for_each = var.values.versioning_configuration[*]
+    content {
+      mfa_delete = versioning_configuration.value.mfa_delete
+      status = versioning_configuration.value.status
+    }
+  }
   {{- end }}
 
 

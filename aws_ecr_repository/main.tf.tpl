@@ -35,13 +35,24 @@ variable "values" {
 resource "aws_ecr_repository" "this" {
 
   {{- if $.Values.encryption_configuration }}
-  encryption_configuration = var.values.encryption_configuration
+  dynamic "encryption_configuration" {
+    for_each = var.values.encryption_configuration[*]
+    content {
+      encryption_type = encryption_configuration.value.encryption_type
+      kms_key = encryption_configuration.value.kms_key
+    }
+  }
   {{- end }}
   {{- if $.Values.force_delete }}
   force_delete = var.values.force_delete
   {{- end }}
   {{- if $.Values.image_scanning_configuration }}
-  image_scanning_configuration = var.values.image_scanning_configuration
+  dynamic "image_scanning_configuration" {
+    for_each = var.values.image_scanning_configuration[*]
+    content {
+      scan_on_push = image_scanning_configuration.value.scan_on_push
+    }
+  }
   {{- end }}
   {{- if $.Values.image_tag_mutability }}
   image_tag_mutability = var.values.image_tag_mutability

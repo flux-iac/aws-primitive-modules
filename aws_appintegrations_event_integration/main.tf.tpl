@@ -34,7 +34,12 @@ resource "aws_appintegrations_event_integration" "this" {
   description = var.values.description
   {{- end }}
   {{- if $.Values.event_filter }}
-  event_filter = var.values.event_filter
+  dynamic "event_filter" {
+    for_each = var.values.event_filter[*]
+    content {
+      source = event_filter.value.source
+    }
+  }
   {{- end }}
   {{- if $.Values.eventbridge_bus }}
   eventbridge_bus = var.values.eventbridge_bus

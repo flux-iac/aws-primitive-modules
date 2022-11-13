@@ -19,8 +19,8 @@ provider "aws" {
 variable "values" {
   type = object({
     attribute = optional(set(object({
-        value = optional(string)
         name = optional(string)
+        value = optional(string)
     })))
     lb_port = optional(number)
     load_balancer = optional(string)

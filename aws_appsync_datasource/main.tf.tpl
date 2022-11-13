@@ -38,11 +38,11 @@ variable "values" {
     http_config = optional(list(object({
         endpoint = optional(string)
         authorization_config = optional(list(object({
+            authorization_type = optional(string)
             aws_iam_config = optional(list(object({
                 signing_region = optional(string)
                 signing_service_name = optional(string)
             })))
-            authorization_type = optional(string)
         })))
     })))
     lambda_config = optional(list(object({
@@ -51,11 +51,11 @@ variable "values" {
     name = optional(string)
     relational_database_config = optional(list(object({
         http_endpoint_config = optional(list(object({
+            db_cluster_identifier = optional(string)
             aws_secret_store_arn = optional(string)
             database_name = optional(string)
             region = optional(string)
             schema = optional(string)
-            db_cluster_identifier = optional(string)
         })))
         source_type = optional(string)
     })))
@@ -73,22 +73,82 @@ resource "aws_appsync_datasource" "this" {
   description = var.values.description
   {{- end }}
   {{- if $.Values.dynamodb_config }}
-  dynamodb_config = var.values.dynamodb_config
+  dynamic "dynamodb_config" {
+    for_each = var.values.dynamodb_config[*]
+    content {
+      region = dynamodb_config.value.region
+      table_name = dynamodb_config.value.table_name
+      use_caller_credentials = dynamodb_config.value.use_caller_credentials
+      versioned = dynamodb_config.value.versioned
+      dynamic "delta_sync_config" {
+        for_each = dynamodb_config.value.delta_sync_config[*]
+        content {
+          base_table_ttl = delta_sync_config.value.base_table_ttl
+          delta_sync_table_name = delta_sync_config.value.delta_sync_table_name
+          delta_sync_table_ttl = delta_sync_config.value.delta_sync_table_ttl
+        }
+      }
+    }
+  }
   {{- end }}
   {{- if $.Values.elasticsearch_config }}
-  elasticsearch_config = var.values.elasticsearch_config
+  dynamic "elasticsearch_config" {
+    for_each = var.values.elasticsearch_config[*]
+    content {
+      region = elasticsearch_config.value.region
+      endpoint = elasticsearch_config.value.endpoint
+    }
+  }
   {{- end }}
   {{- if $.Values.http_config }}
-  http_config = var.values.http_config
+  dynamic "http_config" {
+    for_each = var.values.http_config[*]
+    content {
+      endpoint = http_config.value.endpoint
+      dynamic "authorization_config" {
+        for_each = http_config.value.authorization_config[*]
+        content {
+          authorization_type = authorization_config.value.authorization_type
+          dynamic "aws_iam_config" {
+            for_each = authorization_config.value.aws_iam_config[*]
+            content {
+              signing_region = aws_iam_config.value.signing_region
+              signing_service_name = aws_iam_config.value.signing_service_name
+            }
+          }
+        }
+      }
+    }
+  }
   {{- end }}
   {{- if $.Values.lambda_config }}
-  lambda_config = var.values.lambda_config
+  dynamic "lambda_config" {
+    for_each = var.values.lambda_config[*]
+    content {
+      function_arn = lambda_config.value.function_arn
+    }
+  }
   {{- end }}
   {{- if $.Values.name }}
   name = var.values.name
   {{- end }}
   {{- if $.Values.relational_database_config }}
-  relational_database_config = var.values.relational_database_config
+  dynamic "relational_database_config" {
+    for_each = var.values.relational_database_config[*]
+    content {
+      source_type = relational_database_config.value.source_type
+      dynamic "http_endpoint_config" {
+        for_each = relational_database_config.value.http_endpoint_config[*]
+        content {
+          schema = http_endpoint_config.value.schema
+          db_cluster_identifier = http_endpoint_config.value.db_cluster_identifier
+          aws_secret_store_arn = http_endpoint_config.value.aws_secret_store_arn
+          database_name = http_endpoint_config.value.database_name
+          region = http_endpoint_config.value.region
+        }
+      }
+    }
+  }
   {{- end }}
   {{- if $.Values.service_role_arn }}
   service_role_arn = var.values.service_role_arn

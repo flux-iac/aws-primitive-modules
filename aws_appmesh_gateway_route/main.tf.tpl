@@ -35,6 +35,13 @@ variable "values" {
             })))
         })))
         http2_route = optional(list(object({
+            match = optional(list(object({
+                prefix = optional(string)
+                hostname = optional(list(object({
+                    exact = optional(string)
+                    suffix = optional(string)
+                })))
+            })))
             action = optional(list(object({
                 target = optional(list(object({
                     virtual_service = optional(list(object({
@@ -42,20 +49,13 @@ variable "values" {
                     })))
                 })))
                 rewrite = optional(list(object({
-                    hostname = optional(list(object({
-                        default_target_hostname = optional(string)
-                    })))
                     prefix = optional(list(object({
                         default_prefix = optional(string)
                         value = optional(string)
                     })))
-                })))
-            })))
-            match = optional(list(object({
-                prefix = optional(string)
-                hostname = optional(list(object({
-                    exact = optional(string)
-                    suffix = optional(string)
+                    hostname = optional(list(object({
+                        default_target_hostname = optional(string)
+                    })))
                 })))
             })))
         })))
@@ -71,8 +71,8 @@ variable "values" {
                         default_target_hostname = optional(string)
                     })))
                     prefix = optional(list(object({
-                        value = optional(string)
                         default_prefix = optional(string)
+                        value = optional(string)
                     })))
                 })))
             })))
@@ -102,7 +102,142 @@ resource "aws_appmesh_gateway_route" "this" {
   name = var.values.name
   {{- end }}
   {{- if $.Values.spec }}
-  spec = var.values.spec
+  dynamic "spec" {
+    for_each = var.values.spec[*]
+    content {
+      dynamic "http_route" {
+        for_each = spec.value.http_route[*]
+        content {
+          dynamic "action" {
+            for_each = http_route.value.action[*]
+            content {
+              dynamic "target" {
+                for_each = action.value.target[*]
+                content {
+                  dynamic "virtual_service" {
+                    for_each = target.value.virtual_service[*]
+                    content {
+                      virtual_service_name = virtual_service.value.virtual_service_name
+                    }
+                  }
+                }
+              }
+              dynamic "rewrite" {
+                for_each = action.value.rewrite[*]
+                content {
+                  dynamic "hostname" {
+                    for_each = rewrite.value.hostname[*]
+                    content {
+                      default_target_hostname = hostname.value.default_target_hostname
+                    }
+                  }
+                  dynamic "prefix" {
+                    for_each = rewrite.value.prefix[*]
+                    content {
+                      value = prefix.value.value
+                      default_prefix = prefix.value.default_prefix
+                    }
+                  }
+                }
+              }
+            }
+          }
+          dynamic "match" {
+            for_each = http_route.value.match[*]
+            content {
+              prefix = match.value.prefix
+              dynamic "hostname" {
+                for_each = match.value.hostname[*]
+                content {
+                  exact = hostname.value.exact
+                  suffix = hostname.value.suffix
+                }
+              }
+            }
+          }
+        }
+      }
+      dynamic "grpc_route" {
+        for_each = spec.value.grpc_route[*]
+        content {
+          dynamic "action" {
+            for_each = grpc_route.value.action[*]
+            content {
+              dynamic "target" {
+                for_each = action.value.target[*]
+                content {
+                  dynamic "virtual_service" {
+                    for_each = target.value.virtual_service[*]
+                    content {
+                      virtual_service_name = virtual_service.value.virtual_service_name
+                    }
+                  }
+                }
+              }
+            }
+          }
+          dynamic "match" {
+            for_each = grpc_route.value.match[*]
+            content {
+              service_name = match.value.service_name
+            }
+          }
+        }
+      }
+      dynamic "http2_route" {
+        for_each = spec.value.http2_route[*]
+        content {
+          dynamic "action" {
+            for_each = http2_route.value.action[*]
+            content {
+              dynamic "target" {
+                for_each = action.value.target[*]
+                content {
+                  dynamic "virtual_service" {
+                    for_each = target.value.virtual_service[*]
+                    content {
+                      virtual_service_name = virtual_service.value.virtual_service_name
+                    }
+                  }
+                }
+              }
+              dynamic "rewrite" {
+                for_each = action.value.rewrite[*]
+                content {
+                  dynamic "hostname" {
+                    for_each = rewrite.value.hostname[*]
+                    content {
+                      default_target_hostname = hostname.value.default_target_hostname
+                    }
+                  }
+                  dynamic "prefix" {
+                    for_each = rewrite.value.prefix[*]
+                    content {
+                      default_prefix = prefix.value.default_prefix
+                      value = prefix.value.value
+                    }
+                  }
+                }
+              }
+            }
+          }
+          dynamic "match" {
+            for_each = http2_route.value.match[*]
+            content {
+              prefix = match.value.prefix
+              dynamic "hostname" {
+                for_each = match.value.hostname[*]
+                content {
+                  exact = hostname.value.exact
+                  suffix = hostname.value.suffix
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
   {{- end }}
   {{- if $.Values.tags }}
   tags = var.values.tags

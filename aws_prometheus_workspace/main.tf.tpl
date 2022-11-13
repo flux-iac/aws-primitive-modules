@@ -32,7 +32,12 @@ resource "aws_prometheus_workspace" "this" {
   alias = var.values.alias
   {{- end }}
   {{- if $.Values.logging_configuration }}
-  logging_configuration = var.values.logging_configuration
+  dynamic "logging_configuration" {
+    for_each = var.values.logging_configuration[*]
+    content {
+      log_group_arn = logging_configuration.value.log_group_arn
+    }
+  }
   {{- end }}
   {{- if $.Values.tags }}
   tags = var.values.tags

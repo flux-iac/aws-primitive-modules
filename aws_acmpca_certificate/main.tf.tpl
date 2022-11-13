@@ -44,7 +44,13 @@ resource "aws_acmpca_certificate" "this" {
   template_arn = var.values.template_arn
   {{- end }}
   {{- if $.Values.validity }}
-  validity = var.values.validity
+  dynamic "validity" {
+    for_each = var.values.validity[*]
+    content {
+      value = validity.value.value
+      type = validity.value.type
+    }
+  }
   {{- end }}
 
 

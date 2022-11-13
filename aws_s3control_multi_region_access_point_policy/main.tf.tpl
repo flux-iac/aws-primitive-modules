@@ -29,7 +29,13 @@ resource "aws_s3control_multi_region_access_point_policy" "this" {
   account_id = var.values.account_id
   {{- end }}
   {{- if $.Values.details }}
-  details = var.values.details
+  dynamic "details" {
+    for_each = var.values.details[*]
+    content {
+      name = details.value.name
+      policy = details.value.policy
+    }
+  }
   {{- end }}
 
 

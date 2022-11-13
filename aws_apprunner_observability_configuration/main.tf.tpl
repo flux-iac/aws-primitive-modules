@@ -35,7 +35,12 @@ resource "aws_apprunner_observability_configuration" "this" {
   tags = var.values.tags
   {{- end }}
   {{- if $.Values.trace_configuration }}
-  trace_configuration = var.values.trace_configuration
+  dynamic "trace_configuration" {
+    for_each = var.values.trace_configuration[*]
+    content {
+      vendor = trace_configuration.value.vendor
+    }
+  }
   {{- end }}
 
 

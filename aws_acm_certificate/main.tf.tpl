@@ -55,7 +55,12 @@ resource "aws_acm_certificate" "this" {
   early_renewal_duration = var.values.early_renewal_duration
   {{- end }}
   {{- if $.Values.options }}
-  options = var.values.options
+  dynamic "options" {
+    for_each = var.values.options[*]
+    content {
+      certificate_transparency_logging_preference = options.value.certificate_transparency_logging_preference
+    }
+  }
   {{- end }}
   {{- if $.Values.private_key }}
   private_key = var.values.private_key

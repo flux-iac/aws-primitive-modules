@@ -24,56 +24,45 @@ variable "values" {
     spec = optional(list(object({
         backend = optional(set(object({
             virtual_service = optional(list(object({
-                virtual_service_name = optional(string)
                 client_policy = optional(list(object({
                     tls = optional(list(object({
-                        validation = optional(list(object({
-                            subject_alternative_names = optional(list(object({
-                                match = optional(list(object({
-                                    exact = optional(set(string))
-                                })))
+                        certificate = optional(list(object({
+                            sds = optional(list(object({
+                                secret_name = optional(string)
                             })))
+                            file = optional(list(object({
+                                certificate_chain = optional(string)
+                                private_key = optional(string)
+                            })))
+                        })))
+                        enforce = optional(bool)
+                        ports = optional(set(number))
+                        validation = optional(list(object({
                             trust = optional(list(object({
+                                acm = optional(list(object({
+                                    certificate_authority_arns = optional(set(string))
+                                })))
                                 file = optional(list(object({
                                     certificate_chain = optional(string)
                                 })))
                                 sds = optional(list(object({
                                     secret_name = optional(string)
                                 })))
-                                acm = optional(list(object({
-                                    certificate_authority_arns = optional(set(string))
+                            })))
+                            subject_alternative_names = optional(list(object({
+                                match = optional(list(object({
+                                    exact = optional(set(string))
                                 })))
                             })))
                         })))
-                        certificate = optional(list(object({
-                            file = optional(list(object({
-                                certificate_chain = optional(string)
-                                private_key = optional(string)
-                            })))
-                            sds = optional(list(object({
-                                secret_name = optional(string)
-                            })))
-                        })))
-                        enforce = optional(bool)
-                        ports = optional(set(number))
                     })))
                 })))
+                virtual_service_name = optional(string)
             })))
         })))
         backend_defaults = optional(list(object({
             client_policy = optional(list(object({
                 tls = optional(list(object({
-                    certificate = optional(list(object({
-                        file = optional(list(object({
-                            certificate_chain = optional(string)
-                            private_key = optional(string)
-                        })))
-                        sds = optional(list(object({
-                            secret_name = optional(string)
-                        })))
-                    })))
-                    enforce = optional(bool)
-                    ports = optional(set(number))
                     validation = optional(list(object({
                         subject_alternative_names = optional(list(object({
                             match = optional(list(object({
@@ -92,10 +81,46 @@ variable "values" {
                             })))
                         })))
                     })))
+                    certificate = optional(list(object({
+                        sds = optional(list(object({
+                            secret_name = optional(string)
+                        })))
+                        file = optional(list(object({
+                            certificate_chain = optional(string)
+                            private_key = optional(string)
+                        })))
+                    })))
+                    enforce = optional(bool)
+                    ports = optional(set(number))
                 })))
             })))
         })))
         listener = optional(list(object({
+            health_check = optional(list(object({
+                healthy_threshold = optional(number)
+                interval_millis = optional(number)
+                path = optional(string)
+                port = optional(number)
+                protocol = optional(string)
+                timeout_millis = optional(number)
+                unhealthy_threshold = optional(number)
+            })))
+            outlier_detection = optional(list(object({
+                base_ejection_duration = optional(list(object({
+                    unit = optional(string)
+                    value = optional(number)
+                })))
+                interval = optional(list(object({
+                    unit = optional(string)
+                    value = optional(number)
+                })))
+                max_ejection_percent = optional(number)
+                max_server_errors = optional(number)
+            })))
+            port_mapping = optional(list(object({
+                port = optional(number)
+                protocol = optional(string)
+            })))
             timeout = optional(list(object({
                 grpc = optional(list(object({
                     idle = optional(list(object({
@@ -103,8 +128,8 @@ variable "values" {
                         value = optional(number)
                     })))
                     per_request = optional(list(object({
-                        unit = optional(string)
                         value = optional(number)
+                        unit = optional(string)
                     })))
                 })))
                 http = optional(list(object({
@@ -169,8 +194,8 @@ variable "values" {
                     max_requests = optional(number)
                 })))
                 http = optional(list(object({
-                    max_pending_requests = optional(number)
                     max_connections = optional(number)
+                    max_pending_requests = optional(number)
                 })))
                 http2 = optional(list(object({
                     max_requests = optional(number)
@@ -178,31 +203,6 @@ variable "values" {
                 tcp = optional(list(object({
                     max_connections = optional(number)
                 })))
-            })))
-            health_check = optional(list(object({
-                path = optional(string)
-                port = optional(number)
-                protocol = optional(string)
-                timeout_millis = optional(number)
-                unhealthy_threshold = optional(number)
-                healthy_threshold = optional(number)
-                interval_millis = optional(number)
-            })))
-            outlier_detection = optional(list(object({
-                base_ejection_duration = optional(list(object({
-                    unit = optional(string)
-                    value = optional(number)
-                })))
-                interval = optional(list(object({
-                    unit = optional(string)
-                    value = optional(number)
-                })))
-                max_ejection_percent = optional(number)
-                max_server_errors = optional(number)
-            })))
-            port_mapping = optional(list(object({
-                port = optional(number)
-                protocol = optional(string)
             })))
         })))
         logging = optional(list(object({
@@ -213,13 +213,13 @@ variable "values" {
             })))
         })))
         service_discovery = optional(list(object({
-            dns = optional(list(object({
-                hostname = optional(string)
-            })))
             aws_cloud_map = optional(list(object({
                 attributes = optional(map(string))
                 namespace_name = optional(string)
                 service_name = optional(string)
+            })))
+            dns = optional(list(object({
+                hostname = optional(string)
             })))
         })))
     })))
@@ -239,7 +239,412 @@ resource "aws_appmesh_virtual_node" "this" {
   name = var.values.name
   {{- end }}
   {{- if $.Values.spec }}
-  spec = var.values.spec
+  dynamic "spec" {
+    for_each = var.values.spec[*]
+    content {
+      dynamic "backend" {
+        for_each = spec.value.backend[*]
+        content {
+          dynamic "virtual_service" {
+            for_each = backend.value.virtual_service[*]
+            content {
+              virtual_service_name = virtual_service.value.virtual_service_name
+              dynamic "client_policy" {
+                for_each = virtual_service.value.client_policy[*]
+                content {
+                  dynamic "tls" {
+                    for_each = client_policy.value.tls[*]
+                    content {
+                      dynamic "certificate" {
+                        for_each = tls.value.certificate[*]
+                        content {
+                          dynamic "file" {
+                            for_each = certificate.value.file[*]
+                            content {
+                              certificate_chain = file.value.certificate_chain
+                              private_key = file.value.private_key
+                            }
+                          }
+                          dynamic "sds" {
+                            for_each = certificate.value.sds[*]
+                            content {
+                              secret_name = sds.value.secret_name
+                            }
+                          }
+                        }
+                      }
+                      enforce = tls.value.enforce
+                      ports = tls.value.ports
+                      dynamic "validation" {
+                        for_each = tls.value.validation[*]
+                        content {
+                          dynamic "trust" {
+                            for_each = validation.value.trust[*]
+                            content {
+                              dynamic "acm" {
+                                for_each = trust.value.acm[*]
+                                content {
+                                  certificate_authority_arns = acm.value.certificate_authority_arns
+                                }
+                              }
+                              dynamic "file" {
+                                for_each = trust.value.file[*]
+                                content {
+                                  certificate_chain = file.value.certificate_chain
+                                }
+                              }
+                              dynamic "sds" {
+                                for_each = trust.value.sds[*]
+                                content {
+                                  secret_name = sds.value.secret_name
+                                }
+                              }
+                            }
+                          }
+                          dynamic "subject_alternative_names" {
+                            for_each = validation.value.subject_alternative_names[*]
+                            content {
+                              dynamic "match" {
+                                for_each = subject_alternative_names.value.match[*]
+                                content {
+                                  exact = match.value.exact
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      dynamic "backend_defaults" {
+        for_each = spec.value.backend_defaults[*]
+        content {
+          dynamic "client_policy" {
+            for_each = backend_defaults.value.client_policy[*]
+            content {
+              dynamic "tls" {
+                for_each = client_policy.value.tls[*]
+                content {
+                  dynamic "certificate" {
+                    for_each = tls.value.certificate[*]
+                    content {
+                      dynamic "file" {
+                        for_each = certificate.value.file[*]
+                        content {
+                          certificate_chain = file.value.certificate_chain
+                          private_key = file.value.private_key
+                        }
+                      }
+                      dynamic "sds" {
+                        for_each = certificate.value.sds[*]
+                        content {
+                          secret_name = sds.value.secret_name
+                        }
+                      }
+                    }
+                  }
+                  enforce = tls.value.enforce
+                  ports = tls.value.ports
+                  dynamic "validation" {
+                    for_each = tls.value.validation[*]
+                    content {
+                      dynamic "subject_alternative_names" {
+                        for_each = validation.value.subject_alternative_names[*]
+                        content {
+                          dynamic "match" {
+                            for_each = subject_alternative_names.value.match[*]
+                            content {
+                              exact = match.value.exact
+                            }
+                          }
+                        }
+                      }
+                      dynamic "trust" {
+                        for_each = validation.value.trust[*]
+                        content {
+                          dynamic "acm" {
+                            for_each = trust.value.acm[*]
+                            content {
+                              certificate_authority_arns = acm.value.certificate_authority_arns
+                            }
+                          }
+                          dynamic "file" {
+                            for_each = trust.value.file[*]
+                            content {
+                              certificate_chain = file.value.certificate_chain
+                            }
+                          }
+                          dynamic "sds" {
+                            for_each = trust.value.sds[*]
+                            content {
+                              secret_name = sds.value.secret_name
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      dynamic "listener" {
+        for_each = spec.value.listener[*]
+        content {
+          dynamic "timeout" {
+            for_each = listener.value.timeout[*]
+            content {
+              dynamic "http2" {
+                for_each = timeout.value.http2[*]
+                content {
+                  dynamic "per_request" {
+                    for_each = http2.value.per_request[*]
+                    content {
+                      unit = per_request.value.unit
+                      value = per_request.value.value
+                    }
+                  }
+                  dynamic "idle" {
+                    for_each = http2.value.idle[*]
+                    content {
+                      unit = idle.value.unit
+                      value = idle.value.value
+                    }
+                  }
+                }
+              }
+              dynamic "tcp" {
+                for_each = timeout.value.tcp[*]
+                content {
+                  dynamic "idle" {
+                    for_each = tcp.value.idle[*]
+                    content {
+                      unit = idle.value.unit
+                      value = idle.value.value
+                    }
+                  }
+                }
+              }
+              dynamic "grpc" {
+                for_each = timeout.value.grpc[*]
+                content {
+                  dynamic "idle" {
+                    for_each = grpc.value.idle[*]
+                    content {
+                      unit = idle.value.unit
+                      value = idle.value.value
+                    }
+                  }
+                  dynamic "per_request" {
+                    for_each = grpc.value.per_request[*]
+                    content {
+                      unit = per_request.value.unit
+                      value = per_request.value.value
+                    }
+                  }
+                }
+              }
+              dynamic "http" {
+                for_each = timeout.value.http[*]
+                content {
+                  dynamic "idle" {
+                    for_each = http.value.idle[*]
+                    content {
+                      unit = idle.value.unit
+                      value = idle.value.value
+                    }
+                  }
+                  dynamic "per_request" {
+                    for_each = http.value.per_request[*]
+                    content {
+                      unit = per_request.value.unit
+                      value = per_request.value.value
+                    }
+                  }
+                }
+              }
+            }
+          }
+          dynamic "tls" {
+            for_each = listener.value.tls[*]
+            content {
+              dynamic "certificate" {
+                for_each = tls.value.certificate[*]
+                content {
+                  dynamic "acm" {
+                    for_each = certificate.value.acm[*]
+                    content {
+                      certificate_arn = acm.value.certificate_arn
+                    }
+                  }
+                  dynamic "file" {
+                    for_each = certificate.value.file[*]
+                    content {
+                      certificate_chain = file.value.certificate_chain
+                      private_key = file.value.private_key
+                    }
+                  }
+                  dynamic "sds" {
+                    for_each = certificate.value.sds[*]
+                    content {
+                      secret_name = sds.value.secret_name
+                    }
+                  }
+                }
+              }
+              mode = tls.value.mode
+              dynamic "validation" {
+                for_each = tls.value.validation[*]
+                content {
+                  dynamic "subject_alternative_names" {
+                    for_each = validation.value.subject_alternative_names[*]
+                    content {
+                      dynamic "match" {
+                        for_each = subject_alternative_names.value.match[*]
+                        content {
+                          exact = match.value.exact
+                        }
+                      }
+                    }
+                  }
+                  dynamic "trust" {
+                    for_each = validation.value.trust[*]
+                    content {
+                      dynamic "file" {
+                        for_each = trust.value.file[*]
+                        content {
+                          certificate_chain = file.value.certificate_chain
+                        }
+                      }
+                      dynamic "sds" {
+                        for_each = trust.value.sds[*]
+                        content {
+                          secret_name = sds.value.secret_name
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          dynamic "connection_pool" {
+            for_each = listener.value.connection_pool[*]
+            content {
+              dynamic "http" {
+                for_each = connection_pool.value.http[*]
+                content {
+                  max_connections = http.value.max_connections
+                  max_pending_requests = http.value.max_pending_requests
+                }
+              }
+              dynamic "http2" {
+                for_each = connection_pool.value.http2[*]
+                content {
+                  max_requests = http2.value.max_requests
+                }
+              }
+              dynamic "tcp" {
+                for_each = connection_pool.value.tcp[*]
+                content {
+                  max_connections = tcp.value.max_connections
+                }
+              }
+              dynamic "grpc" {
+                for_each = connection_pool.value.grpc[*]
+                content {
+                  max_requests = grpc.value.max_requests
+                }
+              }
+            }
+          }
+          dynamic "health_check" {
+            for_each = listener.value.health_check[*]
+            content {
+              healthy_threshold = health_check.value.healthy_threshold
+              interval_millis = health_check.value.interval_millis
+              path = health_check.value.path
+              port = health_check.value.port
+              protocol = health_check.value.protocol
+              timeout_millis = health_check.value.timeout_millis
+              unhealthy_threshold = health_check.value.unhealthy_threshold
+            }
+          }
+          dynamic "outlier_detection" {
+            for_each = listener.value.outlier_detection[*]
+            content {
+              dynamic "base_ejection_duration" {
+                for_each = outlier_detection.value.base_ejection_duration[*]
+                content {
+                  unit = base_ejection_duration.value.unit
+                  value = base_ejection_duration.value.value
+                }
+              }
+              dynamic "interval" {
+                for_each = outlier_detection.value.interval[*]
+                content {
+                  unit = interval.value.unit
+                  value = interval.value.value
+                }
+              }
+              max_ejection_percent = outlier_detection.value.max_ejection_percent
+              max_server_errors = outlier_detection.value.max_server_errors
+            }
+          }
+          dynamic "port_mapping" {
+            for_each = listener.value.port_mapping[*]
+            content {
+              port = port_mapping.value.port
+              protocol = port_mapping.value.protocol
+            }
+          }
+        }
+      }
+      dynamic "logging" {
+        for_each = spec.value.logging[*]
+        content {
+          dynamic "access_log" {
+            for_each = logging.value.access_log[*]
+            content {
+              dynamic "file" {
+                for_each = access_log.value.file[*]
+                content {
+                  path = file.value.path
+                }
+              }
+            }
+          }
+        }
+      }
+      dynamic "service_discovery" {
+        for_each = spec.value.service_discovery[*]
+        content {
+          dynamic "dns" {
+            for_each = service_discovery.value.dns[*]
+            content {
+              hostname = dns.value.hostname
+            }
+          }
+          dynamic "aws_cloud_map" {
+            for_each = service_discovery.value.aws_cloud_map[*]
+            content {
+              attributes = aws_cloud_map.value.attributes
+              namespace_name = aws_cloud_map.value.namespace_name
+              service_name = aws_cloud_map.value.service_name
+            }
+          }
+        }
+      }
+    }
+  }
   {{- end }}
   {{- if $.Values.tags }}
   tags = var.values.tags

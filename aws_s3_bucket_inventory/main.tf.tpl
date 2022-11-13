@@ -53,13 +53,47 @@ resource "aws_s3_bucket_inventory" "this" {
   bucket = var.values.bucket
   {{- end }}
   {{- if $.Values.destination }}
-  destination = var.values.destination
+  dynamic "destination" {
+    for_each = var.values.destination[*]
+    content {
+      dynamic "bucket" {
+        for_each = destination.value.bucket[*]
+        content {
+          bucket_arn = bucket.value.bucket_arn
+          account_id = bucket.value.account_id
+          prefix = bucket.value.prefix
+          dynamic "encryption" {
+            for_each = bucket.value.encryption[*]
+            content {
+              dynamic "sse_kms" {
+                for_each = encryption.value.sse_kms[*]
+                content {
+                  key_id = sse_kms.value.key_id
+                }
+              }
+              dynamic "sse_s3" {
+                for_each = encryption.value.sse_s3[*]
+                content {
+                }
+              }
+            }
+          }
+          format = bucket.value.format
+        }
+      }
+    }
+  }
   {{- end }}
   {{- if $.Values.enabled }}
   enabled = var.values.enabled
   {{- end }}
   {{- if $.Values.filter }}
-  filter = var.values.filter
+  dynamic "filter" {
+    for_each = var.values.filter[*]
+    content {
+      prefix = filter.value.prefix
+    }
+  }
   {{- end }}
   {{- if $.Values.included_object_versions }}
   included_object_versions = var.values.included_object_versions
@@ -71,7 +105,12 @@ resource "aws_s3_bucket_inventory" "this" {
   optional_fields = var.values.optional_fields
   {{- end }}
   {{- if $.Values.schedule }}
-  schedule = var.values.schedule
+  dynamic "schedule" {
+    for_each = var.values.schedule[*]
+    content {
+      frequency = schedule.value.frequency
+    }
+  }
   {{- end }}
 
 

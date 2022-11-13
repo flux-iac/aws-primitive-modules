@@ -19,9 +19,9 @@ provider "aws" {
 variable "values" {
   type = object({
     capacity_provider_strategy = optional(set(object({
-        weight = optional(number)
         base = optional(number)
         capacity_provider = optional(string)
+        weight = optional(number)
     })))
     cluster = optional(string)
     external_id = optional(string)
@@ -41,10 +41,10 @@ variable "values" {
     platform_version = optional(string)
     service = optional(string)
     service_registries = optional(list(object({
-        registry_arn = optional(string)
         container_name = optional(string)
         container_port = optional(number)
         port = optional(number)
+        registry_arn = optional(string)
     })))
     tags = optional(map(string))
     task_definition = optional(string)
@@ -59,9 +59,9 @@ resource "aws_ecs_task_set" "this" {
   dynamic "capacity_provider_strategy" {
     for_each = var.values.capacity_provider_strategy[*]
     content {
+      base = capacity_provider_strategy.value.base
       capacity_provider = capacity_provider_strategy.value.capacity_provider
       weight = capacity_provider_strategy.value.weight
-      base = capacity_provider_strategy.value.base
     }
   }
   {{- end }}
@@ -81,15 +81,22 @@ resource "aws_ecs_task_set" "this" {
   dynamic "load_balancer" {
     for_each = var.values.load_balancer[*]
     content {
-      container_port = load_balancer.value.container_port
       load_balancer_name = load_balancer.value.load_balancer_name
       target_group_arn = load_balancer.value.target_group_arn
       container_name = load_balancer.value.container_name
+      container_port = load_balancer.value.container_port
     }
   }
   {{- end }}
   {{- if $.Values.network_configuration }}
-  network_configuration = var.values.network_configuration
+  dynamic "network_configuration" {
+    for_each = var.values.network_configuration[*]
+    content {
+      security_groups = network_configuration.value.security_groups
+      subnets = network_configuration.value.subnets
+      assign_public_ip = network_configuration.value.assign_public_ip
+    }
+  }
   {{- end }}
   {{- if $.Values.platform_version }}
   platform_version = var.values.platform_version
@@ -98,7 +105,15 @@ resource "aws_ecs_task_set" "this" {
   service = var.values.service
   {{- end }}
   {{- if $.Values.service_registries }}
-  service_registries = var.values.service_registries
+  dynamic "service_registries" {
+    for_each = var.values.service_registries[*]
+    content {
+      container_port = service_registries.value.container_port
+      port = service_registries.value.port
+      registry_arn = service_registries.value.registry_arn
+      container_name = service_registries.value.container_name
+    }
+  }
   {{- end }}
   {{- if $.Values.tags }}
   tags = var.values.tags

@@ -41,20 +41,20 @@ variable "values" {
     iam_role = optional(string)
     launch_type = optional(string)
     load_balancer = optional(set(object({
-        target_group_arn = optional(string)
         container_name = optional(string)
         container_port = optional(number)
         elb_name = optional(string)
+        target_group_arn = optional(string)
     })))
     name = optional(string)
     network_configuration = optional(list(object({
+        subnets = optional(set(string))
         assign_public_ip = optional(bool)
         security_groups = optional(set(string))
-        subnets = optional(set(string))
     })))
     ordered_placement_strategy = optional(list(object({
-        type = optional(string)
         field = optional(string)
+        type = optional(string)
     })))
     placement_constraints = optional(set(object({
         expression = optional(string)
@@ -63,10 +63,10 @@ variable "values" {
     propagate_tags = optional(string)
     scheduling_strategy = optional(string)
     service_registries = optional(list(object({
+        container_port = optional(number)
         port = optional(number)
         registry_arn = optional(string)
         container_name = optional(string)
-        container_port = optional(number)
     })))
     tags = optional(map(string))
     task_definition = optional(string)
@@ -90,10 +90,21 @@ resource "aws_ecs_service" "this" {
   cluster = var.values.cluster
   {{- end }}
   {{- if $.Values.deployment_circuit_breaker }}
-  deployment_circuit_breaker = var.values.deployment_circuit_breaker
+  dynamic "deployment_circuit_breaker" {
+    for_each = var.values.deployment_circuit_breaker[*]
+    content {
+      enable = deployment_circuit_breaker.value.enable
+      rollback = deployment_circuit_breaker.value.rollback
+    }
+  }
   {{- end }}
   {{- if $.Values.deployment_controller }}
-  deployment_controller = var.values.deployment_controller
+  dynamic "deployment_controller" {
+    for_each = var.values.deployment_controller[*]
+    content {
+      type = deployment_controller.value.type
+    }
+  }
   {{- end }}
   {{- if $.Values.deployment_maximum_percent }}
   deployment_maximum_percent = var.values.deployment_maximum_percent
@@ -126,10 +137,10 @@ resource "aws_ecs_service" "this" {
   dynamic "load_balancer" {
     for_each = var.values.load_balancer[*]
     content {
-      container_port = load_balancer.value.container_port
-      elb_name = load_balancer.value.elb_name
       target_group_arn = load_balancer.value.target_group_arn
       container_name = load_balancer.value.container_name
+      container_port = load_balancer.value.container_port
+      elb_name = load_balancer.value.elb_name
     }
   }
   {{- end }}
@@ -137,10 +148,23 @@ resource "aws_ecs_service" "this" {
   name = var.values.name
   {{- end }}
   {{- if $.Values.network_configuration }}
-  network_configuration = var.values.network_configuration
+  dynamic "network_configuration" {
+    for_each = var.values.network_configuration[*]
+    content {
+      assign_public_ip = network_configuration.value.assign_public_ip
+      security_groups = network_configuration.value.security_groups
+      subnets = network_configuration.value.subnets
+    }
+  }
   {{- end }}
   {{- if $.Values.ordered_placement_strategy }}
-  ordered_placement_strategy = var.values.ordered_placement_strategy
+  dynamic "ordered_placement_strategy" {
+    for_each = var.values.ordered_placement_strategy[*]
+    content {
+      field = ordered_placement_strategy.value.field
+      type = ordered_placement_strategy.value.type
+    }
+  }
   {{- end }}
   {{- if $.Values.placement_constraints }}
   dynamic "placement_constraints" {
@@ -158,7 +182,15 @@ resource "aws_ecs_service" "this" {
   scheduling_strategy = var.values.scheduling_strategy
   {{- end }}
   {{- if $.Values.service_registries }}
-  service_registries = var.values.service_registries
+  dynamic "service_registries" {
+    for_each = var.values.service_registries[*]
+    content {
+      container_name = service_registries.value.container_name
+      container_port = service_registries.value.container_port
+      port = service_registries.value.port
+      registry_arn = service_registries.value.registry_arn
+    }
+  }
   {{- end }}
   {{- if $.Values.tags }}
   tags = var.values.tags

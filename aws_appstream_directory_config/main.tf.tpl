@@ -36,7 +36,13 @@ resource "aws_appstream_directory_config" "this" {
   organizational_unit_distinguished_names = var.values.organizational_unit_distinguished_names
   {{- end }}
   {{- if $.Values.service_account_credentials }}
-  service_account_credentials = var.values.service_account_credentials
+  dynamic "service_account_credentials" {
+    for_each = var.values.service_account_credentials[*]
+    content {
+      account_name = service_account_credentials.value.account_name
+      account_password = service_account_credentials.value.account_password
+    }
+  }
   {{- end }}
 
 

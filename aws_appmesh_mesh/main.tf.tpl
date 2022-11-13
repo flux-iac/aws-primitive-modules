@@ -34,7 +34,17 @@ resource "aws_appmesh_mesh" "this" {
   name = var.values.name
   {{- end }}
   {{- if $.Values.spec }}
-  spec = var.values.spec
+  dynamic "spec" {
+    for_each = var.values.spec[*]
+    content {
+      dynamic "egress_filter" {
+        for_each = spec.value.egress_filter[*]
+        content {
+          type = egress_filter.value.type
+        }
+      }
+    }
+  }
   {{- end }}
   {{- if $.Values.tags }}
   tags = var.values.tags

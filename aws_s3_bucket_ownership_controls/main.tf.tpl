@@ -31,7 +31,12 @@ resource "aws_s3_bucket_ownership_controls" "this" {
   bucket = var.values.bucket
   {{- end }}
   {{- if $.Values.rule }}
-  rule = var.values.rule
+  dynamic "rule" {
+    for_each = var.values.rule[*]
+    content {
+      object_ownership = rule.value.object_ownership
+    }
+  }
   {{- end }}
 
 

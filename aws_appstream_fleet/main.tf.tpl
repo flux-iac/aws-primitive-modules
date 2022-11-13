@@ -35,7 +35,15 @@ variable "values" {
 resource "aws_appstream_fleet" "this" {
 
   {{- if $.Values.compute_capacity }}
-  compute_capacity = var.values.compute_capacity
+  dynamic "compute_capacity" {
+    for_each = var.values.compute_capacity[*]
+    content {
+      desired_instances = compute_capacity.value.desired_instances
+      in_use = compute_capacity.value.in_use
+      running = compute_capacity.value.running
+      available = compute_capacity.value.available
+    }
+  }
   {{- end }}
   {{- if $.Values.fleet_type }}
   fleet_type = var.values.fleet_type

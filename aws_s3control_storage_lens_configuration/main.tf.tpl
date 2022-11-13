@@ -21,6 +21,26 @@ variable "values" {
     account_id = optional(string)
     config_id = optional(string)
     storage_lens_configuration = optional(list(object({
+        account_level = optional(list(object({
+            activity_metrics = optional(list(object({
+                enabled = optional(bool)
+            })))
+            bucket_level = optional(list(object({
+                activity_metrics = optional(list(object({
+                    enabled = optional(bool)
+                })))
+                prefix_level = optional(list(object({
+                    storage_metrics = optional(list(object({
+                        enabled = optional(bool)
+                        selection_criteria = optional(list(object({
+                            delimiter = optional(string)
+                            max_depth = optional(number)
+                            min_storage_bytes_percentage = optional(number)
+                        })))
+                    })))
+                })))
+            })))
+        })))
         aws_org = optional(list(object({
             arn = optional(string)
         })))
@@ -52,26 +72,6 @@ variable "values" {
             buckets = optional(set(string))
             regions = optional(set(string))
         })))
-        account_level = optional(list(object({
-            activity_metrics = optional(list(object({
-                enabled = optional(bool)
-            })))
-            bucket_level = optional(list(object({
-                activity_metrics = optional(list(object({
-                    enabled = optional(bool)
-                })))
-                prefix_level = optional(list(object({
-                    storage_metrics = optional(list(object({
-                        enabled = optional(bool)
-                        selection_criteria = optional(list(object({
-                            delimiter = optional(string)
-                            max_depth = optional(number)
-                            min_storage_bytes_percentage = optional(number)
-                        })))
-                    })))
-                })))
-            })))
-        })))
     })))
     tags = optional(map(string))
   })
@@ -86,7 +86,110 @@ resource "aws_s3control_storage_lens_configuration" "this" {
   config_id = var.values.config_id
   {{- end }}
   {{- if $.Values.storage_lens_configuration }}
-  storage_lens_configuration = var.values.storage_lens_configuration
+  dynamic "storage_lens_configuration" {
+    for_each = var.values.storage_lens_configuration[*]
+    content {
+      dynamic "account_level" {
+        for_each = storage_lens_configuration.value.account_level[*]
+        content {
+          dynamic "activity_metrics" {
+            for_each = account_level.value.activity_metrics[*]
+            content {
+              enabled = activity_metrics.value.enabled
+            }
+          }
+          dynamic "bucket_level" {
+            for_each = account_level.value.bucket_level[*]
+            content {
+              dynamic "activity_metrics" {
+                for_each = bucket_level.value.activity_metrics[*]
+                content {
+                  enabled = activity_metrics.value.enabled
+                }
+              }
+              dynamic "prefix_level" {
+                for_each = bucket_level.value.prefix_level[*]
+                content {
+                  dynamic "storage_metrics" {
+                    for_each = prefix_level.value.storage_metrics[*]
+                    content {
+                      enabled = storage_metrics.value.enabled
+                      dynamic "selection_criteria" {
+                        for_each = storage_metrics.value.selection_criteria[*]
+                        content {
+                          delimiter = selection_criteria.value.delimiter
+                          max_depth = selection_criteria.value.max_depth
+                          min_storage_bytes_percentage = selection_criteria.value.min_storage_bytes_percentage
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      dynamic "aws_org" {
+        for_each = storage_lens_configuration.value.aws_org[*]
+        content {
+          arn = aws_org.value.arn
+        }
+      }
+      dynamic "data_export" {
+        for_each = storage_lens_configuration.value.data_export[*]
+        content {
+          dynamic "cloud_watch_metrics" {
+            for_each = data_export.value.cloud_watch_metrics[*]
+            content {
+              enabled = cloud_watch_metrics.value.enabled
+            }
+          }
+          dynamic "s3_bucket_destination" {
+            for_each = data_export.value.s3_bucket_destination[*]
+            content {
+              account_id = s3_bucket_destination.value.account_id
+              arn = s3_bucket_destination.value.arn
+              dynamic "encryption" {
+                for_each = s3_bucket_destination.value.encryption[*]
+                content {
+                  dynamic "sse_kms" {
+                    for_each = encryption.value.sse_kms[*]
+                    content {
+                      key_id = sse_kms.value.key_id
+                    }
+                  }
+                  dynamic "sse_s3" {
+                    for_each = encryption.value.sse_s3[*]
+                    content {
+                    }
+                  }
+                }
+              }
+              format = s3_bucket_destination.value.format
+              output_schema_version = s3_bucket_destination.value.output_schema_version
+              prefix = s3_bucket_destination.value.prefix
+            }
+          }
+        }
+      }
+      enabled = storage_lens_configuration.value.enabled
+      dynamic "exclude" {
+        for_each = storage_lens_configuration.value.exclude[*]
+        content {
+          buckets = exclude.value.buckets
+          regions = exclude.value.regions
+        }
+      }
+      dynamic "include" {
+        for_each = storage_lens_configuration.value.include[*]
+        content {
+          regions = include.value.regions
+          buckets = include.value.buckets
+        }
+      }
+    }
+  }
   {{- end }}
   {{- if $.Values.tags }}
   tags = var.values.tags

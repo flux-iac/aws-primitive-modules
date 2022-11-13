@@ -49,8 +49,8 @@ resource "aws_appstream_image_builder" "this" {
   dynamic "access_endpoint" {
     for_each = var.values.access_endpoint[*]
     content {
-      vpce_id = access_endpoint.value.vpce_id
       endpoint_type = access_endpoint.value.endpoint_type
+      vpce_id = access_endpoint.value.vpce_id
     }
   }
   {{- end }}
@@ -64,7 +64,13 @@ resource "aws_appstream_image_builder" "this" {
   display_name = var.values.display_name
   {{- end }}
   {{- if $.Values.domain_join_info }}
-  domain_join_info = var.values.domain_join_info
+  dynamic "domain_join_info" {
+    for_each = var.values.domain_join_info[*]
+    content {
+      directory_name = domain_join_info.value.directory_name
+      organizational_unit_distinguished_name = domain_join_info.value.organizational_unit_distinguished_name
+    }
+  }
   {{- end }}
   {{- if $.Values.enable_default_internet_access }}
   enable_default_internet_access = var.values.enable_default_internet_access
@@ -88,7 +94,13 @@ resource "aws_appstream_image_builder" "this" {
   tags = var.values.tags
   {{- end }}
   {{- if $.Values.vpc_config }}
-  vpc_config = var.values.vpc_config
+  dynamic "vpc_config" {
+    for_each = var.values.vpc_config[*]
+    content {
+      security_group_ids = vpc_config.value.security_group_ids
+      subnet_ids = vpc_config.value.subnet_ids
+    }
+  }
   {{- end }}
 
 

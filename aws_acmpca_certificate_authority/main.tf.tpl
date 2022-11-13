@@ -22,34 +22,34 @@ variable "values" {
         key_algorithm = optional(string)
         signing_algorithm = optional(string)
         subject = optional(list(object({
-            pseudonym = optional(string)
-            state = optional(string)
-            surname = optional(string)
-            common_name = optional(string)
-            country = optional(string)
+            organization = optional(string)
+            organizational_unit = optional(string)
+            distinguished_name_qualifier = optional(string)
             generation_qualifier = optional(string)
             given_name = optional(string)
-            organizational_unit = optional(string)
-            title = optional(string)
-            distinguished_name_qualifier = optional(string)
             initials = optional(string)
             locality = optional(string)
-            organization = optional(string)
+            pseudonym = optional(string)
+            common_name = optional(string)
+            country = optional(string)
+            title = optional(string)
+            state = optional(string)
+            surname = optional(string)
         })))
     })))
     enabled = optional(bool)
     permanent_deletion_time_in_days = optional(number)
     revocation_configuration = optional(list(object({
         crl_configuration = optional(list(object({
+            custom_cname = optional(string)
+            enabled = optional(bool)
             expiration_in_days = optional(number)
             s3_bucket_name = optional(string)
             s3_object_acl = optional(string)
-            custom_cname = optional(string)
-            enabled = optional(bool)
         })))
         ocsp_configuration = optional(list(object({
-            enabled = optional(bool)
             ocsp_custom_cname = optional(string)
+            enabled = optional(bool)
         })))
     })))
     tags = optional(map(string))
@@ -60,7 +60,31 @@ variable "values" {
 resource "aws_acmpca_certificate_authority" "this" {
 
   {{- if $.Values.certificate_authority_configuration }}
-  certificate_authority_configuration = var.values.certificate_authority_configuration
+  dynamic "certificate_authority_configuration" {
+    for_each = var.values.certificate_authority_configuration[*]
+    content {
+      key_algorithm = certificate_authority_configuration.value.key_algorithm
+      signing_algorithm = certificate_authority_configuration.value.signing_algorithm
+      dynamic "subject" {
+        for_each = certificate_authority_configuration.value.subject[*]
+        content {
+          organization = subject.value.organization
+          organizational_unit = subject.value.organizational_unit
+          generation_qualifier = subject.value.generation_qualifier
+          given_name = subject.value.given_name
+          initials = subject.value.initials
+          locality = subject.value.locality
+          pseudonym = subject.value.pseudonym
+          common_name = subject.value.common_name
+          country = subject.value.country
+          distinguished_name_qualifier = subject.value.distinguished_name_qualifier
+          state = subject.value.state
+          surname = subject.value.surname
+          title = subject.value.title
+        }
+      }
+    }
+  }
   {{- end }}
   {{- if $.Values.enabled }}
   enabled = var.values.enabled
@@ -69,7 +93,28 @@ resource "aws_acmpca_certificate_authority" "this" {
   permanent_deletion_time_in_days = var.values.permanent_deletion_time_in_days
   {{- end }}
   {{- if $.Values.revocation_configuration }}
-  revocation_configuration = var.values.revocation_configuration
+  dynamic "revocation_configuration" {
+    for_each = var.values.revocation_configuration[*]
+    content {
+      dynamic "crl_configuration" {
+        for_each = revocation_configuration.value.crl_configuration[*]
+        content {
+          enabled = crl_configuration.value.enabled
+          expiration_in_days = crl_configuration.value.expiration_in_days
+          s3_bucket_name = crl_configuration.value.s3_bucket_name
+          s3_object_acl = crl_configuration.value.s3_object_acl
+          custom_cname = crl_configuration.value.custom_cname
+        }
+      }
+      dynamic "ocsp_configuration" {
+        for_each = revocation_configuration.value.ocsp_configuration[*]
+        content {
+          enabled = ocsp_configuration.value.enabled
+          ocsp_custom_cname = ocsp_configuration.value.ocsp_custom_cname
+        }
+      }
+    }
+  }
   {{- end }}
   {{- if $.Values.tags }}
   tags = var.values.tags

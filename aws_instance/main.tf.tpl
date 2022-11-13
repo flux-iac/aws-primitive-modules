@@ -43,9 +43,9 @@ variable "values" {
     placement_group = optional(string)
     placement_partition_number = optional(number)
     private_dns_name_options = optional(list(object({
+        enable_resource_name_dns_aaaa_record = optional(bool)
         enable_resource_name_dns_a_record = optional(bool)
         hostname_type = optional(string)
-        enable_resource_name_dns_aaaa_record = optional(bool)
     })))
     private_ip = optional(string)
     security_groups = optional(set(string))
@@ -76,7 +76,12 @@ resource "aws_instance" "this" {
   cpu_threads_per_core = var.values.cpu_threads_per_core
   {{- end }}
   {{- if $.Values.credit_specification }}
-  credit_specification = var.values.credit_specification
+  dynamic "credit_specification" {
+    for_each = var.values.credit_specification[*]
+    content {
+      cpu_credits = credit_specification.value.cpu_credits
+    }
+  }
   {{- end }}
   {{- if $.Values.ebs_optimized }}
   ebs_optimized = var.values.ebs_optimized
@@ -113,7 +118,14 @@ resource "aws_instance" "this" {
   key_name = var.values.key_name
   {{- end }}
   {{- if $.Values.launch_template }}
-  launch_template = var.values.launch_template
+  dynamic "launch_template" {
+    for_each = var.values.launch_template[*]
+    content {
+      id = launch_template.value.id
+      name = launch_template.value.name
+      version = launch_template.value.version
+    }
+  }
   {{- end }}
   {{- if $.Values.placement_group }}
   placement_group = var.values.placement_group
@@ -122,7 +134,14 @@ resource "aws_instance" "this" {
   placement_partition_number = var.values.placement_partition_number
   {{- end }}
   {{- if $.Values.private_dns_name_options }}
-  private_dns_name_options = var.values.private_dns_name_options
+  dynamic "private_dns_name_options" {
+    for_each = var.values.private_dns_name_options[*]
+    content {
+      enable_resource_name_dns_aaaa_record = private_dns_name_options.value.enable_resource_name_dns_aaaa_record
+      enable_resource_name_dns_a_record = private_dns_name_options.value.enable_resource_name_dns_a_record
+      hostname_type = private_dns_name_options.value.hostname_type
+    }
+  }
   {{- end }}
   {{- if $.Values.private_ip }}
   private_ip = var.values.private_ip

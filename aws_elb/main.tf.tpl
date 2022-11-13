@@ -31,11 +31,11 @@ variable "values" {
     idle_timeout = optional(number)
     internal = optional(bool)
     listener = optional(set(object({
+        lb_protocol = optional(string)
         ssl_certificate_id = optional(string)
         instance_port = optional(number)
         instance_protocol = optional(string)
         lb_port = optional(number)
-        lb_protocol = optional(string)
     })))
     name = optional(string)
     name_prefix = optional(string)
@@ -46,7 +46,15 @@ variable "values" {
 resource "aws_elb" "this" {
 
   {{- if $.Values.access_logs }}
-  access_logs = var.values.access_logs
+  dynamic "access_logs" {
+    for_each = var.values.access_logs[*]
+    content {
+      interval = access_logs.value.interval
+      bucket = access_logs.value.bucket
+      bucket_prefix = access_logs.value.bucket_prefix
+      enabled = access_logs.value.enabled
+    }
+  }
   {{- end }}
   {{- if $.Values.connection_draining }}
   connection_draining = var.values.connection_draining
@@ -70,11 +78,11 @@ resource "aws_elb" "this" {
   dynamic "listener" {
     for_each = var.values.listener[*]
     content {
+      ssl_certificate_id = listener.value.ssl_certificate_id
       instance_port = listener.value.instance_port
       instance_protocol = listener.value.instance_protocol
       lb_port = listener.value.lb_port
       lb_protocol = listener.value.lb_protocol
-      ssl_certificate_id = listener.value.ssl_certificate_id
     }
   }
   {{- end }}

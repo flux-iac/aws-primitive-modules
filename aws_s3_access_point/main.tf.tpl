@@ -22,10 +22,10 @@ variable "values" {
     bucket = optional(string)
     name = optional(string)
     public_access_block_configuration = optional(list(object({
-        restrict_public_buckets = optional(bool)
         block_public_acls = optional(bool)
         block_public_policy = optional(bool)
         ignore_public_acls = optional(bool)
+        restrict_public_buckets = optional(bool)
     })))
     vpc_configuration = optional(list(object({
         vpc_id = optional(string)
@@ -45,10 +45,23 @@ resource "aws_s3_access_point" "this" {
   name = var.values.name
   {{- end }}
   {{- if $.Values.public_access_block_configuration }}
-  public_access_block_configuration = var.values.public_access_block_configuration
+  dynamic "public_access_block_configuration" {
+    for_each = var.values.public_access_block_configuration[*]
+    content {
+      block_public_acls = public_access_block_configuration.value.block_public_acls
+      block_public_policy = public_access_block_configuration.value.block_public_policy
+      ignore_public_acls = public_access_block_configuration.value.ignore_public_acls
+      restrict_public_buckets = public_access_block_configuration.value.restrict_public_buckets
+    }
+  }
   {{- end }}
   {{- if $.Values.vpc_configuration }}
-  vpc_configuration = var.values.vpc_configuration
+  dynamic "vpc_configuration" {
+    for_each = var.values.vpc_configuration[*]
+    content {
+      vpc_id = vpc_configuration.value.vpc_id
+    }
+  }
   {{- end }}
 
 

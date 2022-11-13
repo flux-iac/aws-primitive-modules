@@ -23,9 +23,9 @@ variable "values" {
     name = optional(string)
     name_prefix = optional(string)
     parameter = optional(set(object({
-        name = optional(string)
         value = optional(string)
         apply_method = optional(string)
+        name = optional(string)
     })))
     tags = optional(map(string))
   })

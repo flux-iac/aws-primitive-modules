@@ -63,7 +63,19 @@ resource "aws_appsync_function" "this" {
   response_mapping_template = var.values.response_mapping_template
   {{- end }}
   {{- if $.Values.sync_config }}
-  sync_config = var.values.sync_config
+  dynamic "sync_config" {
+    for_each = var.values.sync_config[*]
+    content {
+      conflict_detection = sync_config.value.conflict_detection
+      conflict_handler = sync_config.value.conflict_handler
+      dynamic "lambda_conflict_handler_config" {
+        for_each = sync_config.value.lambda_conflict_handler_config[*]
+        content {
+          lambda_conflict_handler_arn = lambda_conflict_handler_config.value.lambda_conflict_handler_arn
+        }
+      }
+    }
+  }
   {{- end }}
 
 

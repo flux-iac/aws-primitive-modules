@@ -19,11 +19,11 @@ provider "aws" {
 variable "values" {
   type = object({
     authentication_options = optional(list(object({
+        active_directory_id = optional(string)
+        root_certificate_chain_arn = optional(string)
         saml_provider_arn = optional(string)
         self_service_saml_provider_arn = optional(string)
         type = optional(string)
-        active_directory_id = optional(string)
-        root_certificate_chain_arn = optional(string)
     })))
     client_cidr_block = optional(string)
     connection_log_options = optional(list(object({
@@ -46,13 +46,29 @@ variable "values" {
 resource "aws_ec2_client_vpn_endpoint" "this" {
 
   {{- if $.Values.authentication_options }}
-  authentication_options = var.values.authentication_options
+  dynamic "authentication_options" {
+    for_each = var.values.authentication_options[*]
+    content {
+      active_directory_id = authentication_options.value.active_directory_id
+      root_certificate_chain_arn = authentication_options.value.root_certificate_chain_arn
+      saml_provider_arn = authentication_options.value.saml_provider_arn
+      self_service_saml_provider_arn = authentication_options.value.self_service_saml_provider_arn
+      type = authentication_options.value.type
+    }
+  }
   {{- end }}
   {{- if $.Values.client_cidr_block }}
   client_cidr_block = var.values.client_cidr_block
   {{- end }}
   {{- if $.Values.connection_log_options }}
-  connection_log_options = var.values.connection_log_options
+  dynamic "connection_log_options" {
+    for_each = var.values.connection_log_options[*]
+    content {
+      cloudwatch_log_group = connection_log_options.value.cloudwatch_log_group
+      cloudwatch_log_stream = connection_log_options.value.cloudwatch_log_stream
+      enabled = connection_log_options.value.enabled
+    }
+  }
   {{- end }}
   {{- if $.Values.description }}
   description = var.values.description

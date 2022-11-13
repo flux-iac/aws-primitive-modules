@@ -22,12 +22,12 @@ variable "values" {
         kms_key = optional(string)
     })))
     health_check_configuration = optional(list(object({
-        path = optional(string)
-        protocol = optional(string)
-        timeout = optional(number)
         unhealthy_threshold = optional(number)
         healthy_threshold = optional(number)
         interval = optional(number)
+        path = optional(string)
+        protocol = optional(string)
+        timeout = optional(number)
     })))
     observability_configuration = optional(list(object({
         observability_configuration_arn = optional(string)
@@ -41,30 +41,30 @@ variable "values" {
         })))
         auto_deployments_enabled = optional(bool)
         code_repository = optional(list(object({
-            code_configuration = optional(list(object({
-                code_configuration_values = optional(list(object({
-                    start_command = optional(string)
-                    build_command = optional(string)
-                    port = optional(string)
-                    runtime = optional(string)
-                    runtime_environment_variables = optional(map(string))
-                })))
-                configuration_source = optional(string)
-            })))
             repository_url = optional(string)
             source_code_version = optional(list(object({
                 type = optional(string)
                 value = optional(string)
             })))
+            code_configuration = optional(list(object({
+                code_configuration_values = optional(list(object({
+                    runtime = optional(string)
+                    runtime_environment_variables = optional(map(string))
+                    start_command = optional(string)
+                    build_command = optional(string)
+                    port = optional(string)
+                })))
+                configuration_source = optional(string)
+            })))
         })))
         image_repository = optional(list(object({
+            image_repository_type = optional(string)
             image_configuration = optional(list(object({
                 port = optional(string)
                 runtime_environment_variables = optional(map(string))
                 start_command = optional(string)
             })))
             image_identifier = optional(string)
-            image_repository_type = optional(string)
         })))
     })))
     tags = optional(map(string))
@@ -74,19 +74,96 @@ variable "values" {
 resource "aws_apprunner_service" "this" {
 
   {{- if $.Values.encryption_configuration }}
-  encryption_configuration = var.values.encryption_configuration
+  dynamic "encryption_configuration" {
+    for_each = var.values.encryption_configuration[*]
+    content {
+      kms_key = encryption_configuration.value.kms_key
+    }
+  }
   {{- end }}
   {{- if $.Values.health_check_configuration }}
-  health_check_configuration = var.values.health_check_configuration
+  dynamic "health_check_configuration" {
+    for_each = var.values.health_check_configuration[*]
+    content {
+      healthy_threshold = health_check_configuration.value.healthy_threshold
+      interval = health_check_configuration.value.interval
+      path = health_check_configuration.value.path
+      protocol = health_check_configuration.value.protocol
+      timeout = health_check_configuration.value.timeout
+      unhealthy_threshold = health_check_configuration.value.unhealthy_threshold
+    }
+  }
   {{- end }}
   {{- if $.Values.observability_configuration }}
-  observability_configuration = var.values.observability_configuration
+  dynamic "observability_configuration" {
+    for_each = var.values.observability_configuration[*]
+    content {
+      observability_configuration_arn = observability_configuration.value.observability_configuration_arn
+      observability_enabled = observability_configuration.value.observability_enabled
+    }
+  }
   {{- end }}
   {{- if $.Values.service_name }}
   service_name = var.values.service_name
   {{- end }}
   {{- if $.Values.source_configuration }}
-  source_configuration = var.values.source_configuration
+  dynamic "source_configuration" {
+    for_each = var.values.source_configuration[*]
+    content {
+      dynamic "code_repository" {
+        for_each = source_configuration.value.code_repository[*]
+        content {
+          dynamic "code_configuration" {
+            for_each = code_repository.value.code_configuration[*]
+            content {
+              dynamic "code_configuration_values" {
+                for_each = code_configuration.value.code_configuration_values[*]
+                content {
+                  build_command = code_configuration_values.value.build_command
+                  port = code_configuration_values.value.port
+                  runtime = code_configuration_values.value.runtime
+                  runtime_environment_variables = code_configuration_values.value.runtime_environment_variables
+                  start_command = code_configuration_values.value.start_command
+                }
+              }
+              configuration_source = code_configuration.value.configuration_source
+            }
+          }
+          repository_url = code_repository.value.repository_url
+          dynamic "source_code_version" {
+            for_each = code_repository.value.source_code_version[*]
+            content {
+              type = source_code_version.value.type
+              value = source_code_version.value.value
+            }
+          }
+        }
+      }
+      dynamic "image_repository" {
+        for_each = source_configuration.value.image_repository[*]
+        content {
+          dynamic "image_configuration" {
+            for_each = image_repository.value.image_configuration[*]
+            content {
+              port = image_configuration.value.port
+              runtime_environment_variables = image_configuration.value.runtime_environment_variables
+              start_command = image_configuration.value.start_command
+            }
+          }
+          image_identifier = image_repository.value.image_identifier
+          image_repository_type = image_repository.value.image_repository_type
+        }
+      }
+      dynamic "authentication_configuration" {
+        for_each = source_configuration.value.authentication_configuration[*]
+        content {
+          connection_arn = authentication_configuration.value.connection_arn
+          access_role_arn = authentication_configuration.value.access_role_arn
+        }
+      }
+      auto_deployments_enabled = source_configuration.value.auto_deployments_enabled
+    }
+  }
   {{- end }}
   {{- if $.Values.tags }}
   tags = var.values.tags

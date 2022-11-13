@@ -42,8 +42,14 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
   dynamic "rule" {
     for_each = var.values.rule[*]
     content {
-      apply_server_side_encryption_by_default = rule.value.apply_server_side_encryption_by_default
       bucket_key_enabled = rule.value.bucket_key_enabled
+      dynamic "apply_server_side_encryption_by_default" {
+        for_each = rule.value.apply_server_side_encryption_by_default[*]
+        content {
+          kms_master_key_id = apply_server_side_encryption_by_default.value.kms_master_key_id
+          sse_algorithm = apply_server_side_encryption_by_default.value.sse_algorithm
+        }
+      }
     }
   }
   {{- end }}

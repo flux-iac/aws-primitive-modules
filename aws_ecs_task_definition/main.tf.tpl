@@ -52,11 +52,11 @@ variable "values" {
     task_role_arn = optional(string)
     volume = optional(set(object({
         docker_volume_configuration = optional(list(object({
+            autoprovision = optional(bool)
             driver = optional(string)
             driver_opts = optional(map(string))
             labels = optional(map(string))
             scope = optional(string)
-            autoprovision = optional(bool)
         })))
         efs_volume_configuration = optional(list(object({
             file_system_id = optional(string)
@@ -69,12 +69,12 @@ variable "values" {
             })))
         })))
         fsx_windows_file_server_volume_configuration = optional(list(object({
-            root_directory = optional(string)
             authorization_config = optional(list(object({
                 credentials_parameter = optional(string)
                 domain = optional(string)
             })))
             file_system_id = optional(string)
+            root_directory = optional(string)
         })))
         host_path = optional(string)
         name = optional(string)
@@ -91,7 +91,12 @@ resource "aws_ecs_task_definition" "this" {
   cpu = var.values.cpu
   {{- end }}
   {{- if $.Values.ephemeral_storage }}
-  ephemeral_storage = var.values.ephemeral_storage
+  dynamic "ephemeral_storage" {
+    for_each = var.values.ephemeral_storage[*]
+    content {
+      size_in_gib = ephemeral_storage.value.size_in_gib
+    }
+  }
   {{- end }}
   {{- if $.Values.execution_role_arn }}
   execution_role_arn = var.values.execution_role_arn
@@ -124,19 +129,32 @@ resource "aws_ecs_task_definition" "this" {
   dynamic "placement_constraints" {
     for_each = var.values.placement_constraints[*]
     content {
-      type = placement_constraints.value.type
       expression = placement_constraints.value.expression
+      type = placement_constraints.value.type
     }
   }
   {{- end }}
   {{- if $.Values.proxy_configuration }}
-  proxy_configuration = var.values.proxy_configuration
+  dynamic "proxy_configuration" {
+    for_each = var.values.proxy_configuration[*]
+    content {
+      container_name = proxy_configuration.value.container_name
+      properties = proxy_configuration.value.properties
+      type = proxy_configuration.value.type
+    }
+  }
   {{- end }}
   {{- if $.Values.requires_compatibilities }}
   requires_compatibilities = var.values.requires_compatibilities
   {{- end }}
   {{- if $.Values.runtime_platform }}
-  runtime_platform = var.values.runtime_platform
+  dynamic "runtime_platform" {
+    for_each = var.values.runtime_platform[*]
+    content {
+      cpu_architecture = runtime_platform.value.cpu_architecture
+      operating_system_family = runtime_platform.value.operating_system_family
+    }
+  }
   {{- end }}
   {{- if $.Values.skip_destroy }}
   skip_destroy = var.values.skip_destroy
@@ -151,11 +169,48 @@ resource "aws_ecs_task_definition" "this" {
   dynamic "volume" {
     for_each = var.values.volume[*]
     content {
-      docker_volume_configuration = volume.value.docker_volume_configuration
-      efs_volume_configuration = volume.value.efs_volume_configuration
-      fsx_windows_file_server_volume_configuration = volume.value.fsx_windows_file_server_volume_configuration
+      dynamic "fsx_windows_file_server_volume_configuration" {
+        for_each = volume.value.fsx_windows_file_server_volume_configuration[*]
+        content {
+          dynamic "authorization_config" {
+            for_each = fsx_windows_file_server_volume_configuration.value.authorization_config[*]
+            content {
+              credentials_parameter = authorization_config.value.credentials_parameter
+              domain = authorization_config.value.domain
+            }
+          }
+          file_system_id = fsx_windows_file_server_volume_configuration.value.file_system_id
+          root_directory = fsx_windows_file_server_volume_configuration.value.root_directory
+        }
+      }
       host_path = volume.value.host_path
       name = volume.value.name
+      dynamic "docker_volume_configuration" {
+        for_each = volume.value.docker_volume_configuration[*]
+        content {
+          scope = docker_volume_configuration.value.scope
+          autoprovision = docker_volume_configuration.value.autoprovision
+          driver = docker_volume_configuration.value.driver
+          driver_opts = docker_volume_configuration.value.driver_opts
+          labels = docker_volume_configuration.value.labels
+        }
+      }
+      dynamic "efs_volume_configuration" {
+        for_each = volume.value.efs_volume_configuration[*]
+        content {
+          dynamic "authorization_config" {
+            for_each = efs_volume_configuration.value.authorization_config[*]
+            content {
+              iam = authorization_config.value.iam
+              access_point_id = authorization_config.value.access_point_id
+            }
+          }
+          file_system_id = efs_volume_configuration.value.file_system_id
+          root_directory = efs_volume_configuration.value.root_directory
+          transit_encryption = efs_volume_configuration.value.transit_encryption
+          transit_encryption_port = efs_volume_configuration.value.transit_encryption_port
+        }
+      }
     }
   }
   {{- end }}

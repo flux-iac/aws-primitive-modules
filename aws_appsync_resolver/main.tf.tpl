@@ -33,11 +33,11 @@ variable "values" {
     request_template = optional(string)
     response_template = optional(string)
     sync_config = optional(list(object({
+        conflict_detection = optional(string)
+        conflict_handler = optional(string)
         lambda_conflict_handler_config = optional(list(object({
             lambda_conflict_handler_arn = optional(string)
         })))
-        conflict_detection = optional(string)
-        conflict_handler = optional(string)
     })))
     type = optional(string)
   })
@@ -49,7 +49,13 @@ resource "aws_appsync_resolver" "this" {
   api_id = var.values.api_id
   {{- end }}
   {{- if $.Values.caching_config }}
-  caching_config = var.values.caching_config
+  dynamic "caching_config" {
+    for_each = var.values.caching_config[*]
+    content {
+      caching_keys = caching_config.value.caching_keys
+      ttl = caching_config.value.ttl
+    }
+  }
   {{- end }}
   {{- if $.Values.data_source }}
   data_source = var.values.data_source
@@ -64,7 +70,12 @@ resource "aws_appsync_resolver" "this" {
   max_batch_size = var.values.max_batch_size
   {{- end }}
   {{- if $.Values.pipeline_config }}
-  pipeline_config = var.values.pipeline_config
+  dynamic "pipeline_config" {
+    for_each = var.values.pipeline_config[*]
+    content {
+      functions = pipeline_config.value.functions
+    }
+  }
   {{- end }}
   {{- if $.Values.request_template }}
   request_template = var.values.request_template
@@ -73,7 +84,19 @@ resource "aws_appsync_resolver" "this" {
   response_template = var.values.response_template
   {{- end }}
   {{- if $.Values.sync_config }}
-  sync_config = var.values.sync_config
+  dynamic "sync_config" {
+    for_each = var.values.sync_config[*]
+    content {
+      conflict_detection = sync_config.value.conflict_detection
+      conflict_handler = sync_config.value.conflict_handler
+      dynamic "lambda_conflict_handler_config" {
+        for_each = sync_config.value.lambda_conflict_handler_config[*]
+        content {
+          lambda_conflict_handler_arn = lambda_conflict_handler_config.value.lambda_conflict_handler_arn
+        }
+      }
+    }
+  }
   {{- end }}
   {{- if $.Values.type }}
   type = var.values.type

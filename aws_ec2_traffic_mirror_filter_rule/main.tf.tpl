@@ -46,7 +46,13 @@ resource "aws_ec2_traffic_mirror_filter_rule" "this" {
   destination_cidr_block = var.values.destination_cidr_block
   {{- end }}
   {{- if $.Values.destination_port_range }}
-  destination_port_range = var.values.destination_port_range
+  dynamic "destination_port_range" {
+    for_each = var.values.destination_port_range[*]
+    content {
+      from_port = destination_port_range.value.from_port
+      to_port = destination_port_range.value.to_port
+    }
+  }
   {{- end }}
   {{- if $.Values.protocol }}
   protocol = var.values.protocol
@@ -61,7 +67,13 @@ resource "aws_ec2_traffic_mirror_filter_rule" "this" {
   source_cidr_block = var.values.source_cidr_block
   {{- end }}
   {{- if $.Values.source_port_range }}
-  source_port_range = var.values.source_port_range
+  dynamic "source_port_range" {
+    for_each = var.values.source_port_range[*]
+    content {
+      from_port = source_port_range.value.from_port
+      to_port = source_port_range.value.to_port
+    }
+  }
   {{- end }}
   {{- if $.Values.traffic_direction }}
   traffic_direction = var.values.traffic_direction

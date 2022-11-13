@@ -34,16 +34,16 @@ variable "values" {
         source_security_group_ids = optional(set(string))
     })))
     scaling_config = optional(list(object({
+        min_size = optional(number)
         desired_size = optional(number)
         max_size = optional(number)
-        min_size = optional(number)
     })))
     subnet_ids = optional(set(string))
     tags = optional(map(string))
     taint = optional(set(object({
+        key = optional(string)
         value = optional(string)
         effect = optional(string)
-        key = optional(string)
     })))
   })
 }
@@ -72,7 +72,14 @@ resource "aws_eks_node_group" "this" {
   labels = var.values.labels
   {{- end }}
   {{- if $.Values.launch_template }}
-  launch_template = var.values.launch_template
+  dynamic "launch_template" {
+    for_each = var.values.launch_template[*]
+    content {
+      id = launch_template.value.id
+      name = launch_template.value.name
+      version = launch_template.value.version
+    }
+  }
   {{- end }}
   {{- if $.Values.node_group_name }}
   node_group_name = var.values.node_group_name
@@ -84,10 +91,23 @@ resource "aws_eks_node_group" "this" {
   node_role_arn = var.values.node_role_arn
   {{- end }}
   {{- if $.Values.remote_access }}
-  remote_access = var.values.remote_access
+  dynamic "remote_access" {
+    for_each = var.values.remote_access[*]
+    content {
+      ec2_ssh_key = remote_access.value.ec2_ssh_key
+      source_security_group_ids = remote_access.value.source_security_group_ids
+    }
+  }
   {{- end }}
   {{- if $.Values.scaling_config }}
-  scaling_config = var.values.scaling_config
+  dynamic "scaling_config" {
+    for_each = var.values.scaling_config[*]
+    content {
+      desired_size = scaling_config.value.desired_size
+      max_size = scaling_config.value.max_size
+      min_size = scaling_config.value.min_size
+    }
+  }
   {{- end }}
   {{- if $.Values.subnet_ids }}
   subnet_ids = var.values.subnet_ids

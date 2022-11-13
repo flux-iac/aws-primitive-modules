@@ -23,8 +23,8 @@ variable "values" {
     resource_id = optional(string)
     scalable_dimension = optional(string)
     scalable_target_action = optional(list(object({
-        max_capacity = optional(string)
         min_capacity = optional(string)
+        max_capacity = optional(string)
     })))
     schedule = optional(string)
     service_namespace = optional(string)
@@ -48,7 +48,13 @@ resource "aws_appautoscaling_scheduled_action" "this" {
   scalable_dimension = var.values.scalable_dimension
   {{- end }}
   {{- if $.Values.scalable_target_action }}
-  scalable_target_action = var.values.scalable_target_action
+  dynamic "scalable_target_action" {
+    for_each = var.values.scalable_target_action[*]
+    content {
+      min_capacity = scalable_target_action.value.min_capacity
+      max_capacity = scalable_target_action.value.max_capacity
+    }
+  }
   {{- end }}
   {{- if $.Values.schedule }}
   schedule = var.values.schedule

@@ -29,7 +29,27 @@ resource "aws_s3control_multi_region_access_point" "this" {
   account_id = var.values.account_id
   {{- end }}
   {{- if $.Values.details }}
-  details = var.values.details
+  dynamic "details" {
+    for_each = var.values.details[*]
+    content {
+      name = details.value.name
+      dynamic "public_access_block" {
+        for_each = details.value.public_access_block[*]
+        content {
+          block_public_acls = public_access_block.value.block_public_acls
+          block_public_policy = public_access_block.value.block_public_policy
+          ignore_public_acls = public_access_block.value.ignore_public_acls
+          restrict_public_buckets = public_access_block.value.restrict_public_buckets
+        }
+      }
+      dynamic "region" {
+        for_each = details.value.region[*]
+        content {
+          bucket = region.value.bucket
+        }
+      }
+    }
+  }
   {{- end }}
 
 

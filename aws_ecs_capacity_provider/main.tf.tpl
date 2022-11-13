@@ -19,15 +19,15 @@ provider "aws" {
 variable "values" {
   type = object({
     auto_scaling_group_provider = optional(list(object({
+        managed_termination_protection = optional(string)
         auto_scaling_group_arn = optional(string)
         managed_scaling = optional(list(object({
+            instance_warmup_period = optional(number)
+            maximum_scaling_step_size = optional(number)
             minimum_scaling_step_size = optional(number)
             status = optional(string)
             target_capacity = optional(number)
-            instance_warmup_period = optional(number)
-            maximum_scaling_step_size = optional(number)
         })))
-        managed_termination_protection = optional(string)
     })))
     name = optional(string)
     tags = optional(map(string))
@@ -37,7 +37,23 @@ variable "values" {
 resource "aws_ecs_capacity_provider" "this" {
 
   {{- if $.Values.auto_scaling_group_provider }}
-  auto_scaling_group_provider = var.values.auto_scaling_group_provider
+  dynamic "auto_scaling_group_provider" {
+    for_each = var.values.auto_scaling_group_provider[*]
+    content {
+      auto_scaling_group_arn = auto_scaling_group_provider.value.auto_scaling_group_arn
+      dynamic "managed_scaling" {
+        for_each = auto_scaling_group_provider.value.managed_scaling[*]
+        content {
+          target_capacity = managed_scaling.value.target_capacity
+          instance_warmup_period = managed_scaling.value.instance_warmup_period
+          maximum_scaling_step_size = managed_scaling.value.maximum_scaling_step_size
+          minimum_scaling_step_size = managed_scaling.value.minimum_scaling_step_size
+          status = managed_scaling.value.status
+        }
+      }
+      managed_termination_protection = auto_scaling_group_provider.value.managed_termination_protection
+    }
+  }
   {{- end }}
   {{- if $.Values.name }}
   name = var.values.name

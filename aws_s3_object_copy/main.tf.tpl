@@ -30,11 +30,11 @@ variable "values" {
     expires = optional(string)
     force_destroy = optional(bool)
     grant = optional(set(object({
-        id = optional(string)
-        permissions = optional(set(string))
         type = optional(string)
         uri = optional(string)
         email = optional(string)
+        id = optional(string)
+        permissions = optional(set(string))
     })))
     key = optional(string)
     metadata_directive = optional(string)

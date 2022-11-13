@@ -44,7 +44,19 @@ resource "aws_s3_bucket_object_lock_configuration" "this" {
   object_lock_enabled = var.values.object_lock_enabled
   {{- end }}
   {{- if $.Values.rule }}
-  rule = var.values.rule
+  dynamic "rule" {
+    for_each = var.values.rule[*]
+    content {
+      dynamic "default_retention" {
+        for_each = rule.value.default_retention[*]
+        content {
+          days = default_retention.value.days
+          mode = default_retention.value.mode
+          years = default_retention.value.years
+        }
+      }
+    }
+  }
   {{- end }}
   {{- if $.Values.token }}
   token = var.values.token

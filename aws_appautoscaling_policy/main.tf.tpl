@@ -24,8 +24,6 @@ variable "values" {
     scalable_dimension = optional(string)
     service_namespace = optional(string)
     step_scaling_policy_configuration = optional(list(object({
-        adjustment_type = optional(string)
-        cooldown = optional(number)
         metric_aggregation_type = optional(string)
         min_adjustment_magnitude = optional(number)
         step_adjustment = optional(set(object({
@@ -33,10 +31,13 @@ variable "values" {
             metric_interval_lower_bound = optional(string)
             metric_interval_upper_bound = optional(string)
         })))
+        adjustment_type = optional(string)
+        cooldown = optional(number)
     })))
     target_tracking_scaling_policy_configuration = optional(list(object({
+        scale_out_cooldown = optional(number)
+        target_value = optional(number)
         customized_metric_specification = optional(list(object({
-            statistic = optional(string)
             unit = optional(string)
             dimensions = optional(set(object({
                 name = optional(string)
@@ -44,6 +45,7 @@ variable "values" {
             })))
             metric_name = optional(string)
             namespace = optional(string)
+            statistic = optional(string)
         })))
         disable_scale_in = optional(bool)
         predefined_metric_specification = optional(list(object({
@@ -51,8 +53,6 @@ variable "values" {
             resource_label = optional(string)
         })))
         scale_in_cooldown = optional(number)
-        scale_out_cooldown = optional(number)
-        target_value = optional(number)
     })))
   })
 }
@@ -75,10 +75,57 @@ resource "aws_appautoscaling_policy" "this" {
   service_namespace = var.values.service_namespace
   {{- end }}
   {{- if $.Values.step_scaling_policy_configuration }}
-  step_scaling_policy_configuration = var.values.step_scaling_policy_configuration
+  dynamic "step_scaling_policy_configuration" {
+    for_each = var.values.step_scaling_policy_configuration[*]
+    content {
+      cooldown = step_scaling_policy_configuration.value.cooldown
+      metric_aggregation_type = step_scaling_policy_configuration.value.metric_aggregation_type
+      min_adjustment_magnitude = step_scaling_policy_configuration.value.min_adjustment_magnitude
+      dynamic "step_adjustment" {
+        for_each = step_scaling_policy_configuration.value.step_adjustment[*]
+        content {
+          metric_interval_upper_bound = step_adjustment.value.metric_interval_upper_bound
+          scaling_adjustment = step_adjustment.value.scaling_adjustment
+          metric_interval_lower_bound = step_adjustment.value.metric_interval_lower_bound
+        }
+      }
+      adjustment_type = step_scaling_policy_configuration.value.adjustment_type
+    }
+  }
   {{- end }}
   {{- if $.Values.target_tracking_scaling_policy_configuration }}
-  target_tracking_scaling_policy_configuration = var.values.target_tracking_scaling_policy_configuration
+  dynamic "target_tracking_scaling_policy_configuration" {
+    for_each = var.values.target_tracking_scaling_policy_configuration[*]
+    content {
+      dynamic "customized_metric_specification" {
+        for_each = target_tracking_scaling_policy_configuration.value.customized_metric_specification[*]
+        content {
+          dynamic "dimensions" {
+            for_each = customized_metric_specification.value.dimensions[*]
+            content {
+              name = dimensions.value.name
+              value = dimensions.value.value
+            }
+          }
+          metric_name = customized_metric_specification.value.metric_name
+          namespace = customized_metric_specification.value.namespace
+          statistic = customized_metric_specification.value.statistic
+          unit = customized_metric_specification.value.unit
+        }
+      }
+      disable_scale_in = target_tracking_scaling_policy_configuration.value.disable_scale_in
+      dynamic "predefined_metric_specification" {
+        for_each = target_tracking_scaling_policy_configuration.value.predefined_metric_specification[*]
+        content {
+          predefined_metric_type = predefined_metric_specification.value.predefined_metric_type
+          resource_label = predefined_metric_specification.value.resource_label
+        }
+      }
+      scale_in_cooldown = target_tracking_scaling_policy_configuration.value.scale_in_cooldown
+      scale_out_cooldown = target_tracking_scaling_policy_configuration.value.scale_out_cooldown
+      target_value = target_tracking_scaling_policy_configuration.value.target_value
+    }
+  }
   {{- end }}
 
 

@@ -20,12 +20,6 @@ variable "values" {
   type = object({
     bucket = optional(string)
     rule = optional(set(object({
-        filter = optional(list(object({
-            prefix = optional(string)
-            tags = optional(map(string))
-        })))
-        id = optional(string)
-        status = optional(string)
         abort_incomplete_multipart_upload = optional(list(object({
             days_after_initiation = optional(number)
         })))
@@ -34,6 +28,12 @@ variable "values" {
             days = optional(number)
             expired_object_delete_marker = optional(bool)
         })))
+        filter = optional(list(object({
+            tags = optional(map(string))
+            prefix = optional(string)
+        })))
+        id = optional(string)
+        status = optional(string)
     })))
   })
 }
@@ -47,11 +47,29 @@ resource "aws_s3control_bucket_lifecycle_configuration" "this" {
   dynamic "rule" {
     for_each = var.values.rule[*]
     content {
-      abort_incomplete_multipart_upload = rule.value.abort_incomplete_multipart_upload
-      expiration = rule.value.expiration
-      filter = rule.value.filter
+      dynamic "expiration" {
+        for_each = rule.value.expiration[*]
+        content {
+          date = expiration.value.date
+          days = expiration.value.days
+          expired_object_delete_marker = expiration.value.expired_object_delete_marker
+        }
+      }
+      dynamic "filter" {
+        for_each = rule.value.filter[*]
+        content {
+          prefix = filter.value.prefix
+          tags = filter.value.tags
+        }
+      }
       id = rule.value.id
       status = rule.value.status
+      dynamic "abort_incomplete_multipart_upload" {
+        for_each = rule.value.abort_incomplete_multipart_upload[*]
+        content {
+          days_after_initiation = abort_incomplete_multipart_upload.value.days_after_initiation
+        }
+      }
     }
   }
   {{- end }}

@@ -21,9 +21,9 @@ variable "values" {
     capacity_providers = optional(set(string))
     cluster_name = optional(string)
     default_capacity_provider_strategy = optional(set(object({
-        capacity_provider = optional(string)
         weight = optional(number)
         base = optional(number)
+        capacity_provider = optional(string)
     })))
   })
 }

@@ -33,7 +33,13 @@ resource "aws_s3_bucket_metric" "this" {
   bucket = var.values.bucket
   {{- end }}
   {{- if $.Values.filter }}
-  filter = var.values.filter
+  dynamic "filter" {
+    for_each = var.values.filter[*]
+    content {
+      tags = filter.value.tags
+      prefix = filter.value.prefix
+    }
+  }
   {{- end }}
   {{- if $.Values.name }}
   name = var.values.name

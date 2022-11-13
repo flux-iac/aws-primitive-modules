@@ -38,7 +38,13 @@ resource "aws_s3_bucket_intelligent_tiering_configuration" "this" {
   bucket = var.values.bucket
   {{- end }}
   {{- if $.Values.filter }}
-  filter = var.values.filter
+  dynamic "filter" {
+    for_each = var.values.filter[*]
+    content {
+      prefix = filter.value.prefix
+      tags = filter.value.tags
+    }
+  }
   {{- end }}
   {{- if $.Values.name }}
   name = var.values.name

@@ -47,7 +47,28 @@ resource "aws_appmesh_virtual_service" "this" {
   name = var.values.name
   {{- end }}
   {{- if $.Values.spec }}
-  spec = var.values.spec
+  dynamic "spec" {
+    for_each = var.values.spec[*]
+    content {
+      dynamic "provider" {
+        for_each = spec.value.provider[*]
+        content {
+          dynamic "virtual_node" {
+            for_each = provider.value.virtual_node[*]
+            content {
+              virtual_node_name = virtual_node.value.virtual_node_name
+            }
+          }
+          dynamic "virtual_router" {
+            for_each = provider.value.virtual_router[*]
+            content {
+              virtual_router_name = virtual_router.value.virtual_router_name
+            }
+          }
+        }
+      }
+    }
+  }
   {{- end }}
   {{- if $.Values.tags }}
   tags = var.values.tags

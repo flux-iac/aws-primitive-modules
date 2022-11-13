@@ -22,12 +22,6 @@ variable "values" {
     expected_bucket_owner = optional(string)
     rule = optional(list(object({
         filter = optional(list(object({
-            object_size_less_than = optional(string)
-            prefix = optional(string)
-            tag = optional(list(object({
-                value = optional(string)
-                key = optional(string)
-            })))
             and = optional(list(object({
                 object_size_greater_than = optional(number)
                 object_size_less_than = optional(number)
@@ -35,18 +29,16 @@ variable "values" {
                 tags = optional(map(string))
             })))
             object_size_greater_than = optional(string)
+            object_size_less_than = optional(string)
+            prefix = optional(string)
+            tag = optional(list(object({
+                key = optional(string)
+                value = optional(string)
+            })))
         })))
-        noncurrent_version_transition = optional(set(object({
-            newer_noncurrent_versions = optional(string)
-            noncurrent_days = optional(number)
-            storage_class = optional(string)
-        })))
-        status = optional(string)
-        noncurrent_version_expiration = optional(list(object({
-            noncurrent_days = optional(number)
-            newer_noncurrent_versions = optional(string)
-        })))
+        id = optional(string)
         prefix = optional(string)
+        status = optional(string)
         transition = optional(set(object({
             date = optional(string)
             days = optional(number)
@@ -60,7 +52,15 @@ variable "values" {
             days = optional(number)
             expired_object_delete_marker = optional(bool)
         })))
-        id = optional(string)
+        noncurrent_version_expiration = optional(list(object({
+            newer_noncurrent_versions = optional(string)
+            noncurrent_days = optional(number)
+        })))
+        noncurrent_version_transition = optional(set(object({
+            newer_noncurrent_versions = optional(string)
+            noncurrent_days = optional(number)
+            storage_class = optional(string)
+        })))
     })))
   })
 }
@@ -74,7 +74,75 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
   expected_bucket_owner = var.values.expected_bucket_owner
   {{- end }}
   {{- if $.Values.rule }}
-  rule = var.values.rule
+  dynamic "rule" {
+    for_each = var.values.rule[*]
+    content {
+      dynamic "filter" {
+        for_each = rule.value.filter[*]
+        content {
+          object_size_greater_than = filter.value.object_size_greater_than
+          object_size_less_than = filter.value.object_size_less_than
+          prefix = filter.value.prefix
+          dynamic "tag" {
+            for_each = filter.value.tag[*]
+            content {
+              key = tag.value.key
+              value = tag.value.value
+            }
+          }
+          dynamic "and" {
+            for_each = filter.value.and[*]
+            content {
+              object_size_greater_than = and.value.object_size_greater_than
+              object_size_less_than = and.value.object_size_less_than
+              prefix = and.value.prefix
+              tags = and.value.tags
+            }
+          }
+        }
+      }
+      id = rule.value.id
+      prefix = rule.value.prefix
+      status = rule.value.status
+      dynamic "abort_incomplete_multipart_upload" {
+        for_each = rule.value.abort_incomplete_multipart_upload[*]
+        content {
+          days_after_initiation = abort_incomplete_multipart_upload.value.days_after_initiation
+        }
+      }
+      dynamic "expiration" {
+        for_each = rule.value.expiration[*]
+        content {
+          days = expiration.value.days
+          expired_object_delete_marker = expiration.value.expired_object_delete_marker
+          date = expiration.value.date
+        }
+      }
+      dynamic "noncurrent_version_expiration" {
+        for_each = rule.value.noncurrent_version_expiration[*]
+        content {
+          newer_noncurrent_versions = noncurrent_version_expiration.value.newer_noncurrent_versions
+          noncurrent_days = noncurrent_version_expiration.value.noncurrent_days
+        }
+      }
+      dynamic "noncurrent_version_transition" {
+        for_each = rule.value.noncurrent_version_transition[*]
+        content {
+          newer_noncurrent_versions = noncurrent_version_transition.value.newer_noncurrent_versions
+          noncurrent_days = noncurrent_version_transition.value.noncurrent_days
+          storage_class = noncurrent_version_transition.value.storage_class
+        }
+      }
+      dynamic "transition" {
+        for_each = rule.value.transition[*]
+        content {
+          storage_class = transition.value.storage_class
+          date = transition.value.date
+          days = transition.value.days
+        }
+      }
+    }
+  }
   {{- end }}
 
 

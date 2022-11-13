@@ -20,10 +20,10 @@ variable "values" {
   type = object({
     enabled_cluster_log_types = optional(set(string))
     encryption_config = optional(list(object({
-        resources = optional(set(string))
         provider = optional(list(object({
             key_arn = optional(string)
         })))
+        resources = optional(set(string))
     })))
     name = optional(string)
     outpost_config = optional(list(object({
@@ -33,13 +33,13 @@ variable "values" {
     role_arn = optional(string)
     tags = optional(map(string))
     vpc_config = optional(list(object({
-        cluster_security_group_id = optional(string)
         endpoint_private_access = optional(bool)
         endpoint_public_access = optional(bool)
         public_access_cidrs = optional(set(string))
         security_group_ids = optional(set(string))
         subnet_ids = optional(set(string))
         vpc_id = optional(string)
+        cluster_security_group_id = optional(string)
     })))
   })
 }
@@ -50,13 +50,30 @@ resource "aws_eks_cluster" "this" {
   enabled_cluster_log_types = var.values.enabled_cluster_log_types
   {{- end }}
   {{- if $.Values.encryption_config }}
-  encryption_config = var.values.encryption_config
+  dynamic "encryption_config" {
+    for_each = var.values.encryption_config[*]
+    content {
+      dynamic "provider" {
+        for_each = encryption_config.value.provider[*]
+        content {
+          key_arn = provider.value.key_arn
+        }
+      }
+      resources = encryption_config.value.resources
+    }
+  }
   {{- end }}
   {{- if $.Values.name }}
   name = var.values.name
   {{- end }}
   {{- if $.Values.outpost_config }}
-  outpost_config = var.values.outpost_config
+  dynamic "outpost_config" {
+    for_each = var.values.outpost_config[*]
+    content {
+      control_plane_instance_type = outpost_config.value.control_plane_instance_type
+      outpost_arns = outpost_config.value.outpost_arns
+    }
+  }
   {{- end }}
   {{- if $.Values.role_arn }}
   role_arn = var.values.role_arn
@@ -65,7 +82,18 @@ resource "aws_eks_cluster" "this" {
   tags = var.values.tags
   {{- end }}
   {{- if $.Values.vpc_config }}
-  vpc_config = var.values.vpc_config
+  dynamic "vpc_config" {
+    for_each = var.values.vpc_config[*]
+    content {
+      endpoint_public_access = vpc_config.value.endpoint_public_access
+      public_access_cidrs = vpc_config.value.public_access_cidrs
+      security_group_ids = vpc_config.value.security_group_ids
+      subnet_ids = vpc_config.value.subnet_ids
+      vpc_id = vpc_config.value.vpc_id
+      cluster_security_group_id = vpc_config.value.cluster_security_group_id
+      endpoint_private_access = vpc_config.value.endpoint_private_access
+    }
+  }
   {{- end }}
 
 

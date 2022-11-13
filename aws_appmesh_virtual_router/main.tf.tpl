@@ -24,8 +24,8 @@ variable "values" {
     spec = optional(list(object({
         listener = optional(list(object({
             port_mapping = optional(list(object({
-                port = optional(number)
                 protocol = optional(string)
+                port = optional(number)
             })))
         })))
     })))
@@ -45,7 +45,23 @@ resource "aws_appmesh_virtual_router" "this" {
   name = var.values.name
   {{- end }}
   {{- if $.Values.spec }}
-  spec = var.values.spec
+  dynamic "spec" {
+    for_each = var.values.spec[*]
+    content {
+      dynamic "listener" {
+        for_each = spec.value.listener[*]
+        content {
+          dynamic "port_mapping" {
+            for_each = listener.value.port_mapping[*]
+            content {
+              protocol = port_mapping.value.protocol
+              port = port_mapping.value.port
+            }
+          }
+        }
+      }
+    }
+  }
   {{- end }}
   {{- if $.Values.tags }}
   tags = var.values.tags
