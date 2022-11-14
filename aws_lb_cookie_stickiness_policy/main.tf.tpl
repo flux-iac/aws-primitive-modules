@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     cookie_expiration_period = optional(number)

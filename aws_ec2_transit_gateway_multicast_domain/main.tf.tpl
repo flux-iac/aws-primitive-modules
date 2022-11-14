@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     auto_accept_shared_associations = optional(string)

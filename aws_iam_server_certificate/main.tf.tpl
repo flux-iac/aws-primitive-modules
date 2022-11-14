@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     certificate_body = optional(string)

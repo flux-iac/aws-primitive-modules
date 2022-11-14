@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     block_public_acls = optional(bool)

@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     deployment_duration_in_minutes = optional(number)

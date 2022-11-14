@@ -13,18 +13,15 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     catalog_data = optional(list(object({
+        usage_text = optional(string)
         about_text = optional(string)
         architectures = optional(set(string))
         description = optional(string)
         logo_image_blob = optional(string)
         operating_systems = optional(set(string))
-        usage_text = optional(string)
     })))
     force_destroy = optional(bool)
     repository_name = optional(string)
@@ -38,12 +35,12 @@ resource "aws_ecrpublic_repository" "this" {
   dynamic "catalog_data" {
     for_each = var.values.catalog_data[*]
     content {
-      usage_text = catalog_data.value.usage_text
-      about_text = catalog_data.value.about_text
-      architectures = catalog_data.value.architectures
       description = catalog_data.value.description
       logo_image_blob = catalog_data.value.logo_image_blob
       operating_systems = catalog_data.value.operating_systems
+      usage_text = catalog_data.value.usage_text
+      about_text = catalog_data.value.about_text
+      architectures = catalog_data.value.architectures
     }
   }
   {{- end }}

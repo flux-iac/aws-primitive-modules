@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     compute_capacity = optional(list(object({
@@ -38,10 +35,10 @@ resource "aws_appstream_fleet" "this" {
   dynamic "compute_capacity" {
     for_each = var.values.compute_capacity[*]
     content {
+      available = compute_capacity.value.available
       desired_instances = compute_capacity.value.desired_instances
       in_use = compute_capacity.value.in_use
       running = compute_capacity.value.running
-      available = compute_capacity.value.available
     }
   }
   {{- end }}

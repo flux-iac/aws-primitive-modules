@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     bucket = optional(string)
@@ -36,8 +33,8 @@ resource "aws_s3_bucket_metric" "this" {
   dynamic "filter" {
     for_each = var.values.filter[*]
     content {
-      tags = filter.value.tags
       prefix = filter.value.prefix
+      tags = filter.value.tags
     }
   }
   {{- end }}

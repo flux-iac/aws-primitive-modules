@@ -13,23 +13,20 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     api_id = optional(string)
     description = optional(string)
     dynamodb_config = optional(list(object({
-        region = optional(string)
-        table_name = optional(string)
-        use_caller_credentials = optional(bool)
         versioned = optional(bool)
         delta_sync_config = optional(list(object({
             base_table_ttl = optional(number)
             delta_sync_table_name = optional(string)
             delta_sync_table_ttl = optional(number)
         })))
+        region = optional(string)
+        table_name = optional(string)
+        use_caller_credentials = optional(bool)
     })))
     elasticsearch_config = optional(list(object({
         region = optional(string)
@@ -50,6 +47,7 @@ variable "values" {
     })))
     name = optional(string)
     relational_database_config = optional(list(object({
+        source_type = optional(string)
         http_endpoint_config = optional(list(object({
             db_cluster_identifier = optional(string)
             aws_secret_store_arn = optional(string)
@@ -57,7 +55,6 @@ variable "values" {
             region = optional(string)
             schema = optional(string)
         })))
-        source_type = optional(string)
     })))
     service_role_arn = optional(string)
     type = optional(string)
@@ -136,17 +133,17 @@ resource "aws_appsync_datasource" "this" {
   dynamic "relational_database_config" {
     for_each = var.values.relational_database_config[*]
     content {
-      source_type = relational_database_config.value.source_type
       dynamic "http_endpoint_config" {
         for_each = relational_database_config.value.http_endpoint_config[*]
         content {
-          schema = http_endpoint_config.value.schema
           db_cluster_identifier = http_endpoint_config.value.db_cluster_identifier
           aws_secret_store_arn = http_endpoint_config.value.aws_secret_store_arn
           database_name = http_endpoint_config.value.database_name
           region = http_endpoint_config.value.region
+          schema = http_endpoint_config.value.schema
         }
       }
+      source_type = relational_database_config.value.source_type
     }
   }
   {{- end }}

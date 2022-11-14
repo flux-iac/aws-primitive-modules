@@ -13,20 +13,17 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     replication_configuration = optional(list(object({
         rule = optional(list(object({
-            destination = optional(list(object({
-                region = optional(string)
-                registry_id = optional(string)
-            })))
             repository_filter = optional(list(object({
                 filter = optional(string)
                 filter_type = optional(string)
+            })))
+            destination = optional(list(object({
+                region = optional(string)
+                registry_id = optional(string)
             })))
         })))
     })))
@@ -42,18 +39,18 @@ resource "aws_ecr_replication_configuration" "this" {
       dynamic "rule" {
         for_each = replication_configuration.value.rule[*]
         content {
-          dynamic "repository_filter" {
-            for_each = rule.value.repository_filter[*]
-            content {
-              filter = repository_filter.value.filter
-              filter_type = repository_filter.value.filter_type
-            }
-          }
           dynamic "destination" {
             for_each = rule.value.destination[*]
             content {
               region = destination.value.region
               registry_id = destination.value.registry_id
+            }
+          }
+          dynamic "repository_filter" {
+            for_each = rule.value.repository_filter[*]
+            content {
+              filter_type = repository_filter.value.filter_type
+              filter = repository_filter.value.filter
             }
           }
         }

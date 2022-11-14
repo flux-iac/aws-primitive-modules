@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     bucket = optional(string)
@@ -43,8 +40,8 @@ resource "aws_s3_bucket_versioning" "this" {
   dynamic "versioning_configuration" {
     for_each = var.values.versioning_configuration[*]
     content {
-      mfa_delete = versioning_configuration.value.mfa_delete
       status = versioning_configuration.value.status
+      mfa_delete = versioning_configuration.value.mfa_delete
     }
   }
   {{- end }}

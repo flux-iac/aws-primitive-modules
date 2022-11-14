@@ -13,28 +13,20 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     bucket = optional(string)
     role = optional(string)
     rule = optional(list(object({
-        filter = optional(list(object({
-            and = optional(list(object({
-                prefix = optional(string)
-                tags = optional(map(string))
-            })))
-            prefix = optional(string)
-            tag = optional(list(object({
-                key = optional(string)
-                value = optional(string)
-            })))
-        })))
-        prefix = optional(string)
-        priority = optional(number)
         destination = optional(list(object({
+            access_control_translation = optional(list(object({
+                owner = optional(string)
+            })))
+            account = optional(string)
+            bucket = optional(string)
+            encryption_configuration = optional(list(object({
+                replica_kms_key_id = optional(string)
+            })))
             metrics = optional(list(object({
                 event_threshold = optional(list(object({
                     minutes = optional(number)
@@ -48,16 +40,26 @@ variable "values" {
                 })))
             })))
             storage_class = optional(string)
-            access_control_translation = optional(list(object({
-                owner = optional(string)
-            })))
-            account = optional(string)
-            bucket = optional(string)
-            encryption_configuration = optional(list(object({
-                replica_kms_key_id = optional(string)
-            })))
         })))
         existing_object_replication = optional(list(object({
+            status = optional(string)
+        })))
+        filter = optional(list(object({
+            and = optional(list(object({
+                prefix = optional(string)
+                tags = optional(map(string))
+            })))
+            prefix = optional(string)
+            tag = optional(list(object({
+                key = optional(string)
+                value = optional(string)
+            })))
+        })))
+        id = optional(string)
+        prefix = optional(string)
+        priority = optional(number)
+        status = optional(string)
+        delete_marker_replication = optional(list(object({
             status = optional(string)
         })))
         source_selection_criteria = optional(list(object({
@@ -68,11 +70,6 @@ variable "values" {
                 status = optional(string)
             })))
         })))
-        status = optional(string)
-        delete_marker_replication = optional(list(object({
-            status = optional(string)
-        })))
-        id = optional(string)
     })))
     token = optional(string)
   })
@@ -90,6 +87,12 @@ resource "aws_s3_bucket_replication_configuration" "this" {
   dynamic "rule" {
     for_each = var.values.rule[*]
     content {
+      dynamic "delete_marker_replication" {
+        for_each = rule.value.delete_marker_replication[*]
+        content {
+          status = delete_marker_replication.value.status
+        }
+      }
       dynamic "destination" {
         for_each = rule.value.destination[*]
         content {
@@ -160,33 +163,27 @@ resource "aws_s3_bucket_replication_configuration" "this" {
           }
         }
       }
+      id = rule.value.id
       prefix = rule.value.prefix
       priority = rule.value.priority
-      dynamic "delete_marker_replication" {
-        for_each = rule.value.delete_marker_replication[*]
-        content {
-          status = delete_marker_replication.value.status
-        }
-      }
-      id = rule.value.id
+      status = rule.value.status
       dynamic "source_selection_criteria" {
         for_each = rule.value.source_selection_criteria[*]
         content {
-          dynamic "replica_modifications" {
-            for_each = source_selection_criteria.value.replica_modifications[*]
-            content {
-              status = replica_modifications.value.status
-            }
-          }
           dynamic "sse_kms_encrypted_objects" {
             for_each = source_selection_criteria.value.sse_kms_encrypted_objects[*]
             content {
               status = sse_kms_encrypted_objects.value.status
             }
           }
+          dynamic "replica_modifications" {
+            for_each = source_selection_criteria.value.replica_modifications[*]
+            content {
+              status = replica_modifications.value.status
+            }
+          }
         }
       }
-      status = rule.value.status
     }
   }
   {{- end }}

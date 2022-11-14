@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     api_id = optional(string)
@@ -27,11 +24,11 @@ variable "values" {
     request_mapping_template = optional(string)
     response_mapping_template = optional(string)
     sync_config = optional(list(object({
-        conflict_detection = optional(string)
         conflict_handler = optional(string)
         lambda_conflict_handler_config = optional(list(object({
             lambda_conflict_handler_arn = optional(string)
         })))
+        conflict_detection = optional(string)
     })))
   })
 }

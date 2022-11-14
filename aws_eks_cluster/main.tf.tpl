@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     enabled_cluster_log_types = optional(set(string))
@@ -33,13 +30,13 @@ variable "values" {
     role_arn = optional(string)
     tags = optional(map(string))
     vpc_config = optional(list(object({
+        vpc_id = optional(string)
+        cluster_security_group_id = optional(string)
         endpoint_private_access = optional(bool)
         endpoint_public_access = optional(bool)
         public_access_cidrs = optional(set(string))
         security_group_ids = optional(set(string))
         subnet_ids = optional(set(string))
-        vpc_id = optional(string)
-        cluster_security_group_id = optional(string)
     })))
   })
 }
@@ -85,13 +82,13 @@ resource "aws_eks_cluster" "this" {
   dynamic "vpc_config" {
     for_each = var.values.vpc_config[*]
     content {
+      cluster_security_group_id = vpc_config.value.cluster_security_group_id
+      endpoint_private_access = vpc_config.value.endpoint_private_access
       endpoint_public_access = vpc_config.value.endpoint_public_access
       public_access_cidrs = vpc_config.value.public_access_cidrs
       security_group_ids = vpc_config.value.security_group_ids
       subnet_ids = vpc_config.value.subnet_ids
       vpc_id = vpc_config.value.vpc_id
-      cluster_security_group_id = vpc_config.value.cluster_security_group_id
-      endpoint_private_access = vpc_config.value.endpoint_private_access
     }
   }
   {{- end }}

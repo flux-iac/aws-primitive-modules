@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     container_definitions = optional(string)
@@ -34,8 +31,8 @@ variable "values" {
     network_mode = optional(string)
     pid_mode = optional(string)
     placement_constraints = optional(set(object({
-        expression = optional(string)
         type = optional(string)
+        expression = optional(string)
     })))
     proxy_configuration = optional(list(object({
         container_name = optional(string)
@@ -59,22 +56,22 @@ variable "values" {
             scope = optional(string)
         })))
         efs_volume_configuration = optional(list(object({
-            file_system_id = optional(string)
-            root_directory = optional(string)
-            transit_encryption = optional(string)
-            transit_encryption_port = optional(number)
             authorization_config = optional(list(object({
                 access_point_id = optional(string)
                 iam = optional(string)
             })))
+            file_system_id = optional(string)
+            root_directory = optional(string)
+            transit_encryption = optional(string)
+            transit_encryption_port = optional(number)
         })))
         fsx_windows_file_server_volume_configuration = optional(list(object({
+            file_system_id = optional(string)
+            root_directory = optional(string)
             authorization_config = optional(list(object({
                 credentials_parameter = optional(string)
                 domain = optional(string)
             })))
-            file_system_id = optional(string)
-            root_directory = optional(string)
         })))
         host_path = optional(string)
         name = optional(string)
@@ -138,9 +135,9 @@ resource "aws_ecs_task_definition" "this" {
   dynamic "proxy_configuration" {
     for_each = var.values.proxy_configuration[*]
     content {
+      type = proxy_configuration.value.type
       container_name = proxy_configuration.value.container_name
       properties = proxy_configuration.value.properties
-      type = proxy_configuration.value.type
     }
   }
   {{- end }}
@@ -169,9 +166,27 @@ resource "aws_ecs_task_definition" "this" {
   dynamic "volume" {
     for_each = var.values.volume[*]
     content {
+      dynamic "efs_volume_configuration" {
+        for_each = volume.value.efs_volume_configuration[*]
+        content {
+          file_system_id = efs_volume_configuration.value.file_system_id
+          root_directory = efs_volume_configuration.value.root_directory
+          transit_encryption = efs_volume_configuration.value.transit_encryption
+          transit_encryption_port = efs_volume_configuration.value.transit_encryption_port
+          dynamic "authorization_config" {
+            for_each = efs_volume_configuration.value.authorization_config[*]
+            content {
+              access_point_id = authorization_config.value.access_point_id
+              iam = authorization_config.value.iam
+            }
+          }
+        }
+      }
       dynamic "fsx_windows_file_server_volume_configuration" {
         for_each = volume.value.fsx_windows_file_server_volume_configuration[*]
         content {
+          file_system_id = fsx_windows_file_server_volume_configuration.value.file_system_id
+          root_directory = fsx_windows_file_server_volume_configuration.value.root_directory
           dynamic "authorization_config" {
             for_each = fsx_windows_file_server_volume_configuration.value.authorization_config[*]
             content {
@@ -179,8 +194,6 @@ resource "aws_ecs_task_definition" "this" {
               domain = authorization_config.value.domain
             }
           }
-          file_system_id = fsx_windows_file_server_volume_configuration.value.file_system_id
-          root_directory = fsx_windows_file_server_volume_configuration.value.root_directory
         }
       }
       host_path = volume.value.host_path
@@ -188,27 +201,11 @@ resource "aws_ecs_task_definition" "this" {
       dynamic "docker_volume_configuration" {
         for_each = volume.value.docker_volume_configuration[*]
         content {
-          scope = docker_volume_configuration.value.scope
-          autoprovision = docker_volume_configuration.value.autoprovision
           driver = docker_volume_configuration.value.driver
           driver_opts = docker_volume_configuration.value.driver_opts
           labels = docker_volume_configuration.value.labels
-        }
-      }
-      dynamic "efs_volume_configuration" {
-        for_each = volume.value.efs_volume_configuration[*]
-        content {
-          dynamic "authorization_config" {
-            for_each = efs_volume_configuration.value.authorization_config[*]
-            content {
-              iam = authorization_config.value.iam
-              access_point_id = authorization_config.value.access_point_id
-            }
-          }
-          file_system_id = efs_volume_configuration.value.file_system_id
-          root_directory = efs_volume_configuration.value.root_directory
-          transit_encryption = efs_volume_configuration.value.transit_encryption
-          transit_encryption_port = efs_volume_configuration.value.transit_encryption_port
+          scope = docker_volume_configuration.value.scope
+          autoprovision = docker_volume_configuration.value.autoprovision
         }
       }
     }

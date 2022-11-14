@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     mesh_name = optional(string)
@@ -54,8 +51,8 @@ resource "aws_appmesh_virtual_router" "this" {
           dynamic "port_mapping" {
             for_each = listener.value.port_mapping[*]
             content {
-              protocol = port_mapping.value.protocol
               port = port_mapping.value.port
+              protocol = port_mapping.value.protocol
             }
           }
         }

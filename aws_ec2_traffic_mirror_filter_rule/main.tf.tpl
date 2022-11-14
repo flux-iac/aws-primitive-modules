@@ -13,16 +13,13 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     description = optional(string)
     destination_cidr_block = optional(string)
     destination_port_range = optional(list(object({
-        from_port = optional(number)
         to_port = optional(number)
+        from_port = optional(number)
     })))
     protocol = optional(number)
     rule_action = optional(string)

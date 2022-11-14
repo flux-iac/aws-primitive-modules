@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     mesh_name = optional(string)
@@ -25,15 +22,6 @@ variable "values" {
         backend_defaults = optional(list(object({
             client_policy = optional(list(object({
                 tls = optional(list(object({
-                    certificate = optional(list(object({
-                        sds = optional(list(object({
-                            secret_name = optional(string)
-                        })))
-                        file = optional(list(object({
-                            certificate_chain = optional(string)
-                            private_key = optional(string)
-                        })))
-                    })))
                     enforce = optional(bool)
                     ports = optional(set(number))
                     validation = optional(list(object({
@@ -54,10 +42,53 @@ variable "values" {
                             })))
                         })))
                     })))
+                    certificate = optional(list(object({
+                        file = optional(list(object({
+                            certificate_chain = optional(string)
+                            private_key = optional(string)
+                        })))
+                        sds = optional(list(object({
+                            secret_name = optional(string)
+                        })))
+                    })))
                 })))
             })))
         })))
         listener = optional(list(object({
+            port_mapping = optional(list(object({
+                port = optional(number)
+                protocol = optional(string)
+            })))
+            tls = optional(list(object({
+                validation = optional(list(object({
+                    subject_alternative_names = optional(list(object({
+                        match = optional(list(object({
+                            exact = optional(set(string))
+                        })))
+                    })))
+                    trust = optional(list(object({
+                        sds = optional(list(object({
+                            secret_name = optional(string)
+                        })))
+                        file = optional(list(object({
+                            certificate_chain = optional(string)
+                        })))
+                    })))
+                })))
+                certificate = optional(list(object({
+                    sds = optional(list(object({
+                        secret_name = optional(string)
+                    })))
+                    acm = optional(list(object({
+                        certificate_arn = optional(string)
+                    })))
+                    file = optional(list(object({
+                        private_key = optional(string)
+                        certificate_chain = optional(string)
+                    })))
+                })))
+                mode = optional(string)
+            })))
             connection_pool = optional(list(object({
                 http = optional(list(object({
                     max_connections = optional(number)
@@ -71,47 +102,13 @@ variable "values" {
                 })))
             })))
             health_check = optional(list(object({
+                unhealthy_threshold = optional(number)
                 healthy_threshold = optional(number)
                 interval_millis = optional(number)
                 path = optional(string)
                 port = optional(number)
                 protocol = optional(string)
                 timeout_millis = optional(number)
-                unhealthy_threshold = optional(number)
-            })))
-            port_mapping = optional(list(object({
-                protocol = optional(string)
-                port = optional(number)
-            })))
-            tls = optional(list(object({
-                certificate = optional(list(object({
-                    acm = optional(list(object({
-                        certificate_arn = optional(string)
-                    })))
-                    file = optional(list(object({
-                        certificate_chain = optional(string)
-                        private_key = optional(string)
-                    })))
-                    sds = optional(list(object({
-                        secret_name = optional(string)
-                    })))
-                })))
-                mode = optional(string)
-                validation = optional(list(object({
-                    subject_alternative_names = optional(list(object({
-                        match = optional(list(object({
-                            exact = optional(set(string))
-                        })))
-                    })))
-                    trust = optional(list(object({
-                        file = optional(list(object({
-                            certificate_chain = optional(string)
-                        })))
-                        sds = optional(list(object({
-                            secret_name = optional(string)
-                        })))
-                    })))
-                })))
             })))
         })))
         logging = optional(list(object({
@@ -156,8 +153,8 @@ resource "aws_appmesh_virtual_gateway" "this" {
                       dynamic "file" {
                         for_each = certificate.value.file[*]
                         content {
-                          private_key = file.value.private_key
                           certificate_chain = file.value.certificate_chain
+                          private_key = file.value.private_key
                         }
                       }
                       dynamic "sds" {
@@ -218,61 +215,12 @@ resource "aws_appmesh_virtual_gateway" "this" {
       dynamic "listener" {
         for_each = spec.value.listener[*]
         content {
-          dynamic "connection_pool" {
-            for_each = listener.value.connection_pool[*]
-            content {
-              dynamic "grpc" {
-                for_each = connection_pool.value.grpc[*]
-                content {
-                  max_requests = grpc.value.max_requests
-                }
-              }
-              dynamic "http" {
-                for_each = connection_pool.value.http[*]
-                content {
-                  max_connections = http.value.max_connections
-                  max_pending_requests = http.value.max_pending_requests
-                }
-              }
-              dynamic "http2" {
-                for_each = connection_pool.value.http2[*]
-                content {
-                  max_requests = http2.value.max_requests
-                }
-              }
-            }
-          }
-          dynamic "health_check" {
-            for_each = listener.value.health_check[*]
-            content {
-              unhealthy_threshold = health_check.value.unhealthy_threshold
-              healthy_threshold = health_check.value.healthy_threshold
-              interval_millis = health_check.value.interval_millis
-              path = health_check.value.path
-              port = health_check.value.port
-              protocol = health_check.value.protocol
-              timeout_millis = health_check.value.timeout_millis
-            }
-          }
-          dynamic "port_mapping" {
-            for_each = listener.value.port_mapping[*]
-            content {
-              port = port_mapping.value.port
-              protocol = port_mapping.value.protocol
-            }
-          }
           dynamic "tls" {
             for_each = listener.value.tls[*]
             content {
               dynamic "certificate" {
                 for_each = tls.value.certificate[*]
                 content {
-                  dynamic "sds" {
-                    for_each = certificate.value.sds[*]
-                    content {
-                      secret_name = sds.value.secret_name
-                    }
-                  }
                   dynamic "acm" {
                     for_each = certificate.value.acm[*]
                     content {
@@ -284,6 +232,12 @@ resource "aws_appmesh_virtual_gateway" "this" {
                     content {
                       certificate_chain = file.value.certificate_chain
                       private_key = file.value.private_key
+                    }
+                  }
+                  dynamic "sds" {
+                    for_each = certificate.value.sds[*]
+                    content {
+                      secret_name = sds.value.secret_name
                     }
                   }
                 }
@@ -322,6 +276,49 @@ resource "aws_appmesh_virtual_gateway" "this" {
                   }
                 }
               }
+            }
+          }
+          dynamic "connection_pool" {
+            for_each = listener.value.connection_pool[*]
+            content {
+              dynamic "http" {
+                for_each = connection_pool.value.http[*]
+                content {
+                  max_connections = http.value.max_connections
+                  max_pending_requests = http.value.max_pending_requests
+                }
+              }
+              dynamic "http2" {
+                for_each = connection_pool.value.http2[*]
+                content {
+                  max_requests = http2.value.max_requests
+                }
+              }
+              dynamic "grpc" {
+                for_each = connection_pool.value.grpc[*]
+                content {
+                  max_requests = grpc.value.max_requests
+                }
+              }
+            }
+          }
+          dynamic "health_check" {
+            for_each = listener.value.health_check[*]
+            content {
+              healthy_threshold = health_check.value.healthy_threshold
+              interval_millis = health_check.value.interval_millis
+              path = health_check.value.path
+              port = health_check.value.port
+              protocol = health_check.value.protocol
+              timeout_millis = health_check.value.timeout_millis
+              unhealthy_threshold = health_check.value.unhealthy_threshold
+            }
+          }
+          dynamic "port_mapping" {
+            for_each = listener.value.port_mapping[*]
+            content {
+              port = port_mapping.value.port
+              protocol = port_mapping.value.protocol
             }
           }
         }

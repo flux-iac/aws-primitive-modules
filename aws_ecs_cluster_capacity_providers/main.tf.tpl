@@ -13,17 +13,14 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     capacity_providers = optional(set(string))
     cluster_name = optional(string)
     default_capacity_provider_strategy = optional(set(object({
-        weight = optional(number)
         base = optional(number)
         capacity_provider = optional(string)
+        weight = optional(number)
     })))
   })
 }
@@ -40,9 +37,9 @@ resource "aws_ecs_cluster_capacity_providers" "this" {
   dynamic "default_capacity_provider_strategy" {
     for_each = var.values.default_capacity_provider_strategy[*]
     content {
+      weight = default_capacity_provider_strategy.value.weight
       base = default_capacity_provider_strategy.value.base
       capacity_provider = default_capacity_provider_strategy.value.capacity_provider
-      weight = default_capacity_provider_strategy.value.weight
     }
   }
   {{- end }}

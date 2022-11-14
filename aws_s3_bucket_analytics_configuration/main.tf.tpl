@@ -13,15 +13,12 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     bucket = optional(string)
     filter = optional(list(object({
-        tags = optional(map(string))
         prefix = optional(string)
+        tags = optional(map(string))
     })))
     name = optional(string)
     storage_class_analysis = optional(list(object({
@@ -49,8 +46,8 @@ resource "aws_s3_bucket_analytics_configuration" "this" {
   dynamic "filter" {
     for_each = var.values.filter[*]
     content {
-      prefix = filter.value.prefix
       tags = filter.value.tags
+      prefix = filter.value.prefix
     }
   }
   {{- end }}
@@ -71,10 +68,10 @@ resource "aws_s3_bucket_analytics_configuration" "this" {
               dynamic "s3_bucket_destination" {
                 for_each = destination.value.s3_bucket_destination[*]
                 content {
+                  bucket_arn = s3_bucket_destination.value.bucket_arn
                   bucket_account_id = s3_bucket_destination.value.bucket_account_id
                   format = s3_bucket_destination.value.format
                   prefix = s3_bucket_destination.value.prefix
-                  bucket_arn = s3_bucket_destination.value.bucket_arn
                 }
               }
             }

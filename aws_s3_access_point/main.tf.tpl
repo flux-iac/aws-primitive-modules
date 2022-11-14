@@ -13,19 +13,16 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     account_id = optional(string)
     bucket = optional(string)
     name = optional(string)
     public_access_block_configuration = optional(list(object({
-        block_public_acls = optional(bool)
         block_public_policy = optional(bool)
         ignore_public_acls = optional(bool)
         restrict_public_buckets = optional(bool)
+        block_public_acls = optional(bool)
     })))
     vpc_configuration = optional(list(object({
         vpc_id = optional(string)

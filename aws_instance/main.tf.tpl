@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     ami = optional(string)
@@ -28,9 +25,9 @@ variable "values" {
     })))
     ebs_optimized = optional(bool)
     ephemeral_block_device = optional(set(object({
+        device_name = optional(string)
         no_device = optional(bool)
         virtual_name = optional(string)
-        device_name = optional(string)
     })))
     get_password_data = optional(bool)
     hibernation = optional(bool)
@@ -90,9 +87,9 @@ resource "aws_instance" "this" {
   dynamic "ephemeral_block_device" {
     for_each = var.values.ephemeral_block_device[*]
     content {
-      device_name = ephemeral_block_device.value.device_name
       no_device = ephemeral_block_device.value.no_device
       virtual_name = ephemeral_block_device.value.virtual_name
+      device_name = ephemeral_block_device.value.device_name
     }
   }
   {{- end }}
@@ -121,9 +118,9 @@ resource "aws_instance" "this" {
   dynamic "launch_template" {
     for_each = var.values.launch_template[*]
     content {
-      id = launch_template.value.id
       name = launch_template.value.name
       version = launch_template.value.version
+      id = launch_template.value.id
     }
   }
   {{- end }}

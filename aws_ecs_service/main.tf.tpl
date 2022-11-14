@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     capacity_provider_strategy = optional(set(object({
@@ -41,16 +38,16 @@ variable "values" {
     iam_role = optional(string)
     launch_type = optional(string)
     load_balancer = optional(set(object({
-        container_name = optional(string)
-        container_port = optional(number)
         elb_name = optional(string)
         target_group_arn = optional(string)
+        container_name = optional(string)
+        container_port = optional(number)
     })))
     name = optional(string)
     network_configuration = optional(list(object({
-        subnets = optional(set(string))
         assign_public_ip = optional(bool)
         security_groups = optional(set(string))
+        subnets = optional(set(string))
     })))
     ordered_placement_strategy = optional(list(object({
         field = optional(string)
@@ -63,10 +60,10 @@ variable "values" {
     propagate_tags = optional(string)
     scheduling_strategy = optional(string)
     service_registries = optional(list(object({
+        container_name = optional(string)
         container_port = optional(number)
         port = optional(number)
         registry_arn = optional(string)
-        container_name = optional(string)
     })))
     tags = optional(map(string))
     task_definition = optional(string)
@@ -137,10 +134,10 @@ resource "aws_ecs_service" "this" {
   dynamic "load_balancer" {
     for_each = var.values.load_balancer[*]
     content {
-      target_group_arn = load_balancer.value.target_group_arn
       container_name = load_balancer.value.container_name
       container_port = load_balancer.value.container_port
       elb_name = load_balancer.value.elb_name
+      target_group_arn = load_balancer.value.target_group_arn
     }
   }
   {{- end }}
@@ -151,9 +148,9 @@ resource "aws_ecs_service" "this" {
   dynamic "network_configuration" {
     for_each = var.values.network_configuration[*]
     content {
-      assign_public_ip = network_configuration.value.assign_public_ip
       security_groups = network_configuration.value.security_groups
       subnets = network_configuration.value.subnets
+      assign_public_ip = network_configuration.value.assign_public_ip
     }
   }
   {{- end }}

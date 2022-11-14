@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     bucket = optional(string)
@@ -29,8 +26,8 @@ variable "values" {
             expired_object_delete_marker = optional(bool)
         })))
         filter = optional(list(object({
-            tags = optional(map(string))
             prefix = optional(string)
+            tags = optional(map(string))
         })))
         id = optional(string)
         status = optional(string)
@@ -47,6 +44,12 @@ resource "aws_s3control_bucket_lifecycle_configuration" "this" {
   dynamic "rule" {
     for_each = var.values.rule[*]
     content {
+      dynamic "abort_incomplete_multipart_upload" {
+        for_each = rule.value.abort_incomplete_multipart_upload[*]
+        content {
+          days_after_initiation = abort_incomplete_multipart_upload.value.days_after_initiation
+        }
+      }
       dynamic "expiration" {
         for_each = rule.value.expiration[*]
         content {
@@ -64,12 +67,6 @@ resource "aws_s3control_bucket_lifecycle_configuration" "this" {
       }
       id = rule.value.id
       status = rule.value.status
-      dynamic "abort_incomplete_multipart_upload" {
-        for_each = rule.value.abort_incomplete_multipart_upload[*]
-        content {
-          days_after_initiation = abort_incomplete_multipart_upload.value.days_after_initiation
-        }
-      }
     }
   }
   {{- end }}

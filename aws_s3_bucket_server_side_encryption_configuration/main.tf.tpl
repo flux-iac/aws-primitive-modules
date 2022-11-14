@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     bucket = optional(string)
@@ -42,7 +39,6 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
   dynamic "rule" {
     for_each = var.values.rule[*]
     content {
-      bucket_key_enabled = rule.value.bucket_key_enabled
       dynamic "apply_server_side_encryption_by_default" {
         for_each = rule.value.apply_server_side_encryption_by_default[*]
         content {
@@ -50,6 +46,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
           sse_algorithm = apply_server_side_encryption_by_default.value.sse_algorithm
         }
       }
+      bucket_key_enabled = rule.value.bucket_key_enabled
     }
   }
   {{- end }}

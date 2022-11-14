@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     bucket = optional(string)
@@ -23,11 +20,11 @@ variable "values" {
     target_bucket = optional(string)
     target_grant = optional(set(object({
         grantee = optional(list(object({
-            uri = optional(string)
             display_name = optional(string)
             email_address = optional(string)
             id = optional(string)
             type = optional(string)
+            uri = optional(string)
         })))
         permission = optional(string)
     })))

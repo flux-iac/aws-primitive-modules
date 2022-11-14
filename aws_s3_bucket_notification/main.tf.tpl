@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     bucket = optional(string)
@@ -56,11 +53,11 @@ resource "aws_s3_bucket_notification" "this" {
   dynamic "lambda_function" {
     for_each = var.values.lambda_function[*]
     content {
+      id = lambda_function.value.id
+      filter_prefix = lambda_function.value.filter_prefix
       filter_suffix = lambda_function.value.filter_suffix
       lambda_function_arn = lambda_function.value.lambda_function_arn
       events = lambda_function.value.events
-      id = lambda_function.value.id
-      filter_prefix = lambda_function.value.filter_prefix
     }
   }
   {{- end }}
@@ -80,11 +77,11 @@ resource "aws_s3_bucket_notification" "this" {
   dynamic "topic" {
     for_each = var.values.topic[*]
     content {
-      events = topic.value.events
       id = topic.value.id
       filter_prefix = topic.value.filter_prefix
       filter_suffix = topic.value.filter_suffix
       topic_arn = topic.value.topic_arn
+      events = topic.value.events
     }
   }
   {{- end }}

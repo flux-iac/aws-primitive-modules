@@ -13,15 +13,12 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     rule = optional(set(object({
         repository_filter = optional(set(object({
-            filter_type = optional(string)
             filter = optional(string)
+            filter_type = optional(string)
         })))
         scan_frequency = optional(string)
     })))

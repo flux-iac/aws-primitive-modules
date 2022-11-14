@@ -13,15 +13,12 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     access_logs = optional(list(object({
+        prefix = optional(string)
         enabled = optional(bool)
         bucket = optional(string)
-        prefix = optional(string)
     })))
     customer_owned_ipv4_pool = optional(string)
     desync_mitigation_mode = optional(string)
@@ -37,11 +34,11 @@ variable "values" {
     name_prefix = optional(string)
     preserve_host_header = optional(bool)
     subnet_mapping = optional(set(object({
-        private_ipv4_address = optional(string)
         subnet_id = optional(string)
         ipv6_address = optional(string)
         outpost_id = optional(string)
         allocation_id = optional(string)
+        private_ipv4_address = optional(string)
     })))
     tags = optional(map(string))
   })
@@ -53,9 +50,9 @@ resource "aws_lb" "this" {
   dynamic "access_logs" {
     for_each = var.values.access_logs[*]
     content {
+      enabled = access_logs.value.enabled
       bucket = access_logs.value.bucket
       prefix = access_logs.value.prefix
-      enabled = access_logs.value.enabled
     }
   }
   {{- end }}

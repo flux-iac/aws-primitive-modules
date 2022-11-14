@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     application_id = optional(string)
@@ -59,8 +56,8 @@ resource "aws_appconfig_configuration_profile" "this" {
   dynamic "validator" {
     for_each = var.values.validator[*]
     content {
-      content = validator.value.content
       type = validator.value.type
+      content = validator.value.content
     }
   }
   {{- end }}

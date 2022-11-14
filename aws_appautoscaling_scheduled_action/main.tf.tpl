@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     end_time = optional(string)
@@ -23,8 +20,8 @@ variable "values" {
     resource_id = optional(string)
     scalable_dimension = optional(string)
     scalable_target_action = optional(list(object({
-        min_capacity = optional(string)
         max_capacity = optional(string)
+        min_capacity = optional(string)
     })))
     schedule = optional(string)
     service_namespace = optional(string)
@@ -51,8 +48,8 @@ resource "aws_appautoscaling_scheduled_action" "this" {
   dynamic "scalable_target_action" {
     for_each = var.values.scalable_target_action[*]
     content {
-      min_capacity = scalable_target_action.value.min_capacity
       max_capacity = scalable_target_action.value.max_capacity
+      min_capacity = scalable_target_action.value.min_capacity
     }
   }
   {{- end }}

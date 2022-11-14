@@ -13,16 +13,13 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     access_logs = optional(list(object({
-        interval = optional(number)
-        bucket = optional(string)
         bucket_prefix = optional(string)
         enabled = optional(bool)
+        interval = optional(number)
+        bucket = optional(string)
     })))
     connection_draining = optional(bool)
     connection_draining_timeout = optional(number)
@@ -49,10 +46,10 @@ resource "aws_elb" "this" {
   dynamic "access_logs" {
     for_each = var.values.access_logs[*]
     content {
+      enabled = access_logs.value.enabled
       interval = access_logs.value.interval
       bucket = access_logs.value.bucket
       bucket_prefix = access_logs.value.bucket_prefix
-      enabled = access_logs.value.enabled
     }
   }
   {{- end }}
@@ -78,11 +75,11 @@ resource "aws_elb" "this" {
   dynamic "listener" {
     for_each = var.values.listener[*]
     content {
-      ssl_certificate_id = listener.value.ssl_certificate_id
       instance_port = listener.value.instance_port
       instance_protocol = listener.value.instance_protocol
       lb_port = listener.value.lb_port
       lb_protocol = listener.value.lb_protocol
+      ssl_certificate_id = listener.value.ssl_certificate_id
     }
   }
   {{- end }}

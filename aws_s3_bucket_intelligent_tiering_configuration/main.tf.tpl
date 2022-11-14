@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     bucket = optional(string)
@@ -56,8 +53,8 @@ resource "aws_s3_bucket_intelligent_tiering_configuration" "this" {
   dynamic "tiering" {
     for_each = var.values.tiering[*]
     content {
-      access_tier = tiering.value.access_tier
       days = tiering.value.days
+      access_tier = tiering.value.access_tier
     }
   }
   {{- end }}

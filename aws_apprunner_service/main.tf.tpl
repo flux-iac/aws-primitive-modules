@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     encryption_configuration = optional(list(object({
@@ -48,23 +45,23 @@ variable "values" {
             })))
             code_configuration = optional(list(object({
                 code_configuration_values = optional(list(object({
-                    runtime = optional(string)
-                    runtime_environment_variables = optional(map(string))
                     start_command = optional(string)
                     build_command = optional(string)
                     port = optional(string)
+                    runtime = optional(string)
+                    runtime_environment_variables = optional(map(string))
                 })))
                 configuration_source = optional(string)
             })))
         })))
         image_repository = optional(list(object({
-            image_repository_type = optional(string)
             image_configuration = optional(list(object({
-                port = optional(string)
                 runtime_environment_variables = optional(map(string))
                 start_command = optional(string)
+                port = optional(string)
             })))
             image_identifier = optional(string)
+            image_repository_type = optional(string)
         })))
     })))
     tags = optional(map(string))
@@ -85,12 +82,12 @@ resource "aws_apprunner_service" "this" {
   dynamic "health_check_configuration" {
     for_each = var.values.health_check_configuration[*]
     content {
+      unhealthy_threshold = health_check_configuration.value.unhealthy_threshold
       healthy_threshold = health_check_configuration.value.healthy_threshold
       interval = health_check_configuration.value.interval
       path = health_check_configuration.value.path
       protocol = health_check_configuration.value.protocol
       timeout = health_check_configuration.value.timeout
-      unhealthy_threshold = health_check_configuration.value.unhealthy_threshold
     }
   }
   {{- end }}
@@ -110,6 +107,14 @@ resource "aws_apprunner_service" "this" {
   dynamic "source_configuration" {
     for_each = var.values.source_configuration[*]
     content {
+      dynamic "authentication_configuration" {
+        for_each = source_configuration.value.authentication_configuration[*]
+        content {
+          access_role_arn = authentication_configuration.value.access_role_arn
+          connection_arn = authentication_configuration.value.connection_arn
+        }
+      }
+      auto_deployments_enabled = source_configuration.value.auto_deployments_enabled
       dynamic "code_repository" {
         for_each = source_configuration.value.code_repository[*]
         content {
@@ -154,14 +159,6 @@ resource "aws_apprunner_service" "this" {
           image_repository_type = image_repository.value.image_repository_type
         }
       }
-      dynamic "authentication_configuration" {
-        for_each = source_configuration.value.authentication_configuration[*]
-        content {
-          connection_arn = authentication_configuration.value.connection_arn
-          access_role_arn = authentication_configuration.value.access_role_arn
-        }
-      }
-      auto_deployments_enabled = source_configuration.value.auto_deployments_enabled
     }
   }
   {{- end }}

@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     auto_scaling_group_provider = optional(list(object({
@@ -44,11 +41,11 @@ resource "aws_ecs_capacity_provider" "this" {
       dynamic "managed_scaling" {
         for_each = auto_scaling_group_provider.value.managed_scaling[*]
         content {
-          target_capacity = managed_scaling.value.target_capacity
-          instance_warmup_period = managed_scaling.value.instance_warmup_period
           maximum_scaling_step_size = managed_scaling.value.maximum_scaling_step_size
           minimum_scaling_step_size = managed_scaling.value.minimum_scaling_step_size
           status = managed_scaling.value.status
+          target_capacity = managed_scaling.value.target_capacity
+          instance_warmup_period = managed_scaling.value.instance_warmup_period
         }
       }
       managed_termination_protection = auto_scaling_group_provider.value.managed_termination_protection

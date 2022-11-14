@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     name = optional(string)
@@ -27,16 +24,14 @@ variable "values" {
         metric_aggregation_type = optional(string)
         min_adjustment_magnitude = optional(number)
         step_adjustment = optional(set(object({
-            scaling_adjustment = optional(number)
             metric_interval_lower_bound = optional(string)
             metric_interval_upper_bound = optional(string)
+            scaling_adjustment = optional(number)
         })))
         adjustment_type = optional(string)
         cooldown = optional(number)
     })))
     target_tracking_scaling_policy_configuration = optional(list(object({
-        scale_out_cooldown = optional(number)
-        target_value = optional(number)
         customized_metric_specification = optional(list(object({
             unit = optional(string)
             dimensions = optional(set(object({
@@ -53,6 +48,8 @@ variable "values" {
             resource_label = optional(string)
         })))
         scale_in_cooldown = optional(number)
+        scale_out_cooldown = optional(number)
+        target_value = optional(number)
     })))
   })
 }
@@ -84,9 +81,9 @@ resource "aws_appautoscaling_policy" "this" {
       dynamic "step_adjustment" {
         for_each = step_scaling_policy_configuration.value.step_adjustment[*]
         content {
+          metric_interval_lower_bound = step_adjustment.value.metric_interval_lower_bound
           metric_interval_upper_bound = step_adjustment.value.metric_interval_upper_bound
           scaling_adjustment = step_adjustment.value.scaling_adjustment
-          metric_interval_lower_bound = step_adjustment.value.metric_interval_lower_bound
         }
       }
       adjustment_type = step_scaling_policy_configuration.value.adjustment_type
@@ -97,6 +94,17 @@ resource "aws_appautoscaling_policy" "this" {
   dynamic "target_tracking_scaling_policy_configuration" {
     for_each = var.values.target_tracking_scaling_policy_configuration[*]
     content {
+      disable_scale_in = target_tracking_scaling_policy_configuration.value.disable_scale_in
+      dynamic "predefined_metric_specification" {
+        for_each = target_tracking_scaling_policy_configuration.value.predefined_metric_specification[*]
+        content {
+          predefined_metric_type = predefined_metric_specification.value.predefined_metric_type
+          resource_label = predefined_metric_specification.value.resource_label
+        }
+      }
+      scale_in_cooldown = target_tracking_scaling_policy_configuration.value.scale_in_cooldown
+      scale_out_cooldown = target_tracking_scaling_policy_configuration.value.scale_out_cooldown
+      target_value = target_tracking_scaling_policy_configuration.value.target_value
       dynamic "customized_metric_specification" {
         for_each = target_tracking_scaling_policy_configuration.value.customized_metric_specification[*]
         content {
@@ -113,17 +121,6 @@ resource "aws_appautoscaling_policy" "this" {
           unit = customized_metric_specification.value.unit
         }
       }
-      disable_scale_in = target_tracking_scaling_policy_configuration.value.disable_scale_in
-      dynamic "predefined_metric_specification" {
-        for_each = target_tracking_scaling_policy_configuration.value.predefined_metric_specification[*]
-        content {
-          predefined_metric_type = predefined_metric_specification.value.predefined_metric_type
-          resource_label = predefined_metric_specification.value.resource_label
-        }
-      }
-      scale_in_cooldown = target_tracking_scaling_policy_configuration.value.scale_in_cooldown
-      scale_out_cooldown = target_tracking_scaling_policy_configuration.value.scale_out_cooldown
-      target_value = target_tracking_scaling_policy_configuration.value.target_value
     }
   }
   {{- end }}

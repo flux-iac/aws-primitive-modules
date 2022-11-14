@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     alpn_policy = optional(string)
@@ -27,13 +24,13 @@ variable "values" {
             status_code = optional(string)
         })))
         forward = optional(list(object({
-            target_group = optional(set(object({
-                weight = optional(number)
-                arn = optional(string)
-            })))
             stickiness = optional(list(object({
                 duration = optional(number)
                 enabled = optional(bool)
+            })))
+            target_group = optional(set(object({
+                arn = optional(string)
+                weight = optional(number)
             })))
         })))
         order = optional(number)
@@ -48,27 +45,27 @@ variable "values" {
         target_group_arn = optional(string)
         type = optional(string)
         authenticate_cognito = optional(list(object({
+            on_unauthenticated_request = optional(string)
+            scope = optional(string)
             session_cookie_name = optional(string)
             session_timeout = optional(number)
             user_pool_arn = optional(string)
             user_pool_client_id = optional(string)
             user_pool_domain = optional(string)
             authentication_request_extra_params = optional(map(string))
-            on_unauthenticated_request = optional(string)
-            scope = optional(string)
         })))
         authenticate_oidc = optional(list(object({
+            authorization_endpoint = optional(string)
             client_secret = optional(string)
+            session_cookie_name = optional(string)
+            user_info_endpoint = optional(string)
+            authentication_request_extra_params = optional(map(string))
+            client_id = optional(string)
             issuer = optional(string)
             on_unauthenticated_request = optional(string)
             scope = optional(string)
             session_timeout = optional(number)
-            user_info_endpoint = optional(string)
-            authentication_request_extra_params = optional(map(string))
-            client_id = optional(string)
-            session_cookie_name = optional(string)
             token_endpoint = optional(string)
-            authorization_endpoint = optional(string)
         })))
     })))
     load_balancer_arn = optional(string)
@@ -89,50 +86,6 @@ resource "aws_lb_listener" "this" {
   dynamic "default_action" {
     for_each = var.values.default_action[*]
     content {
-      dynamic "authenticate_oidc" {
-        for_each = default_action.value.authenticate_oidc[*]
-        content {
-          issuer = authenticate_oidc.value.issuer
-          on_unauthenticated_request = authenticate_oidc.value.on_unauthenticated_request
-          scope = authenticate_oidc.value.scope
-          session_timeout = authenticate_oidc.value.session_timeout
-          user_info_endpoint = authenticate_oidc.value.user_info_endpoint
-          authentication_request_extra_params = authenticate_oidc.value.authentication_request_extra_params
-          client_secret = authenticate_oidc.value.client_secret
-          session_cookie_name = authenticate_oidc.value.session_cookie_name
-          token_endpoint = authenticate_oidc.value.token_endpoint
-          authorization_endpoint = authenticate_oidc.value.authorization_endpoint
-          client_id = authenticate_oidc.value.client_id
-        }
-      }
-      dynamic "fixed_response" {
-        for_each = default_action.value.fixed_response[*]
-        content {
-          content_type = fixed_response.value.content_type
-          message_body = fixed_response.value.message_body
-          status_code = fixed_response.value.status_code
-        }
-      }
-      dynamic "forward" {
-        for_each = default_action.value.forward[*]
-        content {
-          dynamic "target_group" {
-            for_each = forward.value.target_group[*]
-            content {
-              weight = target_group.value.weight
-              arn = target_group.value.arn
-            }
-          }
-          dynamic "stickiness" {
-            for_each = forward.value.stickiness[*]
-            content {
-              duration = stickiness.value.duration
-              enabled = stickiness.value.enabled
-            }
-          }
-        }
-      }
-      order = default_action.value.order
       dynamic "redirect" {
         for_each = default_action.value.redirect[*]
         content {
@@ -149,16 +102,60 @@ resource "aws_lb_listener" "this" {
       dynamic "authenticate_cognito" {
         for_each = default_action.value.authenticate_cognito[*]
         content {
-          user_pool_domain = authenticate_cognito.value.user_pool_domain
-          authentication_request_extra_params = authenticate_cognito.value.authentication_request_extra_params
           on_unauthenticated_request = authenticate_cognito.value.on_unauthenticated_request
           scope = authenticate_cognito.value.scope
           session_cookie_name = authenticate_cognito.value.session_cookie_name
           session_timeout = authenticate_cognito.value.session_timeout
           user_pool_arn = authenticate_cognito.value.user_pool_arn
           user_pool_client_id = authenticate_cognito.value.user_pool_client_id
+          user_pool_domain = authenticate_cognito.value.user_pool_domain
+          authentication_request_extra_params = authenticate_cognito.value.authentication_request_extra_params
         }
       }
+      dynamic "authenticate_oidc" {
+        for_each = default_action.value.authenticate_oidc[*]
+        content {
+          authorization_endpoint = authenticate_oidc.value.authorization_endpoint
+          client_secret = authenticate_oidc.value.client_secret
+          session_cookie_name = authenticate_oidc.value.session_cookie_name
+          user_info_endpoint = authenticate_oidc.value.user_info_endpoint
+          token_endpoint = authenticate_oidc.value.token_endpoint
+          authentication_request_extra_params = authenticate_oidc.value.authentication_request_extra_params
+          client_id = authenticate_oidc.value.client_id
+          issuer = authenticate_oidc.value.issuer
+          on_unauthenticated_request = authenticate_oidc.value.on_unauthenticated_request
+          scope = authenticate_oidc.value.scope
+          session_timeout = authenticate_oidc.value.session_timeout
+        }
+      }
+      dynamic "fixed_response" {
+        for_each = default_action.value.fixed_response[*]
+        content {
+          content_type = fixed_response.value.content_type
+          message_body = fixed_response.value.message_body
+          status_code = fixed_response.value.status_code
+        }
+      }
+      dynamic "forward" {
+        for_each = default_action.value.forward[*]
+        content {
+          dynamic "target_group" {
+            for_each = forward.value.target_group[*]
+            content {
+              arn = target_group.value.arn
+              weight = target_group.value.weight
+            }
+          }
+          dynamic "stickiness" {
+            for_each = forward.value.stickiness[*]
+            content {
+              duration = stickiness.value.duration
+              enabled = stickiness.value.enabled
+            }
+          }
+        }
+      }
+      order = default_action.value.order
     }
   }
   {{- end }}

@@ -13,14 +13,11 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     access_endpoint = optional(set(object({
-        vpce_id = optional(string)
         endpoint_type = optional(string)
+        vpce_id = optional(string)
     })))
     appstream_agent_version = optional(string)
     description = optional(string)

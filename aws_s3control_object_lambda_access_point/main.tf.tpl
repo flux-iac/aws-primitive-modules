@@ -13,16 +13,10 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     account_id = optional(string)
     configuration = optional(list(object({
-        allowed_features = optional(set(string))
-        cloud_watch_metrics_enabled = optional(bool)
-        supporting_access_point = optional(string)
         transformation_configuration = optional(set(object({
             actions = optional(set(string))
             content_transformation = optional(list(object({
@@ -32,6 +26,9 @@ variable "values" {
                 })))
             })))
         })))
+        allowed_features = optional(set(string))
+        cloud_watch_metrics_enabled = optional(bool)
+        supporting_access_point = optional(string)
     })))
     name = optional(string)
   })
@@ -46,13 +43,10 @@ resource "aws_s3control_object_lambda_access_point" "this" {
   dynamic "configuration" {
     for_each = var.values.configuration[*]
     content {
-      allowed_features = configuration.value.allowed_features
-      cloud_watch_metrics_enabled = configuration.value.cloud_watch_metrics_enabled
       supporting_access_point = configuration.value.supporting_access_point
       dynamic "transformation_configuration" {
         for_each = configuration.value.transformation_configuration[*]
         content {
-          actions = transformation_configuration.value.actions
           dynamic "content_transformation" {
             for_each = transformation_configuration.value.content_transformation[*]
             content {
@@ -65,8 +59,11 @@ resource "aws_s3control_object_lambda_access_point" "this" {
               }
             }
           }
+          actions = transformation_configuration.value.actions
         }
       }
+      allowed_features = configuration.value.allowed_features
+      cloud_watch_metrics_enabled = configuration.value.cloud_watch_metrics_enabled
     }
   }
   {{- end }}

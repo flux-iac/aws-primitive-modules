@@ -13,9 +13,6 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     mesh_name = optional(string)
@@ -35,13 +32,6 @@ variable "values" {
             })))
         })))
         http2_route = optional(list(object({
-            match = optional(list(object({
-                prefix = optional(string)
-                hostname = optional(list(object({
-                    exact = optional(string)
-                    suffix = optional(string)
-                })))
-            })))
             action = optional(list(object({
                 target = optional(list(object({
                     virtual_service = optional(list(object({
@@ -49,17 +39,31 @@ variable "values" {
                     })))
                 })))
                 rewrite = optional(list(object({
+                    hostname = optional(list(object({
+                        default_target_hostname = optional(string)
+                    })))
                     prefix = optional(list(object({
                         default_prefix = optional(string)
                         value = optional(string)
                     })))
-                    hostname = optional(list(object({
-                        default_target_hostname = optional(string)
-                    })))
                 })))
+            })))
+            match = optional(list(object({
+                hostname = optional(list(object({
+                    exact = optional(string)
+                    suffix = optional(string)
+                })))
+                prefix = optional(string)
             })))
         })))
         http_route = optional(list(object({
+            match = optional(list(object({
+                prefix = optional(string)
+                hostname = optional(list(object({
+                    exact = optional(string)
+                    suffix = optional(string)
+                })))
+            })))
             action = optional(list(object({
                 target = optional(list(object({
                     virtual_service = optional(list(object({
@@ -74,13 +78,6 @@ variable "values" {
                         default_prefix = optional(string)
                         value = optional(string)
                     })))
-                })))
-            })))
-            match = optional(list(object({
-                prefix = optional(string)
-                hostname = optional(list(object({
-                    exact = optional(string)
-                    suffix = optional(string)
                 })))
             })))
         })))
@@ -108,6 +105,19 @@ resource "aws_appmesh_gateway_route" "this" {
       dynamic "http_route" {
         for_each = spec.value.http_route[*]
         content {
+          dynamic "match" {
+            for_each = http_route.value.match[*]
+            content {
+              prefix = match.value.prefix
+              dynamic "hostname" {
+                for_each = match.value.hostname[*]
+                content {
+                  exact = hostname.value.exact
+                  suffix = hostname.value.suffix
+                }
+              }
+            }
+          }
           dynamic "action" {
             for_each = http_route.value.action[*]
             content {
@@ -134,23 +144,10 @@ resource "aws_appmesh_gateway_route" "this" {
                   dynamic "prefix" {
                     for_each = rewrite.value.prefix[*]
                     content {
-                      value = prefix.value.value
                       default_prefix = prefix.value.default_prefix
+                      value = prefix.value.value
                     }
                   }
-                }
-              }
-            }
-          }
-          dynamic "match" {
-            for_each = http_route.value.match[*]
-            content {
-              prefix = match.value.prefix
-              dynamic "hostname" {
-                for_each = match.value.hostname[*]
-                content {
-                  exact = hostname.value.exact
-                  suffix = hostname.value.suffix
                 }
               }
             }

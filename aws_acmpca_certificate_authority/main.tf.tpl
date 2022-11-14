@@ -13,43 +13,40 @@ terraform {
   }
 }
 
-provider "aws" {
-}
-
 variable "values" {
   type = object({
     certificate_authority_configuration = optional(list(object({
         key_algorithm = optional(string)
         signing_algorithm = optional(string)
         subject = optional(list(object({
+            locality = optional(string)
             organization = optional(string)
             organizational_unit = optional(string)
-            distinguished_name_qualifier = optional(string)
+            surname = optional(string)
+            title = optional(string)
             generation_qualifier = optional(string)
             given_name = optional(string)
+            distinguished_name_qualifier = optional(string)
             initials = optional(string)
-            locality = optional(string)
             pseudonym = optional(string)
+            state = optional(string)
             common_name = optional(string)
             country = optional(string)
-            title = optional(string)
-            state = optional(string)
-            surname = optional(string)
         })))
     })))
     enabled = optional(bool)
     permanent_deletion_time_in_days = optional(number)
     revocation_configuration = optional(list(object({
         crl_configuration = optional(list(object({
+            s3_bucket_name = optional(string)
+            s3_object_acl = optional(string)
             custom_cname = optional(string)
             enabled = optional(bool)
             expiration_in_days = optional(number)
-            s3_bucket_name = optional(string)
-            s3_object_acl = optional(string)
         })))
         ocsp_configuration = optional(list(object({
-            ocsp_custom_cname = optional(string)
             enabled = optional(bool)
+            ocsp_custom_cname = optional(string)
         })))
     })))
     tags = optional(map(string))
@@ -63,26 +60,26 @@ resource "aws_acmpca_certificate_authority" "this" {
   dynamic "certificate_authority_configuration" {
     for_each = var.values.certificate_authority_configuration[*]
     content {
-      key_algorithm = certificate_authority_configuration.value.key_algorithm
       signing_algorithm = certificate_authority_configuration.value.signing_algorithm
       dynamic "subject" {
         for_each = certificate_authority_configuration.value.subject[*]
         content {
-          organization = subject.value.organization
-          organizational_unit = subject.value.organizational_unit
-          generation_qualifier = subject.value.generation_qualifier
-          given_name = subject.value.given_name
           initials = subject.value.initials
-          locality = subject.value.locality
           pseudonym = subject.value.pseudonym
+          state = subject.value.state
           common_name = subject.value.common_name
           country = subject.value.country
           distinguished_name_qualifier = subject.value.distinguished_name_qualifier
-          state = subject.value.state
+          organization = subject.value.organization
+          organizational_unit = subject.value.organizational_unit
           surname = subject.value.surname
           title = subject.value.title
+          generation_qualifier = subject.value.generation_qualifier
+          given_name = subject.value.given_name
+          locality = subject.value.locality
         }
       }
+      key_algorithm = certificate_authority_configuration.value.key_algorithm
     }
   }
   {{- end }}
@@ -99,11 +96,11 @@ resource "aws_acmpca_certificate_authority" "this" {
       dynamic "crl_configuration" {
         for_each = revocation_configuration.value.crl_configuration[*]
         content {
+          custom_cname = crl_configuration.value.custom_cname
           enabled = crl_configuration.value.enabled
           expiration_in_days = crl_configuration.value.expiration_in_days
           s3_bucket_name = crl_configuration.value.s3_bucket_name
           s3_object_acl = crl_configuration.value.s3_object_acl
-          custom_cname = crl_configuration.value.custom_cname
         }
       }
       dynamic "ocsp_configuration" {
