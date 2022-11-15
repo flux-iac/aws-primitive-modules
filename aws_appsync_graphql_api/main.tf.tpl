@@ -16,12 +16,11 @@ terraform {
 variable "values" {
   type = object({
     additional_authentication_provider = optional(list(object({
-        authentication_type = optional(string)
         openid_connect_config = optional(list(object({
+            auth_ttl = optional(number)
             client_id = optional(string)
             iat_ttl = optional(number)
             issuer = optional(string)
-            auth_ttl = optional(number)
         })))
         user_pool_config = optional(list(object({
             app_id_client_regex = optional(string)
@@ -33,6 +32,7 @@ variable "values" {
             authorizer_uri = optional(string)
             identity_validation_expression = optional(string)
         })))
+        authentication_type = optional(string)
     })))
     authentication_type = optional(string)
     lambda_authorizer_config = optional(list(object({
@@ -55,10 +55,10 @@ variable "values" {
     schema = optional(string)
     tags = optional(map(string))
     user_pool_config = optional(list(object({
-        default_action = optional(string)
-        user_pool_id = optional(string)
         app_id_client_regex = optional(string)
         aws_region = optional(string)
+        default_action = optional(string)
+        user_pool_id = optional(string)
     })))
     xray_enabled = optional(bool)
   })
@@ -91,9 +91,9 @@ resource "aws_appsync_graphql_api" "this" {
       dynamic "lambda_authorizer_config" {
         for_each = additional_authentication_provider.value.lambda_authorizer_config[*]
         content {
+          authorizer_result_ttl_in_seconds = lambda_authorizer_config.value.authorizer_result_ttl_in_seconds
           authorizer_uri = lambda_authorizer_config.value.authorizer_uri
           identity_validation_expression = lambda_authorizer_config.value.identity_validation_expression
-          authorizer_result_ttl_in_seconds = lambda_authorizer_config.value.authorizer_result_ttl_in_seconds
         }
       }
     }
@@ -129,10 +129,10 @@ resource "aws_appsync_graphql_api" "this" {
   dynamic "openid_connect_config" {
     for_each = var.values.openid_connect_config[*]
     content {
-      issuer = openid_connect_config.value.issuer
       auth_ttl = openid_connect_config.value.auth_ttl
       client_id = openid_connect_config.value.client_id
       iat_ttl = openid_connect_config.value.iat_ttl
+      issuer = openid_connect_config.value.issuer
     }
   }
   {{- end }}

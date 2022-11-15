@@ -18,38 +18,22 @@ variable "values" {
     context = optional(string)
     excess_capacity_termination_policy = optional(string)
     launch_template_config = optional(list(object({
-        launch_template_specification = optional(list(object({
-            launch_template_id = optional(string)
-            launch_template_name = optional(string)
-            version = optional(string)
-        })))
         override = optional(list(object({
+            availability_zone = optional(string)
             instance_requirements = optional(list(object({
-                accelerator_count = optional(list(object({
-                    max = optional(number)
-                    min = optional(number)
-                })))
-                memory_gib_per_vcpu = optional(list(object({
-                    max = optional(number)
-                    min = optional(number)
-                })))
-                on_demand_max_price_percentage_over_lowest_price = optional(number)
-                total_local_storage_gb = optional(list(object({
-                    max = optional(number)
-                    min = optional(number)
-                })))
-                local_storage = optional(string)
-                local_storage_types = optional(set(string))
-                network_interface_count = optional(list(object({
-                    min = optional(number)
-                    max = optional(number)
-                })))
-                spot_max_price_percentage_over_lowest_price = optional(number)
-                accelerator_manufacturers = optional(set(string))
                 accelerator_names = optional(set(string))
-                bare_metal = optional(string)
                 burstable_performance = optional(string)
-                vcpu_count = optional(list(object({
+                local_storage = optional(string)
+                memory_mib = optional(list(object({
+                    min = optional(number)
+                    max = optional(number)
+                })))
+                network_interface_count = optional(list(object({
+                    max = optional(number)
+                    min = optional(number)
+                })))
+                require_hibernate_support = optional(bool)
+                accelerator_count = optional(list(object({
                     max = optional(number)
                     min = optional(number)
                 })))
@@ -57,26 +41,42 @@ variable "values" {
                     max = optional(number)
                     min = optional(number)
                 })))
-                accelerator_types = optional(set(string))
                 baseline_ebs_bandwidth_mbps = optional(list(object({
                     max = optional(number)
                     min = optional(number)
                 })))
-                instance_generations = optional(set(string))
-                cpu_manufacturers = optional(set(string))
-                excluded_instance_types = optional(set(string))
-                memory_mib = optional(list(object({
+                local_storage_types = optional(set(string))
+                memory_gib_per_vcpu = optional(list(object({
                     max = optional(number)
                     min = optional(number)
                 })))
-                require_hibernate_support = optional(bool)
+                total_local_storage_gb = optional(list(object({
+                    max = optional(number)
+                    min = optional(number)
+                })))
+                vcpu_count = optional(list(object({
+                    max = optional(number)
+                    min = optional(number)
+                })))
+                accelerator_types = optional(set(string))
+                cpu_manufacturers = optional(set(string))
+                instance_generations = optional(set(string))
+                on_demand_max_price_percentage_over_lowest_price = optional(number)
+                accelerator_manufacturers = optional(set(string))
+                bare_metal = optional(string)
+                excluded_instance_types = optional(set(string))
+                spot_max_price_percentage_over_lowest_price = optional(number)
             })))
             instance_type = optional(string)
             max_price = optional(string)
             priority = optional(number)
             subnet_id = optional(string)
             weighted_capacity = optional(number)
-            availability_zone = optional(string)
+        })))
+        launch_template_specification = optional(list(object({
+            launch_template_id = optional(string)
+            launch_template_name = optional(string)
+            version = optional(string)
         })))
     })))
     on_demand_options = optional(list(object({
@@ -84,22 +84,22 @@ variable "values" {
     })))
     replace_unhealthy_instances = optional(bool)
     spot_options = optional(list(object({
-        allocation_strategy = optional(string)
-        instance_interruption_behavior = optional(string)
-        instance_pools_to_use_count = optional(number)
         maintenance_strategies = optional(list(object({
             capacity_rebalance = optional(list(object({
                 replacement_strategy = optional(string)
             })))
         })))
+        allocation_strategy = optional(string)
+        instance_interruption_behavior = optional(string)
+        instance_pools_to_use_count = optional(number)
     })))
     tags = optional(map(string))
     target_capacity_specification = optional(list(object({
-        total_target_capacity = optional(number)
         default_target_capacity_type = optional(string)
         on_demand_target_capacity = optional(number)
         spot_target_capacity = optional(number)
         target_capacity_unit_type = optional(string)
+        total_target_capacity = optional(number)
     })))
     terminate_instances = optional(bool)
     terminate_instances_with_expiration = optional(bool)
@@ -122,32 +122,21 @@ resource "aws_ec2_fleet" "this" {
       dynamic "launch_template_specification" {
         for_each = launch_template_config.value.launch_template_specification[*]
         content {
+          version = launch_template_specification.value.version
           launch_template_id = launch_template_specification.value.launch_template_id
           launch_template_name = launch_template_specification.value.launch_template_name
-          version = launch_template_specification.value.version
         }
       }
       dynamic "override" {
         for_each = launch_template_config.value.override[*]
         content {
+          priority = override.value.priority
+          subnet_id = override.value.subnet_id
+          weighted_capacity = override.value.weighted_capacity
           availability_zone = override.value.availability_zone
           dynamic "instance_requirements" {
             for_each = override.value.instance_requirements[*]
             content {
-              accelerator_manufacturers = instance_requirements.value.accelerator_manufacturers
-              accelerator_names = instance_requirements.value.accelerator_names
-              bare_metal = instance_requirements.value.bare_metal
-              burstable_performance = instance_requirements.value.burstable_performance
-              local_storage = instance_requirements.value.local_storage
-              local_storage_types = instance_requirements.value.local_storage_types
-              dynamic "network_interface_count" {
-                for_each = instance_requirements.value.network_interface_count[*]
-                content {
-                  max = network_interface_count.value.max
-                  min = network_interface_count.value.min
-                }
-              }
-              spot_max_price_percentage_over_lowest_price = instance_requirements.value.spot_max_price_percentage_over_lowest_price
               dynamic "accelerator_total_memory_mib" {
                 for_each = instance_requirements.value.accelerator_total_memory_mib[*]
                 content {
@@ -155,7 +144,6 @@ resource "aws_ec2_fleet" "this" {
                   min = accelerator_total_memory_mib.value.min
                 }
               }
-              accelerator_types = instance_requirements.value.accelerator_types
               dynamic "baseline_ebs_bandwidth_mbps" {
                 for_each = instance_requirements.value.baseline_ebs_bandwidth_mbps[*]
                 content {
@@ -163,31 +151,7 @@ resource "aws_ec2_fleet" "this" {
                   min = baseline_ebs_bandwidth_mbps.value.min
                 }
               }
-              instance_generations = instance_requirements.value.instance_generations
-              dynamic "vcpu_count" {
-                for_each = instance_requirements.value.vcpu_count[*]
-                content {
-                  min = vcpu_count.value.min
-                  max = vcpu_count.value.max
-                }
-              }
-              cpu_manufacturers = instance_requirements.value.cpu_manufacturers
-              excluded_instance_types = instance_requirements.value.excluded_instance_types
-              dynamic "memory_mib" {
-                for_each = instance_requirements.value.memory_mib[*]
-                content {
-                  max = memory_mib.value.max
-                  min = memory_mib.value.min
-                }
-              }
-              require_hibernate_support = instance_requirements.value.require_hibernate_support
-              dynamic "accelerator_count" {
-                for_each = instance_requirements.value.accelerator_count[*]
-                content {
-                  max = accelerator_count.value.max
-                  min = accelerator_count.value.min
-                }
-              }
+              local_storage_types = instance_requirements.value.local_storage_types
               dynamic "memory_gib_per_vcpu" {
                 for_each = instance_requirements.value.memory_gib_per_vcpu[*]
                 content {
@@ -195,7 +159,6 @@ resource "aws_ec2_fleet" "this" {
                   min = memory_gib_per_vcpu.value.min
                 }
               }
-              on_demand_max_price_percentage_over_lowest_price = instance_requirements.value.on_demand_max_price_percentage_over_lowest_price
               dynamic "total_local_storage_gb" {
                 for_each = instance_requirements.value.total_local_storage_gb[*]
                 content {
@@ -203,13 +166,50 @@ resource "aws_ec2_fleet" "this" {
                   min = total_local_storage_gb.value.min
                 }
               }
+              dynamic "vcpu_count" {
+                for_each = instance_requirements.value.vcpu_count[*]
+                content {
+                  min = vcpu_count.value.min
+                  max = vcpu_count.value.max
+                }
+              }
+              dynamic "accelerator_count" {
+                for_each = instance_requirements.value.accelerator_count[*]
+                content {
+                  max = accelerator_count.value.max
+                  min = accelerator_count.value.min
+                }
+              }
+              cpu_manufacturers = instance_requirements.value.cpu_manufacturers
+              instance_generations = instance_requirements.value.instance_generations
+              on_demand_max_price_percentage_over_lowest_price = instance_requirements.value.on_demand_max_price_percentage_over_lowest_price
+              accelerator_types = instance_requirements.value.accelerator_types
+              bare_metal = instance_requirements.value.bare_metal
+              excluded_instance_types = instance_requirements.value.excluded_instance_types
+              spot_max_price_percentage_over_lowest_price = instance_requirements.value.spot_max_price_percentage_over_lowest_price
+              accelerator_manufacturers = instance_requirements.value.accelerator_manufacturers
+              burstable_performance = instance_requirements.value.burstable_performance
+              local_storage = instance_requirements.value.local_storage
+              dynamic "memory_mib" {
+                for_each = instance_requirements.value.memory_mib[*]
+                content {
+                  max = memory_mib.value.max
+                  min = memory_mib.value.min
+                }
+              }
+              dynamic "network_interface_count" {
+                for_each = instance_requirements.value.network_interface_count[*]
+                content {
+                  max = network_interface_count.value.max
+                  min = network_interface_count.value.min
+                }
+              }
+              require_hibernate_support = instance_requirements.value.require_hibernate_support
+              accelerator_names = instance_requirements.value.accelerator_names
             }
           }
           instance_type = override.value.instance_type
           max_price = override.value.max_price
-          priority = override.value.priority
-          subnet_id = override.value.subnet_id
-          weighted_capacity = override.value.weighted_capacity
         }
       }
     }

@@ -26,9 +26,10 @@ spec:
     network_interface_id: << primary_network_interface_id of an aws_instance >>
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.38.0
+    name: aws-package
   approvePlan: auto
   interval: 1h0m
+  retryInterval: 20s
 ---
 apiVersion: infra.contrib.fluxcd.io/v1alpha1
 kind: Terraform
@@ -42,9 +43,10 @@ spec:
     gateway_load_balancer_endpoint_id: << id of an aws_vpc_endpoint >>
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.38.0
+    name: aws-package
   approvePlan: auto
   interval: 1h0m
+  retryInterval: 20s
 ---
 apiVersion: infra.contrib.fluxcd.io/v1alpha1
 kind: Terraform
@@ -58,9 +60,10 @@ spec:
     network_load_balancer_arn: << arn of an aws_lb >>
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.38.0
+    name: aws-package
   approvePlan: auto
   interval: 1h0m
+  retryInterval: 20s
 ```
 
 ## Argument Reference

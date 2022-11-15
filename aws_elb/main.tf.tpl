@@ -28,11 +28,11 @@ variable "values" {
     idle_timeout = optional(number)
     internal = optional(bool)
     listener = optional(set(object({
+        instance_protocol = optional(string)
+        lb_port = optional(number)
         lb_protocol = optional(string)
         ssl_certificate_id = optional(string)
         instance_port = optional(number)
-        instance_protocol = optional(string)
-        lb_port = optional(number)
     })))
     name = optional(string)
     name_prefix = optional(string)
@@ -46,10 +46,10 @@ resource "aws_elb" "this" {
   dynamic "access_logs" {
     for_each = var.values.access_logs[*]
     content {
-      enabled = access_logs.value.enabled
       interval = access_logs.value.interval
       bucket = access_logs.value.bucket
       bucket_prefix = access_logs.value.bucket_prefix
+      enabled = access_logs.value.enabled
     }
   }
   {{- end }}

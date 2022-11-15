@@ -16,25 +16,24 @@ terraform {
 variable "values" {
   type = object({
     action = optional(list(object({
-        order = optional(number)
         target_group_arn = optional(string)
         forward = optional(list(object({
-            stickiness = optional(list(object({
-                enabled = optional(bool)
-                duration = optional(number)
-            })))
             target_group = optional(set(object({
                 weight = optional(number)
                 arn = optional(string)
             })))
+            stickiness = optional(list(object({
+                enabled = optional(bool)
+                duration = optional(number)
+            })))
         })))
         redirect = optional(list(object({
-            status_code = optional(string)
             host = optional(string)
             path = optional(string)
             port = optional(string)
             protocol = optional(string)
             query = optional(string)
+            status_code = optional(string)
         })))
         fixed_response = optional(list(object({
             content_type = optional(string)
@@ -42,31 +41,42 @@ variable "values" {
             status_code = optional(string)
         })))
         authenticate_cognito = optional(list(object({
+            on_unauthenticated_request = optional(string)
+            scope = optional(string)
+            session_cookie_name = optional(string)
             session_timeout = optional(number)
             user_pool_arn = optional(string)
             user_pool_client_id = optional(string)
             user_pool_domain = optional(string)
             authentication_request_extra_params = optional(map(string))
-            on_unauthenticated_request = optional(string)
-            scope = optional(string)
-            session_cookie_name = optional(string)
         })))
         authenticate_oidc = optional(list(object({
-            client_secret = optional(string)
+            authentication_request_extra_params = optional(map(string))
             issuer = optional(string)
-            session_timeout = optional(number)
             token_endpoint = optional(string)
             user_info_endpoint = optional(string)
-            authentication_request_extra_params = optional(map(string))
+            session_timeout = optional(number)
             authorization_endpoint = optional(string)
             client_id = optional(string)
+            client_secret = optional(string)
             on_unauthenticated_request = optional(string)
             scope = optional(string)
             session_cookie_name = optional(string)
         })))
         type = optional(string)
+        order = optional(number)
     })))
     condition = optional(set(object({
+        path_pattern = optional(list(object({
+            values = optional(set(string))
+        })))
+        query_string = optional(set(object({
+            key = optional(string)
+            value = optional(string)
+        })))
+        source_ip = optional(list(object({
+            values = optional(set(string))
+        })))
         host_header = optional(list(object({
             values = optional(set(string))
         })))
@@ -75,16 +85,6 @@ variable "values" {
             values = optional(set(string))
         })))
         http_request_method = optional(list(object({
-            values = optional(set(string))
-        })))
-        path_pattern = optional(list(object({
-            values = optional(set(string))
-        })))
-        query_string = optional(set(object({
-            value = optional(string)
-            key = optional(string)
-        })))
-        source_ip = optional(list(object({
             values = optional(set(string))
         })))
     })))
@@ -103,13 +103,6 @@ resource "aws_lb_listener_rule" "this" {
       dynamic "forward" {
         for_each = action.value.forward[*]
         content {
-          dynamic "target_group" {
-            for_each = forward.value.target_group[*]
-            content {
-              arn = target_group.value.arn
-              weight = target_group.value.weight
-            }
-          }
           dynamic "stickiness" {
             for_each = forward.value.stickiness[*]
             content {
@@ -117,31 +110,37 @@ resource "aws_lb_listener_rule" "this" {
               enabled = stickiness.value.enabled
             }
           }
+          dynamic "target_group" {
+            for_each = forward.value.target_group[*]
+            content {
+              arn = target_group.value.arn
+              weight = target_group.value.weight
+            }
+          }
         }
       }
       dynamic "redirect" {
         for_each = action.value.redirect[*]
         content {
+          query = redirect.value.query
+          status_code = redirect.value.status_code
           host = redirect.value.host
           path = redirect.value.path
           port = redirect.value.port
           protocol = redirect.value.protocol
-          query = redirect.value.query
-          status_code = redirect.value.status_code
         }
       }
       dynamic "fixed_response" {
         for_each = action.value.fixed_response[*]
         content {
+          status_code = fixed_response.value.status_code
           content_type = fixed_response.value.content_type
           message_body = fixed_response.value.message_body
-          status_code = fixed_response.value.status_code
         }
       }
       dynamic "authenticate_cognito" {
         for_each = action.value.authenticate_cognito[*]
         content {
-          authentication_request_extra_params = authenticate_cognito.value.authentication_request_extra_params
           on_unauthenticated_request = authenticate_cognito.value.on_unauthenticated_request
           scope = authenticate_cognito.value.scope
           session_cookie_name = authenticate_cognito.value.session_cookie_name
@@ -149,22 +148,23 @@ resource "aws_lb_listener_rule" "this" {
           user_pool_arn = authenticate_cognito.value.user_pool_arn
           user_pool_client_id = authenticate_cognito.value.user_pool_client_id
           user_pool_domain = authenticate_cognito.value.user_pool_domain
+          authentication_request_extra_params = authenticate_cognito.value.authentication_request_extra_params
         }
       }
       dynamic "authenticate_oidc" {
         for_each = action.value.authenticate_oidc[*]
         content {
+          authentication_request_extra_params = authenticate_oidc.value.authentication_request_extra_params
+          issuer = authenticate_oidc.value.issuer
+          token_endpoint = authenticate_oidc.value.token_endpoint
+          user_info_endpoint = authenticate_oidc.value.user_info_endpoint
+          session_timeout = authenticate_oidc.value.session_timeout
           authorization_endpoint = authenticate_oidc.value.authorization_endpoint
           client_id = authenticate_oidc.value.client_id
+          client_secret = authenticate_oidc.value.client_secret
           on_unauthenticated_request = authenticate_oidc.value.on_unauthenticated_request
           scope = authenticate_oidc.value.scope
           session_cookie_name = authenticate_oidc.value.session_cookie_name
-          authentication_request_extra_params = authenticate_oidc.value.authentication_request_extra_params
-          issuer = authenticate_oidc.value.issuer
-          session_timeout = authenticate_oidc.value.session_timeout
-          token_endpoint = authenticate_oidc.value.token_endpoint
-          user_info_endpoint = authenticate_oidc.value.user_info_endpoint
-          client_secret = authenticate_oidc.value.client_secret
         }
       }
       type = action.value.type
@@ -176,19 +176,6 @@ resource "aws_lb_listener_rule" "this" {
   dynamic "condition" {
     for_each = var.values.condition[*]
     content {
-      dynamic "http_header" {
-        for_each = condition.value.http_header[*]
-        content {
-          http_header_name = http_header.value.http_header_name
-          values = http_header.value.values
-        }
-      }
-      dynamic "http_request_method" {
-        for_each = condition.value.http_request_method[*]
-        content {
-          values = http_request_method.value.values
-        }
-      }
       dynamic "path_pattern" {
         for_each = condition.value.path_pattern[*]
         content {
@@ -212,6 +199,19 @@ resource "aws_lb_listener_rule" "this" {
         for_each = condition.value.host_header[*]
         content {
           values = host_header.value.values
+        }
+      }
+      dynamic "http_header" {
+        for_each = condition.value.http_header[*]
+        content {
+          http_header_name = http_header.value.http_header_name
+          values = http_header.value.values
+        }
+      }
+      dynamic "http_request_method" {
+        for_each = condition.value.http_request_method[*]
+        content {
+          values = http_request_method.value.values
         }
       }
     }

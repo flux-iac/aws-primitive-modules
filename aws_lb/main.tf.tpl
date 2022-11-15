@@ -16,9 +16,9 @@ terraform {
 variable "values" {
   type = object({
     access_logs = optional(list(object({
+        bucket = optional(string)
         prefix = optional(string)
         enabled = optional(bool)
-        bucket = optional(string)
     })))
     customer_owned_ipv4_pool = optional(string)
     desync_mitigation_mode = optional(string)
@@ -34,11 +34,11 @@ variable "values" {
     name_prefix = optional(string)
     preserve_host_header = optional(bool)
     subnet_mapping = optional(set(object({
+        private_ipv4_address = optional(string)
         subnet_id = optional(string)
         ipv6_address = optional(string)
         outpost_id = optional(string)
         allocation_id = optional(string)
-        private_ipv4_address = optional(string)
     })))
     tags = optional(map(string))
   })

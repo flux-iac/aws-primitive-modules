@@ -18,13 +18,13 @@ variable "values" {
     account_id = optional(string)
     configuration = optional(list(object({
         transformation_configuration = optional(set(object({
-            actions = optional(set(string))
             content_transformation = optional(list(object({
                 aws_lambda = optional(list(object({
                     function_arn = optional(string)
                     function_payload = optional(string)
                 })))
             })))
+            actions = optional(set(string))
         })))
         allowed_features = optional(set(string))
         cloud_watch_metrics_enabled = optional(bool)
@@ -43,6 +43,8 @@ resource "aws_s3control_object_lambda_access_point" "this" {
   dynamic "configuration" {
     for_each = var.values.configuration[*]
     content {
+      allowed_features = configuration.value.allowed_features
+      cloud_watch_metrics_enabled = configuration.value.cloud_watch_metrics_enabled
       supporting_access_point = configuration.value.supporting_access_point
       dynamic "transformation_configuration" {
         for_each = configuration.value.transformation_configuration[*]
@@ -62,8 +64,6 @@ resource "aws_s3control_object_lambda_access_point" "this" {
           actions = transformation_configuration.value.actions
         }
       }
-      allowed_features = configuration.value.allowed_features
-      cloud_watch_metrics_enabled = configuration.value.cloud_watch_metrics_enabled
     }
   }
   {{- end }}

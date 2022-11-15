@@ -20,11 +20,11 @@ variable "values" {
     name = optional(string)
     spec = optional(list(object({
         provider = optional(list(object({
-            virtual_node = optional(list(object({
-                virtual_node_name = optional(string)
-            })))
             virtual_router = optional(list(object({
                 virtual_router_name = optional(string)
+            })))
+            virtual_node = optional(list(object({
+                virtual_node_name = optional(string)
             })))
         })))
     })))

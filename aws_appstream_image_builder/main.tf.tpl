@@ -23,8 +23,8 @@ variable "values" {
     description = optional(string)
     display_name = optional(string)
     domain_join_info = optional(list(object({
-        directory_name = optional(string)
         organizational_unit_distinguished_name = optional(string)
+        directory_name = optional(string)
     })))
     enable_default_internet_access = optional(bool)
     iam_role_arn = optional(string)

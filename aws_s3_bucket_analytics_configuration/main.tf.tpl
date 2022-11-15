@@ -17,8 +17,8 @@ variable "values" {
   type = object({
     bucket = optional(string)
     filter = optional(list(object({
-        prefix = optional(string)
         tags = optional(map(string))
+        prefix = optional(string)
     })))
     name = optional(string)
     storage_class_analysis = optional(list(object({

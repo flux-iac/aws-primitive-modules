@@ -21,29 +21,29 @@ variable "values" {
     })))
     billing_mode = optional(string)
     global_secondary_index = optional(set(object({
+        read_capacity = optional(number)
+        write_capacity = optional(number)
+        hash_key = optional(string)
         name = optional(string)
         non_key_attributes = optional(set(string))
         projection_type = optional(string)
         range_key = optional(string)
-        read_capacity = optional(number)
-        write_capacity = optional(number)
-        hash_key = optional(string)
     })))
     hash_key = optional(string)
     local_secondary_index = optional(set(object({
+        range_key = optional(string)
         name = optional(string)
         non_key_attributes = optional(list(string))
         projection_type = optional(string)
-        range_key = optional(string)
     })))
     name = optional(string)
     range_key = optional(string)
     read_capacity = optional(number)
     replica = optional(set(object({
+        region_name = optional(string)
         kms_key_arn = optional(string)
         point_in_time_recovery = optional(bool)
         propagate_tags = optional(bool)
-        region_name = optional(string)
     })))
     restore_date_time = optional(string)
     restore_source_name = optional(string)
@@ -73,13 +73,13 @@ resource "aws_dynamodb_table" "this" {
   dynamic "global_secondary_index" {
     for_each = var.values.global_secondary_index[*]
     content {
-      range_key = global_secondary_index.value.range_key
-      read_capacity = global_secondary_index.value.read_capacity
-      write_capacity = global_secondary_index.value.write_capacity
       hash_key = global_secondary_index.value.hash_key
       name = global_secondary_index.value.name
       non_key_attributes = global_secondary_index.value.non_key_attributes
       projection_type = global_secondary_index.value.projection_type
+      range_key = global_secondary_index.value.range_key
+      read_capacity = global_secondary_index.value.read_capacity
+      write_capacity = global_secondary_index.value.write_capacity
     }
   }
   {{- end }}

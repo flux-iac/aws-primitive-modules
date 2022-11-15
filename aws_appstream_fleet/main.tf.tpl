@@ -16,10 +16,10 @@ terraform {
 variable "values" {
   type = object({
     compute_capacity = optional(list(object({
+        running = optional(number)
         available = optional(number)
         desired_instances = optional(number)
         in_use = optional(number)
-        running = optional(number)
     })))
     fleet_type = optional(string)
     idle_disconnect_timeout_in_seconds = optional(number)

@@ -44,8 +44,8 @@ resource "aws_acmpca_certificate" "this" {
   dynamic "validity" {
     for_each = var.values.validity[*]
     content {
-      value = validity.value.value
       type = validity.value.type
+      value = validity.value.value
     }
   }
   {{- end }}

@@ -27,11 +27,11 @@ variable "values" {
     expires = optional(string)
     force_destroy = optional(bool)
     grant = optional(set(object({
+        permissions = optional(set(string))
+        type = optional(string)
         uri = optional(string)
         email = optional(string)
         id = optional(string)
-        permissions = optional(set(string))
-        type = optional(string)
     })))
     key = optional(string)
     metadata_directive = optional(string)
@@ -84,11 +84,11 @@ resource "aws_s3_object_copy" "this" {
   dynamic "grant" {
     for_each = var.values.grant[*]
     content {
-      email = grant.value.email
-      id = grant.value.id
       permissions = grant.value.permissions
       type = grant.value.type
       uri = grant.value.uri
+      email = grant.value.email
+      id = grant.value.id
     }
   }
   {{- end }}

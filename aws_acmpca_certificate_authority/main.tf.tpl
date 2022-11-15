@@ -19,30 +19,30 @@ variable "values" {
         key_algorithm = optional(string)
         signing_algorithm = optional(string)
         subject = optional(list(object({
-            locality = optional(string)
-            organization = optional(string)
-            organizational_unit = optional(string)
-            surname = optional(string)
-            title = optional(string)
+            country = optional(string)
+            distinguished_name_qualifier = optional(string)
             generation_qualifier = optional(string)
             given_name = optional(string)
-            distinguished_name_qualifier = optional(string)
-            initials = optional(string)
-            pseudonym = optional(string)
+            locality = optional(string)
+            organization = optional(string)
             state = optional(string)
             common_name = optional(string)
-            country = optional(string)
+            initials = optional(string)
+            organizational_unit = optional(string)
+            pseudonym = optional(string)
+            surname = optional(string)
+            title = optional(string)
         })))
     })))
     enabled = optional(bool)
     permanent_deletion_time_in_days = optional(number)
     revocation_configuration = optional(list(object({
         crl_configuration = optional(list(object({
-            s3_bucket_name = optional(string)
-            s3_object_acl = optional(string)
             custom_cname = optional(string)
             enabled = optional(bool)
             expiration_in_days = optional(number)
+            s3_bucket_name = optional(string)
+            s3_object_acl = optional(string)
         })))
         ocsp_configuration = optional(list(object({
             enabled = optional(bool)
@@ -60,26 +60,26 @@ resource "aws_acmpca_certificate_authority" "this" {
   dynamic "certificate_authority_configuration" {
     for_each = var.values.certificate_authority_configuration[*]
     content {
-      signing_algorithm = certificate_authority_configuration.value.signing_algorithm
       dynamic "subject" {
         for_each = certificate_authority_configuration.value.subject[*]
         content {
-          initials = subject.value.initials
-          pseudonym = subject.value.pseudonym
+          organization = subject.value.organization
           state = subject.value.state
-          common_name = subject.value.common_name
           country = subject.value.country
           distinguished_name_qualifier = subject.value.distinguished_name_qualifier
-          organization = subject.value.organization
-          organizational_unit = subject.value.organizational_unit
-          surname = subject.value.surname
-          title = subject.value.title
           generation_qualifier = subject.value.generation_qualifier
           given_name = subject.value.given_name
           locality = subject.value.locality
+          title = subject.value.title
+          common_name = subject.value.common_name
+          initials = subject.value.initials
+          organizational_unit = subject.value.organizational_unit
+          pseudonym = subject.value.pseudonym
+          surname = subject.value.surname
         }
       }
       key_algorithm = certificate_authority_configuration.value.key_algorithm
+      signing_algorithm = certificate_authority_configuration.value.signing_algorithm
     }
   }
   {{- end }}

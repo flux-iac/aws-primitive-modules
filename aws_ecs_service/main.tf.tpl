@@ -38,10 +38,10 @@ variable "values" {
     iam_role = optional(string)
     launch_type = optional(string)
     load_balancer = optional(set(object({
+        container_port = optional(number)
         elb_name = optional(string)
         target_group_arn = optional(string)
         container_name = optional(string)
-        container_port = optional(number)
     })))
     name = optional(string)
     network_configuration = optional(list(object({
@@ -50,8 +50,8 @@ variable "values" {
         subnets = optional(set(string))
     })))
     ordered_placement_strategy = optional(list(object({
-        field = optional(string)
         type = optional(string)
+        field = optional(string)
     })))
     placement_constraints = optional(set(object({
         expression = optional(string)
@@ -148,9 +148,9 @@ resource "aws_ecs_service" "this" {
   dynamic "network_configuration" {
     for_each = var.values.network_configuration[*]
     content {
+      assign_public_ip = network_configuration.value.assign_public_ip
       security_groups = network_configuration.value.security_groups
       subnets = network_configuration.value.subnets
-      assign_public_ip = network_configuration.value.assign_public_ip
     }
   }
   {{- end }}
@@ -182,10 +182,10 @@ resource "aws_ecs_service" "this" {
   dynamic "service_registries" {
     for_each = var.values.service_registries[*]
     content {
+      registry_arn = service_registries.value.registry_arn
       container_name = service_registries.value.container_name
       container_port = service_registries.value.container_port
       port = service_registries.value.port
-      registry_arn = service_registries.value.registry_arn
     }
   }
   {{- end }}

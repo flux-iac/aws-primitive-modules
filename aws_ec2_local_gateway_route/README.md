@@ -26,9 +26,10 @@ spec:
     local_gateway_virtual_interface_group_id: << example.id of a data >>
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.38.0
+    name: aws-package
   approvePlan: auto
   interval: 1h0m
+  retryInterval: 20s
 ```
 
 ## Argument Reference

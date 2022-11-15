@@ -60,6 +60,19 @@ variable "values" {
                 protocol = optional(string)
             })))
             tls = optional(list(object({
+                certificate = optional(list(object({
+                    acm = optional(list(object({
+                        certificate_arn = optional(string)
+                    })))
+                    file = optional(list(object({
+                        certificate_chain = optional(string)
+                        private_key = optional(string)
+                    })))
+                    sds = optional(list(object({
+                        secret_name = optional(string)
+                    })))
+                })))
+                mode = optional(string)
                 validation = optional(list(object({
                     subject_alternative_names = optional(list(object({
                         match = optional(list(object({
@@ -67,29 +80,19 @@ variable "values" {
                         })))
                     })))
                     trust = optional(list(object({
-                        sds = optional(list(object({
-                            secret_name = optional(string)
-                        })))
                         file = optional(list(object({
                             certificate_chain = optional(string)
                         })))
+                        sds = optional(list(object({
+                            secret_name = optional(string)
+                        })))
                     })))
                 })))
-                certificate = optional(list(object({
-                    sds = optional(list(object({
-                        secret_name = optional(string)
-                    })))
-                    acm = optional(list(object({
-                        certificate_arn = optional(string)
-                    })))
-                    file = optional(list(object({
-                        private_key = optional(string)
-                        certificate_chain = optional(string)
-                    })))
-                })))
-                mode = optional(string)
             })))
             connection_pool = optional(list(object({
+                grpc = optional(list(object({
+                    max_requests = optional(number)
+                })))
                 http = optional(list(object({
                     max_connections = optional(number)
                     max_pending_requests = optional(number)
@@ -97,18 +100,15 @@ variable "values" {
                 http2 = optional(list(object({
                     max_requests = optional(number)
                 })))
-                grpc = optional(list(object({
-                    max_requests = optional(number)
-                })))
             })))
             health_check = optional(list(object({
-                unhealthy_threshold = optional(number)
                 healthy_threshold = optional(number)
                 interval_millis = optional(number)
                 path = optional(string)
                 port = optional(number)
                 protocol = optional(string)
                 timeout_millis = optional(number)
+                unhealthy_threshold = optional(number)
             })))
         })))
         logging = optional(list(object({
@@ -138,6 +138,22 @@ resource "aws_appmesh_virtual_gateway" "this" {
   dynamic "spec" {
     for_each = var.values.spec[*]
     content {
+      dynamic "logging" {
+        for_each = spec.value.logging[*]
+        content {
+          dynamic "access_log" {
+            for_each = logging.value.access_log[*]
+            content {
+              dynamic "file" {
+                for_each = access_log.value.file[*]
+                content {
+                  path = file.value.path
+                }
+              }
+            }
+          }
+        }
+      }
       dynamic "backend_defaults" {
         for_each = spec.value.backend_defaults[*]
         content {
@@ -184,6 +200,12 @@ resource "aws_appmesh_virtual_gateway" "this" {
                       dynamic "trust" {
                         for_each = validation.value.trust[*]
                         content {
+                          dynamic "sds" {
+                            for_each = trust.value.sds[*]
+                            content {
+                              secret_name = sds.value.secret_name
+                            }
+                          }
                           dynamic "acm" {
                             for_each = trust.value.acm[*]
                             content {
@@ -194,12 +216,6 @@ resource "aws_appmesh_virtual_gateway" "this" {
                             for_each = trust.value.file[*]
                             content {
                               certificate_chain = file.value.certificate_chain
-                            }
-                          }
-                          dynamic "sds" {
-                            for_each = trust.value.sds[*]
-                            content {
-                              secret_name = sds.value.secret_name
                             }
                           }
                         }
@@ -215,6 +231,25 @@ resource "aws_appmesh_virtual_gateway" "this" {
       dynamic "listener" {
         for_each = spec.value.listener[*]
         content {
+          dynamic "health_check" {
+            for_each = listener.value.health_check[*]
+            content {
+              path = health_check.value.path
+              port = health_check.value.port
+              protocol = health_check.value.protocol
+              timeout_millis = health_check.value.timeout_millis
+              unhealthy_threshold = health_check.value.unhealthy_threshold
+              healthy_threshold = health_check.value.healthy_threshold
+              interval_millis = health_check.value.interval_millis
+            }
+          }
+          dynamic "port_mapping" {
+            for_each = listener.value.port_mapping[*]
+            content {
+              port = port_mapping.value.port
+              protocol = port_mapping.value.protocol
+            }
+          }
           dynamic "tls" {
             for_each = listener.value.tls[*]
             content {
@@ -281,6 +316,12 @@ resource "aws_appmesh_virtual_gateway" "this" {
           dynamic "connection_pool" {
             for_each = listener.value.connection_pool[*]
             content {
+              dynamic "grpc" {
+                for_each = connection_pool.value.grpc[*]
+                content {
+                  max_requests = grpc.value.max_requests
+                }
+              }
               dynamic "http" {
                 for_each = connection_pool.value.http[*]
                 content {
@@ -292,47 +333,6 @@ resource "aws_appmesh_virtual_gateway" "this" {
                 for_each = connection_pool.value.http2[*]
                 content {
                   max_requests = http2.value.max_requests
-                }
-              }
-              dynamic "grpc" {
-                for_each = connection_pool.value.grpc[*]
-                content {
-                  max_requests = grpc.value.max_requests
-                }
-              }
-            }
-          }
-          dynamic "health_check" {
-            for_each = listener.value.health_check[*]
-            content {
-              healthy_threshold = health_check.value.healthy_threshold
-              interval_millis = health_check.value.interval_millis
-              path = health_check.value.path
-              port = health_check.value.port
-              protocol = health_check.value.protocol
-              timeout_millis = health_check.value.timeout_millis
-              unhealthy_threshold = health_check.value.unhealthy_threshold
-            }
-          }
-          dynamic "port_mapping" {
-            for_each = listener.value.port_mapping[*]
-            content {
-              port = port_mapping.value.port
-              protocol = port_mapping.value.protocol
-            }
-          }
-        }
-      }
-      dynamic "logging" {
-        for_each = spec.value.logging[*]
-        content {
-          dynamic "access_log" {
-            for_each = logging.value.access_log[*]
-            content {
-              dynamic "file" {
-                for_each = access_log.value.file[*]
-                content {
-                  path = file.value.path
                 }
               }
             }

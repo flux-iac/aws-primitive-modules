@@ -40,9 +40,10 @@ spec:
     name: example_profile
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.38.0
+    name: aws-package
   approvePlan: auto
   interval: 1h0m
+  retryInterval: 20s
 ```
 
 ## Argument Reference

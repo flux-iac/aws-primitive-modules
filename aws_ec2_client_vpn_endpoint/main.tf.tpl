@@ -16,17 +16,17 @@ terraform {
 variable "values" {
   type = object({
     authentication_options = optional(list(object({
+        root_certificate_chain_arn = optional(string)
         saml_provider_arn = optional(string)
         self_service_saml_provider_arn = optional(string)
         type = optional(string)
         active_directory_id = optional(string)
-        root_certificate_chain_arn = optional(string)
     })))
     client_cidr_block = optional(string)
     connection_log_options = optional(list(object({
-        enabled = optional(bool)
         cloudwatch_log_group = optional(string)
         cloudwatch_log_stream = optional(string)
+        enabled = optional(bool)
     })))
     description = optional(string)
     dns_servers = optional(list(string))
@@ -46,11 +46,11 @@ resource "aws_ec2_client_vpn_endpoint" "this" {
   dynamic "authentication_options" {
     for_each = var.values.authentication_options[*]
     content {
-      active_directory_id = authentication_options.value.active_directory_id
-      root_certificate_chain_arn = authentication_options.value.root_certificate_chain_arn
       saml_provider_arn = authentication_options.value.saml_provider_arn
       self_service_saml_provider_arn = authentication_options.value.self_service_saml_provider_arn
       type = authentication_options.value.type
+      active_directory_id = authentication_options.value.active_directory_id
+      root_certificate_chain_arn = authentication_options.value.root_certificate_chain_arn
     }
   }
   {{- end }}

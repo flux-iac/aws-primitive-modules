@@ -24,19 +24,19 @@ variable "values" {
     })))
     name = optional(string)
     outpost_config = optional(list(object({
-        control_plane_instance_type = optional(string)
         outpost_arns = optional(set(string))
+        control_plane_instance_type = optional(string)
     })))
     role_arn = optional(string)
     tags = optional(map(string))
     vpc_config = optional(list(object({
+        public_access_cidrs = optional(set(string))
+        security_group_ids = optional(set(string))
+        subnet_ids = optional(set(string))
         vpc_id = optional(string)
         cluster_security_group_id = optional(string)
         endpoint_private_access = optional(bool)
         endpoint_public_access = optional(bool)
-        public_access_cidrs = optional(set(string))
-        security_group_ids = optional(set(string))
-        subnet_ids = optional(set(string))
     })))
   })
 }

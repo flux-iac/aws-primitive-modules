@@ -19,11 +19,24 @@ variable "values" {
     connector_label = optional(string)
     connector_profile_config = optional(list(object({
         connector_profile_credentials = optional(list(object({
-            custom_connector = optional(list(object({
-                custom = optional(list(object({
-                    custom_authentication_type = optional(string)
-                    credentials_map = optional(map(string))
+            snowflake = optional(list(object({
+                password = optional(string)
+                username = optional(string)
+            })))
+            zendesk = optional(list(object({
+                access_token = optional(string)
+                client_id = optional(string)
+                client_secret = optional(string)
+                oauth_request = optional(list(object({
+                    redirect_uri = optional(string)
+                    auth_code = optional(string)
                 })))
+            })))
+            amplitude = optional(list(object({
+                api_key = optional(string)
+                secret_key = optional(string)
+            })))
+            custom_connector = optional(list(object({
                 oauth2 = optional(list(object({
                     access_token = optional(string)
                     client_id = optional(string)
@@ -35,50 +48,28 @@ variable "values" {
                     refresh_token = optional(string)
                 })))
                 api_key = optional(list(object({
-                    api_key = optional(string)
                     api_secret_key = optional(string)
+                    api_key = optional(string)
                 })))
                 authentication_type = optional(string)
                 basic = optional(list(object({
                     password = optional(string)
                     username = optional(string)
                 })))
-            })))
-            marketo = optional(list(object({
-                access_token = optional(string)
-                client_id = optional(string)
-                client_secret = optional(string)
-                oauth_request = optional(list(object({
-                    auth_code = optional(string)
-                    redirect_uri = optional(string)
+                custom = optional(list(object({
+                    custom_authentication_type = optional(string)
+                    credentials_map = optional(map(string))
                 })))
-            })))
-            redshift = optional(list(object({
-                password = optional(string)
-                username = optional(string)
-            })))
-            salesforce = optional(list(object({
-                refresh_token = optional(string)
-                access_token = optional(string)
-                client_credentials_arn = optional(string)
-                oauth_request = optional(list(object({
-                    auth_code = optional(string)
-                    redirect_uri = optional(string)
-                })))
-            })))
-            veeva = optional(list(object({
-                password = optional(string)
-                username = optional(string)
             })))
             google_analytics = optional(list(object({
+                access_token = optional(string)
+                client_id = optional(string)
                 client_secret = optional(string)
                 oauth_request = optional(list(object({
                     auth_code = optional(string)
                     redirect_uri = optional(string)
                 })))
                 refresh_token = optional(string)
-                access_token = optional(string)
-                client_id = optional(string)
             })))
             honeycode = optional(list(object({
                 access_token = optional(string)
@@ -88,23 +79,21 @@ variable "values" {
                 })))
                 refresh_token = optional(string)
             })))
-            infor_nexus = optional(list(object({
-                access_key_id = optional(string)
-                datakey = optional(string)
-                secret_access_key = optional(string)
-                user_id = optional(string)
+            salesforce = optional(list(object({
+                access_token = optional(string)
+                client_credentials_arn = optional(string)
+                oauth_request = optional(list(object({
+                    auth_code = optional(string)
+                    redirect_uri = optional(string)
+                })))
+                refresh_token = optional(string)
             })))
-            service_now = optional(list(object({
-                password = optional(string)
-                username = optional(string)
-            })))
-            amplitude = optional(list(object({
+            singular = optional(list(object({
                 api_key = optional(string)
-                secret_key = optional(string)
             })))
             datadog = optional(list(object({
-                application_key = optional(string)
                 api_key = optional(string)
+                application_key = optional(string)
             })))
             dynatrace = optional(list(object({
                 api_token = optional(string)
@@ -115,7 +104,6 @@ variable "values" {
                     username = optional(string)
                 })))
                 oauth_credentials = optional(list(object({
-                    client_secret = optional(string)
                     oauth_request = optional(list(object({
                         auth_code = optional(string)
                         redirect_uri = optional(string)
@@ -123,12 +111,34 @@ variable "values" {
                     refresh_token = optional(string)
                     access_token = optional(string)
                     client_id = optional(string)
+                    client_secret = optional(string)
                 })))
             })))
-            slack = optional(list(object({
+            veeva = optional(list(object({
+                password = optional(string)
+                username = optional(string)
+            })))
+            marketo = optional(list(object({
+                access_token = optional(string)
+                client_id = optional(string)
+                client_secret = optional(string)
                 oauth_request = optional(list(object({
                     auth_code = optional(string)
                     redirect_uri = optional(string)
+                })))
+            })))
+            redshift = optional(list(object({
+                password = optional(string)
+                username = optional(string)
+            })))
+            service_now = optional(list(object({
+                password = optional(string)
+                username = optional(string)
+            })))
+            slack = optional(list(object({
+                oauth_request = optional(list(object({
+                    redirect_uri = optional(string)
+                    auth_code = optional(string)
                 })))
                 access_token = optional(string)
                 client_id = optional(string)
@@ -137,67 +147,71 @@ variable "values" {
             trendmicro = optional(list(object({
                 api_secret_key = optional(string)
             })))
-            singular = optional(list(object({
-                api_key = optional(string)
-            })))
-            snowflake = optional(list(object({
-                password = optional(string)
-                username = optional(string)
-            })))
-            zendesk = optional(list(object({
-                access_token = optional(string)
-                client_id = optional(string)
-                client_secret = optional(string)
-                oauth_request = optional(list(object({
-                    redirect_uri = optional(string)
-                    auth_code = optional(string)
-                })))
+            infor_nexus = optional(list(object({
+                access_key_id = optional(string)
+                datakey = optional(string)
+                secret_access_key = optional(string)
+                user_id = optional(string)
             })))
         })))
         connector_profile_properties = optional(list(object({
-            singular = optional(list(object({
+            amplitude = optional(list(object({
+            })))
+            custom_connector = optional(list(object({
+                oauth2_properties = optional(list(object({
+                    oauth2_grant_type = optional(string)
+                    token_url = optional(string)
+                    token_url_custom_properties = optional(map(string))
+                })))
+                profile_properties = optional(map(string))
+            })))
+            redshift = optional(list(object({
+                bucket_name = optional(string)
+                bucket_prefix = optional(string)
+                database_url = optional(string)
+                role_arn = optional(string)
+            })))
+            veeva = optional(list(object({
+                instance_url = optional(string)
+            })))
+            datadog = optional(list(object({
+                instance_url = optional(string)
             })))
             marketo = optional(list(object({
+                instance_url = optional(string)
+            })))
+            singular = optional(list(object({
+            })))
+            dynatrace = optional(list(object({
+                instance_url = optional(string)
+            })))
+            honeycode = optional(list(object({
+            })))
+            infor_nexus = optional(list(object({
                 instance_url = optional(string)
             })))
             service_now = optional(list(object({
                 instance_url = optional(string)
             })))
+            slack = optional(list(object({
+                instance_url = optional(string)
+            })))
             snowflake = optional(list(object({
-                region = optional(string)
-                stage = optional(string)
-                warehouse = optional(string)
                 account_name = optional(string)
                 bucket_name = optional(string)
                 bucket_prefix = optional(string)
                 private_link_service_name = optional(string)
-            })))
-            trendmicro = optional(list(object({
-            })))
-            veeva = optional(list(object({
-                instance_url = optional(string)
-            })))
-            dynatrace = optional(list(object({
-                instance_url = optional(string)
-            })))
-            infor_nexus = optional(list(object({
-                instance_url = optional(string)
+                region = optional(string)
+                stage = optional(string)
+                warehouse = optional(string)
             })))
             google_analytics = optional(list(object({
-            })))
-            redshift = optional(list(object({
-                bucket_prefix = optional(string)
-                database_url = optional(string)
-                role_arn = optional(string)
-                bucket_name = optional(string)
             })))
             salesforce = optional(list(object({
                 instance_url = optional(string)
                 is_sandbox_environment = optional(bool)
             })))
             sapo_data = optional(list(object({
-                application_service_path = optional(string)
-                client_number = optional(string)
                 logon_language = optional(string)
                 oauth_properties = optional(list(object({
                     auth_code_url = optional(string)
@@ -207,27 +221,13 @@ variable "values" {
                 port_number = optional(number)
                 private_link_service_name = optional(string)
                 application_host_url = optional(string)
+                application_service_path = optional(string)
+                client_number = optional(string)
+            })))
+            trendmicro = optional(list(object({
             })))
             zendesk = optional(list(object({
                 instance_url = optional(string)
-            })))
-            amplitude = optional(list(object({
-            })))
-            custom_connector = optional(list(object({
-                profile_properties = optional(map(string))
-                oauth2_properties = optional(list(object({
-                    oauth2_grant_type = optional(string)
-                    token_url = optional(string)
-                    token_url_custom_properties = optional(map(string))
-                })))
-            })))
-            slack = optional(list(object({
-                instance_url = optional(string)
-            })))
-            datadog = optional(list(object({
-                instance_url = optional(string)
-            })))
-            honeycode = optional(list(object({
             })))
         })))
     })))
@@ -252,6 +252,158 @@ resource "aws_appflow_connector_profile" "this" {
       dynamic "connector_profile_credentials" {
         for_each = connector_profile_config.value.connector_profile_credentials[*]
         content {
+          dynamic "sapo_data" {
+            for_each = connector_profile_credentials.value.sapo_data[*]
+            content {
+              dynamic "basic_auth_credentials" {
+                for_each = sapo_data.value.basic_auth_credentials[*]
+                content {
+                  password = basic_auth_credentials.value.password
+                  username = basic_auth_credentials.value.username
+                }
+              }
+              dynamic "oauth_credentials" {
+                for_each = sapo_data.value.oauth_credentials[*]
+                content {
+                  access_token = oauth_credentials.value.access_token
+                  client_id = oauth_credentials.value.client_id
+                  client_secret = oauth_credentials.value.client_secret
+                  dynamic "oauth_request" {
+                    for_each = oauth_credentials.value.oauth_request[*]
+                    content {
+                      redirect_uri = oauth_request.value.redirect_uri
+                      auth_code = oauth_request.value.auth_code
+                    }
+                  }
+                  refresh_token = oauth_credentials.value.refresh_token
+                }
+              }
+            }
+          }
+          dynamic "veeva" {
+            for_each = connector_profile_credentials.value.veeva[*]
+            content {
+              password = veeva.value.password
+              username = veeva.value.username
+            }
+          }
+          dynamic "datadog" {
+            for_each = connector_profile_credentials.value.datadog[*]
+            content {
+              api_key = datadog.value.api_key
+              application_key = datadog.value.application_key
+            }
+          }
+          dynamic "dynatrace" {
+            for_each = connector_profile_credentials.value.dynatrace[*]
+            content {
+              api_token = dynatrace.value.api_token
+            }
+          }
+          dynamic "service_now" {
+            for_each = connector_profile_credentials.value.service_now[*]
+            content {
+              password = service_now.value.password
+              username = service_now.value.username
+            }
+          }
+          dynamic "slack" {
+            for_each = connector_profile_credentials.value.slack[*]
+            content {
+              client_secret = slack.value.client_secret
+              dynamic "oauth_request" {
+                for_each = slack.value.oauth_request[*]
+                content {
+                  auth_code = oauth_request.value.auth_code
+                  redirect_uri = oauth_request.value.redirect_uri
+                }
+              }
+              access_token = slack.value.access_token
+              client_id = slack.value.client_id
+            }
+          }
+          dynamic "trendmicro" {
+            for_each = connector_profile_credentials.value.trendmicro[*]
+            content {
+              api_secret_key = trendmicro.value.api_secret_key
+            }
+          }
+          dynamic "marketo" {
+            for_each = connector_profile_credentials.value.marketo[*]
+            content {
+              client_id = marketo.value.client_id
+              client_secret = marketo.value.client_secret
+              dynamic "oauth_request" {
+                for_each = marketo.value.oauth_request[*]
+                content {
+                  auth_code = oauth_request.value.auth_code
+                  redirect_uri = oauth_request.value.redirect_uri
+                }
+              }
+              access_token = marketo.value.access_token
+            }
+          }
+          dynamic "redshift" {
+            for_each = connector_profile_credentials.value.redshift[*]
+            content {
+              password = redshift.value.password
+              username = redshift.value.username
+            }
+          }
+          dynamic "infor_nexus" {
+            for_each = connector_profile_credentials.value.infor_nexus[*]
+            content {
+              secret_access_key = infor_nexus.value.secret_access_key
+              user_id = infor_nexus.value.user_id
+              access_key_id = infor_nexus.value.access_key_id
+              datakey = infor_nexus.value.datakey
+            }
+          }
+          dynamic "google_analytics" {
+            for_each = connector_profile_credentials.value.google_analytics[*]
+            content {
+              access_token = google_analytics.value.access_token
+              client_id = google_analytics.value.client_id
+              client_secret = google_analytics.value.client_secret
+              dynamic "oauth_request" {
+                for_each = google_analytics.value.oauth_request[*]
+                content {
+                  auth_code = oauth_request.value.auth_code
+                  redirect_uri = oauth_request.value.redirect_uri
+                }
+              }
+              refresh_token = google_analytics.value.refresh_token
+            }
+          }
+          dynamic "honeycode" {
+            for_each = connector_profile_credentials.value.honeycode[*]
+            content {
+              access_token = honeycode.value.access_token
+              dynamic "oauth_request" {
+                for_each = honeycode.value.oauth_request[*]
+                content {
+                  auth_code = oauth_request.value.auth_code
+                  redirect_uri = oauth_request.value.redirect_uri
+                }
+              }
+              refresh_token = honeycode.value.refresh_token
+            }
+          }
+          dynamic "salesforce" {
+            for_each = connector_profile_credentials.value.salesforce[*]
+            content {
+              access_token = salesforce.value.access_token
+              client_credentials_arn = salesforce.value.client_credentials_arn
+              dynamic "oauth_request" {
+                for_each = salesforce.value.oauth_request[*]
+                content {
+                  auth_code = oauth_request.value.auth_code
+                  redirect_uri = oauth_request.value.redirect_uri
+                }
+              }
+              refresh_token = salesforce.value.refresh_token
+            }
+          }
           dynamic "singular" {
             for_each = connector_profile_credentials.value.singular[*]
             content {
@@ -280,33 +432,16 @@ resource "aws_appflow_connector_profile" "this" {
               }
             }
           }
+          dynamic "amplitude" {
+            for_each = connector_profile_credentials.value.amplitude[*]
+            content {
+              api_key = amplitude.value.api_key
+              secret_key = amplitude.value.secret_key
+            }
+          }
           dynamic "custom_connector" {
             for_each = connector_profile_credentials.value.custom_connector[*]
             content {
-              dynamic "oauth2" {
-                for_each = custom_connector.value.oauth2[*]
-                content {
-                  refresh_token = oauth2.value.refresh_token
-                  access_token = oauth2.value.access_token
-                  client_id = oauth2.value.client_id
-                  client_secret = oauth2.value.client_secret
-                  dynamic "oauth_request" {
-                    for_each = oauth2.value.oauth_request[*]
-                    content {
-                      redirect_uri = oauth_request.value.redirect_uri
-                      auth_code = oauth_request.value.auth_code
-                    }
-                  }
-                }
-              }
-              dynamic "api_key" {
-                for_each = custom_connector.value.api_key[*]
-                content {
-                  api_secret_key = api_key.value.api_secret_key
-                  api_key = api_key.value.api_key
-                }
-              }
-              authentication_type = custom_connector.value.authentication_type
               dynamic "basic" {
                 for_each = custom_connector.value.basic[*]
                 content {
@@ -321,165 +456,30 @@ resource "aws_appflow_connector_profile" "this" {
                   custom_authentication_type = custom.value.custom_authentication_type
                 }
               }
-            }
-          }
-          dynamic "marketo" {
-            for_each = connector_profile_credentials.value.marketo[*]
-            content {
-              access_token = marketo.value.access_token
-              client_id = marketo.value.client_id
-              client_secret = marketo.value.client_secret
-              dynamic "oauth_request" {
-                for_each = marketo.value.oauth_request[*]
+              dynamic "oauth2" {
+                for_each = custom_connector.value.oauth2[*]
                 content {
-                  auth_code = oauth_request.value.auth_code
-                  redirect_uri = oauth_request.value.redirect_uri
-                }
-              }
-            }
-          }
-          dynamic "redshift" {
-            for_each = connector_profile_credentials.value.redshift[*]
-            content {
-              username = redshift.value.username
-              password = redshift.value.password
-            }
-          }
-          dynamic "salesforce" {
-            for_each = connector_profile_credentials.value.salesforce[*]
-            content {
-              access_token = salesforce.value.access_token
-              client_credentials_arn = salesforce.value.client_credentials_arn
-              dynamic "oauth_request" {
-                for_each = salesforce.value.oauth_request[*]
-                content {
-                  auth_code = oauth_request.value.auth_code
-                  redirect_uri = oauth_request.value.redirect_uri
-                }
-              }
-              refresh_token = salesforce.value.refresh_token
-            }
-          }
-          dynamic "veeva" {
-            for_each = connector_profile_credentials.value.veeva[*]
-            content {
-              password = veeva.value.password
-              username = veeva.value.username
-            }
-          }
-          dynamic "google_analytics" {
-            for_each = connector_profile_credentials.value.google_analytics[*]
-            content {
-              access_token = google_analytics.value.access_token
-              client_id = google_analytics.value.client_id
-              client_secret = google_analytics.value.client_secret
-              dynamic "oauth_request" {
-                for_each = google_analytics.value.oauth_request[*]
-                content {
-                  auth_code = oauth_request.value.auth_code
-                  redirect_uri = oauth_request.value.redirect_uri
-                }
-              }
-              refresh_token = google_analytics.value.refresh_token
-            }
-          }
-          dynamic "honeycode" {
-            for_each = connector_profile_credentials.value.honeycode[*]
-            content {
-              dynamic "oauth_request" {
-                for_each = honeycode.value.oauth_request[*]
-                content {
-                  auth_code = oauth_request.value.auth_code
-                  redirect_uri = oauth_request.value.redirect_uri
-                }
-              }
-              refresh_token = honeycode.value.refresh_token
-              access_token = honeycode.value.access_token
-            }
-          }
-          dynamic "infor_nexus" {
-            for_each = connector_profile_credentials.value.infor_nexus[*]
-            content {
-              access_key_id = infor_nexus.value.access_key_id
-              datakey = infor_nexus.value.datakey
-              secret_access_key = infor_nexus.value.secret_access_key
-              user_id = infor_nexus.value.user_id
-            }
-          }
-          dynamic "service_now" {
-            for_each = connector_profile_credentials.value.service_now[*]
-            content {
-              password = service_now.value.password
-              username = service_now.value.username
-            }
-          }
-          dynamic "trendmicro" {
-            for_each = connector_profile_credentials.value.trendmicro[*]
-            content {
-              api_secret_key = trendmicro.value.api_secret_key
-            }
-          }
-          dynamic "amplitude" {
-            for_each = connector_profile_credentials.value.amplitude[*]
-            content {
-              api_key = amplitude.value.api_key
-              secret_key = amplitude.value.secret_key
-            }
-          }
-          dynamic "datadog" {
-            for_each = connector_profile_credentials.value.datadog[*]
-            content {
-              api_key = datadog.value.api_key
-              application_key = datadog.value.application_key
-            }
-          }
-          dynamic "dynatrace" {
-            for_each = connector_profile_credentials.value.dynatrace[*]
-            content {
-              api_token = dynatrace.value.api_token
-            }
-          }
-          dynamic "sapo_data" {
-            for_each = connector_profile_credentials.value.sapo_data[*]
-            content {
-              dynamic "basic_auth_credentials" {
-                for_each = sapo_data.value.basic_auth_credentials[*]
-                content {
-                  password = basic_auth_credentials.value.password
-                  username = basic_auth_credentials.value.username
-                }
-              }
-              dynamic "oauth_credentials" {
-                for_each = sapo_data.value.oauth_credentials[*]
-                content {
-                  access_token = oauth_credentials.value.access_token
-                  client_id = oauth_credentials.value.client_id
-                  client_secret = oauth_credentials.value.client_secret
+                  refresh_token = oauth2.value.refresh_token
+                  access_token = oauth2.value.access_token
+                  client_id = oauth2.value.client_id
+                  client_secret = oauth2.value.client_secret
                   dynamic "oauth_request" {
-                    for_each = oauth_credentials.value.oauth_request[*]
+                    for_each = oauth2.value.oauth_request[*]
                     content {
                       auth_code = oauth_request.value.auth_code
                       redirect_uri = oauth_request.value.redirect_uri
                     }
                   }
-                  refresh_token = oauth_credentials.value.refresh_token
                 }
               }
-            }
-          }
-          dynamic "slack" {
-            for_each = connector_profile_credentials.value.slack[*]
-            content {
-              access_token = slack.value.access_token
-              client_id = slack.value.client_id
-              client_secret = slack.value.client_secret
-              dynamic "oauth_request" {
-                for_each = slack.value.oauth_request[*]
+              dynamic "api_key" {
+                for_each = custom_connector.value.api_key[*]
                 content {
-                  redirect_uri = oauth_request.value.redirect_uri
-                  auth_code = oauth_request.value.auth_code
+                  api_key = api_key.value.api_key
+                  api_secret_key = api_key.value.api_secret_key
                 }
               }
+              authentication_type = custom_connector.value.authentication_type
             }
           }
         }
@@ -487,6 +487,52 @@ resource "aws_appflow_connector_profile" "this" {
       dynamic "connector_profile_properties" {
         for_each = connector_profile_config.value.connector_profile_properties[*]
         content {
+          dynamic "amplitude" {
+            for_each = connector_profile_properties.value.amplitude[*]
+            content {
+            }
+          }
+          dynamic "custom_connector" {
+            for_each = connector_profile_properties.value.custom_connector[*]
+            content {
+              profile_properties = custom_connector.value.profile_properties
+              dynamic "oauth2_properties" {
+                for_each = custom_connector.value.oauth2_properties[*]
+                content {
+                  oauth2_grant_type = oauth2_properties.value.oauth2_grant_type
+                  token_url = oauth2_properties.value.token_url
+                  token_url_custom_properties = oauth2_properties.value.token_url_custom_properties
+                }
+              }
+            }
+          }
+          dynamic "redshift" {
+            for_each = connector_profile_properties.value.redshift[*]
+            content {
+              bucket_name = redshift.value.bucket_name
+              bucket_prefix = redshift.value.bucket_prefix
+              database_url = redshift.value.database_url
+              role_arn = redshift.value.role_arn
+            }
+          }
+          dynamic "veeva" {
+            for_each = connector_profile_properties.value.veeva[*]
+            content {
+              instance_url = veeva.value.instance_url
+            }
+          }
+          dynamic "datadog" {
+            for_each = connector_profile_properties.value.datadog[*]
+            content {
+              instance_url = datadog.value.instance_url
+            }
+          }
+          dynamic "marketo" {
+            for_each = connector_profile_properties.value.marketo[*]
+            content {
+              instance_url = marketo.value.instance_url
+            }
+          }
           dynamic "singular" {
             for_each = connector_profile_properties.value.singular[*]
             content {
@@ -498,16 +544,15 @@ resource "aws_appflow_connector_profile" "this" {
               instance_url = dynatrace.value.instance_url
             }
           }
+          dynamic "honeycode" {
+            for_each = connector_profile_properties.value.honeycode[*]
+            content {
+            }
+          }
           dynamic "infor_nexus" {
             for_each = connector_profile_properties.value.infor_nexus[*]
             content {
               instance_url = infor_nexus.value.instance_url
-            }
-          }
-          dynamic "marketo" {
-            for_each = connector_profile_properties.value.marketo[*]
-            content {
-              instance_url = marketo.value.instance_url
             }
           }
           dynamic "service_now" {
@@ -516,60 +561,27 @@ resource "aws_appflow_connector_profile" "this" {
               instance_url = service_now.value.instance_url
             }
           }
+          dynamic "slack" {
+            for_each = connector_profile_properties.value.slack[*]
+            content {
+              instance_url = slack.value.instance_url
+            }
+          }
           dynamic "snowflake" {
             for_each = connector_profile_properties.value.snowflake[*]
             content {
+              region = snowflake.value.region
+              stage = snowflake.value.stage
               warehouse = snowflake.value.warehouse
               account_name = snowflake.value.account_name
               bucket_name = snowflake.value.bucket_name
               bucket_prefix = snowflake.value.bucket_prefix
               private_link_service_name = snowflake.value.private_link_service_name
-              region = snowflake.value.region
-              stage = snowflake.value.stage
-            }
-          }
-          dynamic "trendmicro" {
-            for_each = connector_profile_properties.value.trendmicro[*]
-            content {
-            }
-          }
-          dynamic "veeva" {
-            for_each = connector_profile_properties.value.veeva[*]
-            content {
-              instance_url = veeva.value.instance_url
-            }
-          }
-          dynamic "amplitude" {
-            for_each = connector_profile_properties.value.amplitude[*]
-            content {
-            }
-          }
-          dynamic "custom_connector" {
-            for_each = connector_profile_properties.value.custom_connector[*]
-            content {
-              dynamic "oauth2_properties" {
-                for_each = custom_connector.value.oauth2_properties[*]
-                content {
-                  oauth2_grant_type = oauth2_properties.value.oauth2_grant_type
-                  token_url = oauth2_properties.value.token_url
-                  token_url_custom_properties = oauth2_properties.value.token_url_custom_properties
-                }
-              }
-              profile_properties = custom_connector.value.profile_properties
             }
           }
           dynamic "google_analytics" {
             for_each = connector_profile_properties.value.google_analytics[*]
             content {
-            }
-          }
-          dynamic "redshift" {
-            for_each = connector_profile_properties.value.redshift[*]
-            content {
-              bucket_name = redshift.value.bucket_name
-              bucket_prefix = redshift.value.bucket_prefix
-              database_url = redshift.value.database_url
-              role_arn = redshift.value.role_arn
             }
           }
           dynamic "salesforce" {
@@ -582,43 +594,31 @@ resource "aws_appflow_connector_profile" "this" {
           dynamic "sapo_data" {
             for_each = connector_profile_properties.value.sapo_data[*]
             content {
+              dynamic "oauth_properties" {
+                for_each = sapo_data.value.oauth_properties[*]
+                content {
+                  token_url = oauth_properties.value.token_url
+                  auth_code_url = oauth_properties.value.auth_code_url
+                  oauth_scopes = oauth_properties.value.oauth_scopes
+                }
+              }
+              port_number = sapo_data.value.port_number
               private_link_service_name = sapo_data.value.private_link_service_name
               application_host_url = sapo_data.value.application_host_url
               application_service_path = sapo_data.value.application_service_path
               client_number = sapo_data.value.client_number
               logon_language = sapo_data.value.logon_language
-              dynamic "oauth_properties" {
-                for_each = sapo_data.value.oauth_properties[*]
-                content {
-                  oauth_scopes = oauth_properties.value.oauth_scopes
-                  token_url = oauth_properties.value.token_url
-                  auth_code_url = oauth_properties.value.auth_code_url
-                }
-              }
-              port_number = sapo_data.value.port_number
+            }
+          }
+          dynamic "trendmicro" {
+            for_each = connector_profile_properties.value.trendmicro[*]
+            content {
             }
           }
           dynamic "zendesk" {
             for_each = connector_profile_properties.value.zendesk[*]
             content {
               instance_url = zendesk.value.instance_url
-            }
-          }
-          dynamic "datadog" {
-            for_each = connector_profile_properties.value.datadog[*]
-            content {
-              instance_url = datadog.value.instance_url
-            }
-          }
-          dynamic "honeycode" {
-            for_each = connector_profile_properties.value.honeycode[*]
-            content {
-            }
-          }
-          dynamic "slack" {
-            for_each = connector_profile_properties.value.slack[*]
-            content {
-              instance_url = slack.value.instance_url
             }
           }
         }

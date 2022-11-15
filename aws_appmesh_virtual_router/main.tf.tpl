@@ -21,8 +21,8 @@ variable "values" {
     spec = optional(list(object({
         listener = optional(list(object({
             port_mapping = optional(list(object({
-                protocol = optional(string)
                 port = optional(number)
+                protocol = optional(string)
             })))
         })))
     })))

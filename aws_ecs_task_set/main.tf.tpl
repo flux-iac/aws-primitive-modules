@@ -38,10 +38,10 @@ variable "values" {
     platform_version = optional(string)
     service = optional(string)
     service_registries = optional(list(object({
+        registry_arn = optional(string)
         container_name = optional(string)
         container_port = optional(number)
         port = optional(number)
-        registry_arn = optional(string)
     })))
     tags = optional(map(string))
     task_definition = optional(string)
@@ -56,9 +56,9 @@ resource "aws_ecs_task_set" "this" {
   dynamic "capacity_provider_strategy" {
     for_each = var.values.capacity_provider_strategy[*]
     content {
+      base = capacity_provider_strategy.value.base
       capacity_provider = capacity_provider_strategy.value.capacity_provider
       weight = capacity_provider_strategy.value.weight
-      base = capacity_provider_strategy.value.base
     }
   }
   {{- end }}
@@ -105,10 +105,10 @@ resource "aws_ecs_task_set" "this" {
   dynamic "service_registries" {
     for_each = var.values.service_registries[*]
     content {
-      port = service_registries.value.port
-      registry_arn = service_registries.value.registry_arn
       container_name = service_registries.value.container_name
       container_port = service_registries.value.container_port
+      port = service_registries.value.port
+      registry_arn = service_registries.value.registry_arn
     }
   }
   {{- end }}

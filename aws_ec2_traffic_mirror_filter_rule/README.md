@@ -38,9 +38,10 @@ spec:
     traffic_mirror_filter_id: << id of an aws_ec2_traffic_mirror_filter >>
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.38.0
+    name: aws-package
   approvePlan: auto
   interval: 1h0m
+  retryInterval: 20s
 ---
 apiVersion: infra.contrib.fluxcd.io/v1alpha1
 kind: Terraform
@@ -59,9 +60,10 @@ spec:
     traffic_mirror_filter_id: << id of an aws_ec2_traffic_mirror_filter >>
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.38.0
+    name: aws-package
   approvePlan: auto
   interval: 1h0m
+  retryInterval: 20s
 ```
 
 ## Argument Reference

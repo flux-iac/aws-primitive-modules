@@ -18,11 +18,11 @@ variable "values" {
     bucket = optional(string)
     eventbridge = optional(bool)
     lambda_function = optional(list(object({
-        id = optional(string)
         filter_prefix = optional(string)
         filter_suffix = optional(string)
         lambda_function_arn = optional(string)
         events = optional(set(string))
+        id = optional(string)
     })))
     queue = optional(list(object({
         id = optional(string)
@@ -32,11 +32,11 @@ variable "values" {
         events = optional(set(string))
     })))
     topic = optional(list(object({
+        topic_arn = optional(string)
+        events = optional(set(string))
         id = optional(string)
         filter_prefix = optional(string)
         filter_suffix = optional(string)
-        topic_arn = optional(string)
-        events = optional(set(string))
     })))
   })
 }
@@ -77,11 +77,11 @@ resource "aws_s3_bucket_notification" "this" {
   dynamic "topic" {
     for_each = var.values.topic[*]
     content {
+      events = topic.value.events
       id = topic.value.id
       filter_prefix = topic.value.filter_prefix
       filter_suffix = topic.value.filter_suffix
       topic_arn = topic.value.topic_arn
-      events = topic.value.events
     }
   }
   {{- end }}

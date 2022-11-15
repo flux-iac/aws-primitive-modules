@@ -21,8 +21,6 @@ variable "values" {
     scalable_dimension = optional(string)
     service_namespace = optional(string)
     step_scaling_policy_configuration = optional(list(object({
-        metric_aggregation_type = optional(string)
-        min_adjustment_magnitude = optional(number)
         step_adjustment = optional(set(object({
             metric_interval_lower_bound = optional(string)
             metric_interval_upper_bound = optional(string)
@@ -30,17 +28,19 @@ variable "values" {
         })))
         adjustment_type = optional(string)
         cooldown = optional(number)
+        metric_aggregation_type = optional(string)
+        min_adjustment_magnitude = optional(number)
     })))
     target_tracking_scaling_policy_configuration = optional(list(object({
         customized_metric_specification = optional(list(object({
+            metric_name = optional(string)
+            namespace = optional(string)
+            statistic = optional(string)
             unit = optional(string)
             dimensions = optional(set(object({
                 name = optional(string)
                 value = optional(string)
             })))
-            metric_name = optional(string)
-            namespace = optional(string)
-            statistic = optional(string)
         })))
         disable_scale_in = optional(bool)
         predefined_metric_specification = optional(list(object({
@@ -75,7 +75,6 @@ resource "aws_appautoscaling_policy" "this" {
   dynamic "step_scaling_policy_configuration" {
     for_each = var.values.step_scaling_policy_configuration[*]
     content {
-      cooldown = step_scaling_policy_configuration.value.cooldown
       metric_aggregation_type = step_scaling_policy_configuration.value.metric_aggregation_type
       min_adjustment_magnitude = step_scaling_policy_configuration.value.min_adjustment_magnitude
       dynamic "step_adjustment" {
@@ -87,6 +86,7 @@ resource "aws_appautoscaling_policy" "this" {
         }
       }
       adjustment_type = step_scaling_policy_configuration.value.adjustment_type
+      cooldown = step_scaling_policy_configuration.value.cooldown
     }
   }
   {{- end }}
@@ -94,17 +94,6 @@ resource "aws_appautoscaling_policy" "this" {
   dynamic "target_tracking_scaling_policy_configuration" {
     for_each = var.values.target_tracking_scaling_policy_configuration[*]
     content {
-      disable_scale_in = target_tracking_scaling_policy_configuration.value.disable_scale_in
-      dynamic "predefined_metric_specification" {
-        for_each = target_tracking_scaling_policy_configuration.value.predefined_metric_specification[*]
-        content {
-          predefined_metric_type = predefined_metric_specification.value.predefined_metric_type
-          resource_label = predefined_metric_specification.value.resource_label
-        }
-      }
-      scale_in_cooldown = target_tracking_scaling_policy_configuration.value.scale_in_cooldown
-      scale_out_cooldown = target_tracking_scaling_policy_configuration.value.scale_out_cooldown
-      target_value = target_tracking_scaling_policy_configuration.value.target_value
       dynamic "customized_metric_specification" {
         for_each = target_tracking_scaling_policy_configuration.value.customized_metric_specification[*]
         content {
@@ -121,6 +110,17 @@ resource "aws_appautoscaling_policy" "this" {
           unit = customized_metric_specification.value.unit
         }
       }
+      disable_scale_in = target_tracking_scaling_policy_configuration.value.disable_scale_in
+      dynamic "predefined_metric_specification" {
+        for_each = target_tracking_scaling_policy_configuration.value.predefined_metric_specification[*]
+        content {
+          resource_label = predefined_metric_specification.value.resource_label
+          predefined_metric_type = predefined_metric_specification.value.predefined_metric_type
+        }
+      }
+      scale_in_cooldown = target_tracking_scaling_policy_configuration.value.scale_in_cooldown
+      scale_out_cooldown = target_tracking_scaling_policy_configuration.value.scale_out_cooldown
+      target_value = target_tracking_scaling_policy_configuration.value.target_value
     }
   }
   {{- end }}

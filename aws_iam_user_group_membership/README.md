@@ -32,9 +32,10 @@ spec:
     user: << name of an aws_iam_user >>
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.38.0
+    name: aws-package
   approvePlan: auto
   interval: 1h0m
+  retryInterval: 20s
 ---
 apiVersion: infra.contrib.fluxcd.io/v1alpha1
 kind: Terraform
@@ -49,9 +50,10 @@ spec:
     user: << name of an aws_iam_user >>
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.38.0
+    name: aws-package
   approvePlan: auto
   interval: 1h0m
+  retryInterval: 20s
 ```
 
 ## Argument Reference

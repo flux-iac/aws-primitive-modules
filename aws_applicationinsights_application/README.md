@@ -24,9 +24,10 @@ spec:
     resource_group_name: << name of an aws_resourcegroups_group >>
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.38.0
+    name: aws-package
   approvePlan: auto
   interval: 1h0m
+  retryInterval: 20s
 ```
 
 ## Argument Reference

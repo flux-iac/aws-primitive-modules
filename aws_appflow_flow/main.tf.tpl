@@ -17,40 +17,53 @@ variable "values" {
   type = object({
     description = optional(string)
     destination_flow_config = optional(set(object({
+        api_version = optional(string)
+        connector_profile_name = optional(string)
+        connector_type = optional(string)
         destination_connector_properties = optional(list(object({
-            zendesk = optional(list(object({
+            redshift = optional(list(object({
+                bucket_prefix = optional(string)
                 error_handling_config = optional(list(object({
                     bucket_name = optional(string)
                     bucket_prefix = optional(string)
                     fail_on_first_destination_error = optional(bool)
                 })))
-                id_field_names = optional(list(string))
+                intermediate_bucket_name = optional(string)
                 object = optional(string)
-                write_operation_type = optional(string)
+            })))
+            upsolver = optional(list(object({
+                bucket_name = optional(string)
+                bucket_prefix = optional(string)
+                s3_output_format_config = optional(list(object({
+                    file_type = optional(string)
+                    prefix_config = optional(list(object({
+                        prefix_format = optional(string)
+                        prefix_type = optional(string)
+                    })))
+                    aggregation_config = optional(list(object({
+                        aggregation_type = optional(string)
+                    })))
+                })))
+            })))
+            event_bridge = optional(list(object({
+                error_handling_config = optional(list(object({
+                    bucket_name = optional(string)
+                    bucket_prefix = optional(string)
+                    fail_on_first_destination_error = optional(bool)
+                })))
+                object = optional(string)
             })))
             customer_profiles = optional(list(object({
                 domain_name = optional(string)
                 object_type_name = optional(string)
             })))
-            redshift = optional(list(object({
-                bucket_prefix = optional(string)
-                error_handling_config = optional(list(object({
-                    fail_on_first_destination_error = optional(bool)
-                    bucket_name = optional(string)
-                    bucket_prefix = optional(string)
-                })))
-                intermediate_bucket_name = optional(string)
+            honeycode = optional(list(object({
                 object = optional(string)
-            })))
-            snowflake = optional(list(object({
-                bucket_prefix = optional(string)
                 error_handling_config = optional(list(object({
                     bucket_name = optional(string)
                     bucket_prefix = optional(string)
                     fail_on_first_destination_error = optional(bool)
                 })))
-                intermediate_bucket_name = optional(string)
-                object = optional(string)
             })))
             lookout_metrics = optional(list(object({
             })))
@@ -63,7 +76,6 @@ variable "values" {
                 object = optional(string)
             })))
             s3 = optional(list(object({
-                bucket_name = optional(string)
                 bucket_prefix = optional(string)
                 s3_output_format_config = optional(list(object({
                     aggregation_config = optional(list(object({
@@ -75,12 +87,13 @@ variable "values" {
                         prefix_type = optional(string)
                     })))
                 })))
+                bucket_name = optional(string)
             })))
             salesforce = optional(list(object({
                 error_handling_config = optional(list(object({
-                    bucket_name = optional(string)
                     bucket_prefix = optional(string)
                     fail_on_first_destination_error = optional(bool)
+                    bucket_name = optional(string)
                 })))
                 id_field_names = optional(list(string))
                 object = optional(string)
@@ -96,69 +109,54 @@ variable "values" {
                 id_field_names = optional(list(string))
                 object_path = optional(string)
                 success_response_handling_config = optional(list(object({
-                    bucket_name = optional(string)
                     bucket_prefix = optional(string)
+                    bucket_name = optional(string)
                 })))
             })))
             custom_connector = optional(list(object({
                 custom_properties = optional(map(string))
                 entity_name = optional(string)
                 error_handling_config = optional(list(object({
-                    fail_on_first_destination_error = optional(bool)
                     bucket_name = optional(string)
                     bucket_prefix = optional(string)
+                    fail_on_first_destination_error = optional(bool)
                 })))
                 id_field_names = optional(list(string))
                 write_operation_type = optional(string)
             })))
-            event_bridge = optional(list(object({
+            zendesk = optional(list(object({
                 error_handling_config = optional(list(object({
                     bucket_name = optional(string)
                     bucket_prefix = optional(string)
                     fail_on_first_destination_error = optional(bool)
                 })))
+                id_field_names = optional(list(string))
                 object = optional(string)
+                write_operation_type = optional(string)
             })))
-            honeycode = optional(list(object({
-                error_handling_config = optional(list(object({
-                    bucket_name = optional(string)
-                    bucket_prefix = optional(string)
-                    fail_on_first_destination_error = optional(bool)
-                })))
-                object = optional(string)
-            })))
-            upsolver = optional(list(object({
-                s3_output_format_config = optional(list(object({
-                    aggregation_config = optional(list(object({
-                        aggregation_type = optional(string)
-                    })))
-                    file_type = optional(string)
-                    prefix_config = optional(list(object({
-                        prefix_format = optional(string)
-                        prefix_type = optional(string)
-                    })))
-                })))
-                bucket_name = optional(string)
+            snowflake = optional(list(object({
                 bucket_prefix = optional(string)
+                error_handling_config = optional(list(object({
+                    bucket_prefix = optional(string)
+                    fail_on_first_destination_error = optional(bool)
+                    bucket_name = optional(string)
+                })))
+                intermediate_bucket_name = optional(string)
+                object = optional(string)
             })))
         })))
-        api_version = optional(string)
-        connector_profile_name = optional(string)
-        connector_type = optional(string)
     })))
     kms_arn = optional(string)
     name = optional(string)
     source_flow_config = optional(list(object({
+        api_version = optional(string)
         connector_profile_name = optional(string)
         connector_type = optional(string)
         incremental_pull_config = optional(list(object({
             datetime_type_field_name = optional(string)
         })))
         source_connector_properties = optional(list(object({
-            datadog = optional(list(object({
-                object = optional(string)
-            })))
-            marketo = optional(list(object({
+            dynatrace = optional(list(object({
                 object = optional(string)
             })))
             salesforce = optional(list(object({
@@ -166,28 +164,24 @@ variable "values" {
                 include_deleted_records = optional(bool)
                 object = optional(string)
             })))
-            sapo_data = optional(list(object({
-                object = optional(string)
-            })))
             slack = optional(list(object({
                 object = optional(string)
             })))
-            dynatrace = optional(list(object({
+            trendmicro = optional(list(object({
                 object = optional(string)
             })))
             veeva = optional(list(object({
-                object = optional(string)
-                document_type = optional(string)
                 include_all_versions = optional(bool)
                 include_renditions = optional(bool)
                 include_source_files = optional(bool)
+                object = optional(string)
+                document_type = optional(string)
             })))
             zendesk = optional(list(object({
                 object = optional(string)
             })))
-            custom_connector = optional(list(object({
-                custom_properties = optional(map(string))
-                entity_name = optional(string)
+            datadog = optional(list(object({
+                object = optional(string)
             })))
             google_analytics = optional(list(object({
                 object = optional(string)
@@ -195,14 +189,7 @@ variable "values" {
             infor_nexus = optional(list(object({
                 object = optional(string)
             })))
-            s3 = optional(list(object({
-                bucket_name = optional(string)
-                bucket_prefix = optional(string)
-                s3_input_format_config = optional(list(object({
-                    s3_input_file_type = optional(string)
-                })))
-            })))
-            service_now = optional(list(object({
+            marketo = optional(list(object({
                 object = optional(string)
             })))
             singular = optional(list(object({
@@ -211,31 +198,44 @@ variable "values" {
             amplitude = optional(list(object({
                 object = optional(string)
             })))
-            trendmicro = optional(list(object({
+            custom_connector = optional(list(object({
+                custom_properties = optional(map(string))
+                entity_name = optional(string)
+            })))
+            s3 = optional(list(object({
+                bucket_name = optional(string)
+                bucket_prefix = optional(string)
+                s3_input_format_config = optional(list(object({
+                    s3_input_file_type = optional(string)
+                })))
+            })))
+            sapo_data = optional(list(object({
+                object = optional(string)
+            })))
+            service_now = optional(list(object({
                 object = optional(string)
             })))
         })))
-        api_version = optional(string)
     })))
     tags = optional(map(string))
     task = optional(set(object({
         connector_operator = optional(list(object({
-            amplitude = optional(string)
-            marketo = optional(string)
-            singular = optional(string)
-            trendmicro = optional(string)
-            zendesk = optional(string)
-            datadog = optional(string)
-            dynatrace = optional(string)
             google_analytics = optional(string)
             infor_nexus = optional(string)
             sapo_data = optional(string)
-            salesforce = optional(string)
-            service_now = optional(string)
-            custom_connector = optional(string)
-            s3 = optional(string)
-            slack = optional(string)
             veeva = optional(string)
+            zendesk = optional(string)
+            amplitude = optional(string)
+            custom_connector = optional(string)
+            marketo = optional(string)
+            salesforce = optional(string)
+            slack = optional(string)
+            trendmicro = optional(string)
+            datadog = optional(string)
+            dynatrace = optional(string)
+            s3 = optional(string)
+            service_now = optional(string)
+            singular = optional(string)
         })))
         destination_field = optional(string)
         source_fields = optional(list(string))
@@ -245,13 +245,13 @@ variable "values" {
     trigger_config = optional(list(object({
         trigger_properties = optional(list(object({
             scheduled = optional(list(object({
-                schedule_offset = optional(number)
-                schedule_start_time = optional(string)
-                timezone = optional(string)
                 data_pull_mode = optional(string)
                 first_execution_from = optional(string)
                 schedule_end_time = optional(string)
                 schedule_expression = optional(string)
+                schedule_offset = optional(number)
+                schedule_start_time = optional(string)
+                timezone = optional(string)
             })))
         })))
         trigger_type = optional(string)
@@ -274,6 +274,30 @@ resource "aws_appflow_flow" "this" {
       dynamic "destination_connector_properties" {
         for_each = destination_flow_config.value.destination_connector_properties[*]
         content {
+          dynamic "custom_connector" {
+            for_each = destination_connector_properties.value.custom_connector[*]
+            content {
+              custom_properties = custom_connector.value.custom_properties
+              entity_name = custom_connector.value.entity_name
+              dynamic "error_handling_config" {
+                for_each = custom_connector.value.error_handling_config[*]
+                content {
+                  bucket_name = error_handling_config.value.bucket_name
+                  bucket_prefix = error_handling_config.value.bucket_prefix
+                  fail_on_first_destination_error = error_handling_config.value.fail_on_first_destination_error
+                }
+              }
+              id_field_names = custom_connector.value.id_field_names
+              write_operation_type = custom_connector.value.write_operation_type
+            }
+          }
+          dynamic "customer_profiles" {
+            for_each = destination_connector_properties.value.customer_profiles[*]
+            content {
+              domain_name = customer_profiles.value.domain_name
+              object_type_name = customer_profiles.value.object_type_name
+            }
+          }
           dynamic "honeycode" {
             for_each = destination_connector_properties.value.honeycode[*]
             content {
@@ -336,7 +360,6 @@ resource "aws_appflow_flow" "this" {
           dynamic "salesforce" {
             for_each = destination_connector_properties.value.salesforce[*]
             content {
-              write_operation_type = salesforce.value.write_operation_type
               dynamic "error_handling_config" {
                 for_each = salesforce.value.error_handling_config[*]
                 content {
@@ -347,6 +370,7 @@ resource "aws_appflow_flow" "this" {
               }
               id_field_names = salesforce.value.id_field_names
               object = salesforce.value.object
+              write_operation_type = salesforce.value.write_operation_type
             }
           }
           dynamic "sapo_data" {
@@ -355,9 +379,9 @@ resource "aws_appflow_flow" "this" {
               dynamic "error_handling_config" {
                 for_each = sapo_data.value.error_handling_config[*]
                 content {
-                  fail_on_first_destination_error = error_handling_config.value.fail_on_first_destination_error
                   bucket_name = error_handling_config.value.bucket_name
                   bucket_prefix = error_handling_config.value.bucket_prefix
+                  fail_on_first_destination_error = error_handling_config.value.fail_on_first_destination_error
                 }
               }
               id_field_names = sapo_data.value.id_field_names
@@ -372,27 +396,41 @@ resource "aws_appflow_flow" "this" {
               write_operation_type = sapo_data.value.write_operation_type
             }
           }
-          dynamic "custom_connector" {
-            for_each = destination_connector_properties.value.custom_connector[*]
+          dynamic "snowflake" {
+            for_each = destination_connector_properties.value.snowflake[*]
             content {
+              bucket_prefix = snowflake.value.bucket_prefix
               dynamic "error_handling_config" {
-                for_each = custom_connector.value.error_handling_config[*]
+                for_each = snowflake.value.error_handling_config[*]
+                content {
+                  bucket_prefix = error_handling_config.value.bucket_prefix
+                  fail_on_first_destination_error = error_handling_config.value.fail_on_first_destination_error
+                  bucket_name = error_handling_config.value.bucket_name
+                }
+              }
+              intermediate_bucket_name = snowflake.value.intermediate_bucket_name
+              object = snowflake.value.object
+            }
+          }
+          dynamic "zendesk" {
+            for_each = destination_connector_properties.value.zendesk[*]
+            content {
+              id_field_names = zendesk.value.id_field_names
+              object = zendesk.value.object
+              write_operation_type = zendesk.value.write_operation_type
+              dynamic "error_handling_config" {
+                for_each = zendesk.value.error_handling_config[*]
                 content {
                   bucket_name = error_handling_config.value.bucket_name
                   bucket_prefix = error_handling_config.value.bucket_prefix
                   fail_on_first_destination_error = error_handling_config.value.fail_on_first_destination_error
                 }
               }
-              id_field_names = custom_connector.value.id_field_names
-              write_operation_type = custom_connector.value.write_operation_type
-              custom_properties = custom_connector.value.custom_properties
-              entity_name = custom_connector.value.entity_name
             }
           }
           dynamic "event_bridge" {
             for_each = destination_connector_properties.value.event_bridge[*]
             content {
-              object = event_bridge.value.object
               dynamic "error_handling_config" {
                 for_each = event_bridge.value.error_handling_config[*]
                 content {
@@ -401,6 +439,23 @@ resource "aws_appflow_flow" "this" {
                   fail_on_first_destination_error = error_handling_config.value.fail_on_first_destination_error
                 }
               }
+              object = event_bridge.value.object
+            }
+          }
+          dynamic "redshift" {
+            for_each = destination_connector_properties.value.redshift[*]
+            content {
+              bucket_prefix = redshift.value.bucket_prefix
+              dynamic "error_handling_config" {
+                for_each = redshift.value.error_handling_config[*]
+                content {
+                  fail_on_first_destination_error = error_handling_config.value.fail_on_first_destination_error
+                  bucket_name = error_handling_config.value.bucket_name
+                  bucket_prefix = error_handling_config.value.bucket_prefix
+                }
+              }
+              intermediate_bucket_name = redshift.value.intermediate_bucket_name
+              object = redshift.value.object
             }
           }
           dynamic "upsolver" {
@@ -427,61 +482,6 @@ resource "aws_appflow_flow" "this" {
                   }
                 }
               }
-            }
-          }
-          dynamic "snowflake" {
-            for_each = destination_connector_properties.value.snowflake[*]
-            content {
-              dynamic "error_handling_config" {
-                for_each = snowflake.value.error_handling_config[*]
-                content {
-                  bucket_name = error_handling_config.value.bucket_name
-                  bucket_prefix = error_handling_config.value.bucket_prefix
-                  fail_on_first_destination_error = error_handling_config.value.fail_on_first_destination_error
-                }
-              }
-              intermediate_bucket_name = snowflake.value.intermediate_bucket_name
-              object = snowflake.value.object
-              bucket_prefix = snowflake.value.bucket_prefix
-            }
-          }
-          dynamic "zendesk" {
-            for_each = destination_connector_properties.value.zendesk[*]
-            content {
-              dynamic "error_handling_config" {
-                for_each = zendesk.value.error_handling_config[*]
-                content {
-                  bucket_name = error_handling_config.value.bucket_name
-                  bucket_prefix = error_handling_config.value.bucket_prefix
-                  fail_on_first_destination_error = error_handling_config.value.fail_on_first_destination_error
-                }
-              }
-              id_field_names = zendesk.value.id_field_names
-              object = zendesk.value.object
-              write_operation_type = zendesk.value.write_operation_type
-            }
-          }
-          dynamic "customer_profiles" {
-            for_each = destination_connector_properties.value.customer_profiles[*]
-            content {
-              object_type_name = customer_profiles.value.object_type_name
-              domain_name = customer_profiles.value.domain_name
-            }
-          }
-          dynamic "redshift" {
-            for_each = destination_connector_properties.value.redshift[*]
-            content {
-              object = redshift.value.object
-              bucket_prefix = redshift.value.bucket_prefix
-              dynamic "error_handling_config" {
-                for_each = redshift.value.error_handling_config[*]
-                content {
-                  bucket_name = error_handling_config.value.bucket_name
-                  bucket_prefix = error_handling_config.value.bucket_prefix
-                  fail_on_first_destination_error = error_handling_config.value.fail_on_first_destination_error
-                }
-              }
-              intermediate_bucket_name = redshift.value.intermediate_bucket_name
             }
           }
         }
@@ -511,11 +511,84 @@ resource "aws_appflow_flow" "this" {
       dynamic "source_connector_properties" {
         for_each = source_flow_config.value.source_connector_properties[*]
         content {
+          dynamic "amplitude" {
+            for_each = source_connector_properties.value.amplitude[*]
+            content {
+              object = amplitude.value.object
+            }
+          }
           dynamic "custom_connector" {
             for_each = source_connector_properties.value.custom_connector[*]
             content {
               custom_properties = custom_connector.value.custom_properties
               entity_name = custom_connector.value.entity_name
+            }
+          }
+          dynamic "s3" {
+            for_each = source_connector_properties.value.s3[*]
+            content {
+              dynamic "s3_input_format_config" {
+                for_each = s3.value.s3_input_format_config[*]
+                content {
+                  s3_input_file_type = s3_input_format_config.value.s3_input_file_type
+                }
+              }
+              bucket_name = s3.value.bucket_name
+              bucket_prefix = s3.value.bucket_prefix
+            }
+          }
+          dynamic "sapo_data" {
+            for_each = source_connector_properties.value.sapo_data[*]
+            content {
+              object = sapo_data.value.object
+            }
+          }
+          dynamic "service_now" {
+            for_each = source_connector_properties.value.service_now[*]
+            content {
+              object = service_now.value.object
+            }
+          }
+          dynamic "dynatrace" {
+            for_each = source_connector_properties.value.dynatrace[*]
+            content {
+              object = dynatrace.value.object
+            }
+          }
+          dynamic "salesforce" {
+            for_each = source_connector_properties.value.salesforce[*]
+            content {
+              enable_dynamic_field_update = salesforce.value.enable_dynamic_field_update
+              include_deleted_records = salesforce.value.include_deleted_records
+              object = salesforce.value.object
+            }
+          }
+          dynamic "slack" {
+            for_each = source_connector_properties.value.slack[*]
+            content {
+              object = slack.value.object
+            }
+          }
+          dynamic "trendmicro" {
+            for_each = source_connector_properties.value.trendmicro[*]
+            content {
+              object = trendmicro.value.object
+            }
+          }
+          dynamic "veeva" {
+            for_each = source_connector_properties.value.veeva[*]
+            content {
+              document_type = veeva.value.document_type
+              include_all_versions = veeva.value.include_all_versions
+              include_renditions = veeva.value.include_renditions
+              include_source_files = veeva.value.include_source_files
+              object = veeva.value.object
+            }
+          }
+          dynamic "datadog" {
+            for_each = source_connector_properties.value.datadog[*]
+            content {
+              object = datadog.value.object
             }
           }
           dynamic "google_analytics" {
@@ -530,23 +603,10 @@ resource "aws_appflow_flow" "this" {
               object = infor_nexus.value.object
             }
           }
-          dynamic "s3" {
-            for_each = source_connector_properties.value.s3[*]
+          dynamic "marketo" {
+            for_each = source_connector_properties.value.marketo[*]
             content {
-              bucket_name = s3.value.bucket_name
-              bucket_prefix = s3.value.bucket_prefix
-              dynamic "s3_input_format_config" {
-                for_each = s3.value.s3_input_format_config[*]
-                content {
-                  s3_input_file_type = s3_input_format_config.value.s3_input_file_type
-                }
-              }
-            }
-          }
-          dynamic "service_now" {
-            for_each = source_connector_properties.value.service_now[*]
-            content {
-              object = service_now.value.object
+              object = marketo.value.object
             }
           }
           dynamic "singular" {
@@ -561,66 +621,6 @@ resource "aws_appflow_flow" "this" {
               object = zendesk.value.object
             }
           }
-          dynamic "amplitude" {
-            for_each = source_connector_properties.value.amplitude[*]
-            content {
-              object = amplitude.value.object
-            }
-          }
-          dynamic "trendmicro" {
-            for_each = source_connector_properties.value.trendmicro[*]
-            content {
-              object = trendmicro.value.object
-            }
-          }
-          dynamic "datadog" {
-            for_each = source_connector_properties.value.datadog[*]
-            content {
-              object = datadog.value.object
-            }
-          }
-          dynamic "marketo" {
-            for_each = source_connector_properties.value.marketo[*]
-            content {
-              object = marketo.value.object
-            }
-          }
-          dynamic "salesforce" {
-            for_each = source_connector_properties.value.salesforce[*]
-            content {
-              enable_dynamic_field_update = salesforce.value.enable_dynamic_field_update
-              include_deleted_records = salesforce.value.include_deleted_records
-              object = salesforce.value.object
-            }
-          }
-          dynamic "sapo_data" {
-            for_each = source_connector_properties.value.sapo_data[*]
-            content {
-              object = sapo_data.value.object
-            }
-          }
-          dynamic "slack" {
-            for_each = source_connector_properties.value.slack[*]
-            content {
-              object = slack.value.object
-            }
-          }
-          dynamic "dynatrace" {
-            for_each = source_connector_properties.value.dynatrace[*]
-            content {
-              object = dynatrace.value.object
-            }
-          }
-          dynamic "veeva" {
-            for_each = source_connector_properties.value.veeva[*]
-            content {
-              document_type = veeva.value.document_type
-              include_all_versions = veeva.value.include_all_versions
-              include_renditions = veeva.value.include_renditions
-              include_source_files = veeva.value.include_source_files
-              object = veeva.value.object
-            }
-          }
         }
       }
     }
@@ -633,7 +633,6 @@ resource "aws_appflow_flow" "this" {
   dynamic "task" {
     for_each = var.values.task[*]
     content {
-      destination_field = task.value.destination_field
       source_fields = task.value.source_fields
       task_properties = task.value.task_properties
       task_type = task.value.task_type
@@ -641,23 +640,24 @@ resource "aws_appflow_flow" "this" {
         for_each = task.value.connector_operator[*]
         content {
           amplitude = connector_operator.value.amplitude
+          custom_connector = connector_operator.value.custom_connector
           marketo = connector_operator.value.marketo
-          singular = connector_operator.value.singular
-          trendmicro = connector_operator.value.trendmicro
+          sapo_data = connector_operator.value.sapo_data
+          veeva = connector_operator.value.veeva
           zendesk = connector_operator.value.zendesk
           datadog = connector_operator.value.datadog
           dynatrace = connector_operator.value.dynatrace
+          s3 = connector_operator.value.s3
+          salesforce = connector_operator.value.salesforce
+          slack = connector_operator.value.slack
+          trendmicro = connector_operator.value.trendmicro
+          service_now = connector_operator.value.service_now
+          singular = connector_operator.value.singular
           google_analytics = connector_operator.value.google_analytics
           infor_nexus = connector_operator.value.infor_nexus
-          sapo_data = connector_operator.value.sapo_data
-          salesforce = connector_operator.value.salesforce
-          service_now = connector_operator.value.service_now
-          custom_connector = connector_operator.value.custom_connector
-          s3 = connector_operator.value.s3
-          slack = connector_operator.value.slack
-          veeva = connector_operator.value.veeva
         }
       }
+      destination_field = task.value.destination_field
     }
   }
   {{- end }}
@@ -671,13 +671,13 @@ resource "aws_appflow_flow" "this" {
           dynamic "scheduled" {
             for_each = trigger_properties.value.scheduled[*]
             content {
-              timezone = scheduled.value.timezone
               data_pull_mode = scheduled.value.data_pull_mode
               first_execution_from = scheduled.value.first_execution_from
               schedule_end_time = scheduled.value.schedule_end_time
               schedule_expression = scheduled.value.schedule_expression
               schedule_offset = scheduled.value.schedule_offset
               schedule_start_time = scheduled.value.schedule_start_time
+              timezone = scheduled.value.timezone
             }
           }
         }

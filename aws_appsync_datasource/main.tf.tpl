@@ -18,22 +18,21 @@ variable "values" {
     api_id = optional(string)
     description = optional(string)
     dynamodb_config = optional(list(object({
+        region = optional(string)
+        table_name = optional(string)
+        use_caller_credentials = optional(bool)
         versioned = optional(bool)
         delta_sync_config = optional(list(object({
             base_table_ttl = optional(number)
             delta_sync_table_name = optional(string)
             delta_sync_table_ttl = optional(number)
         })))
-        region = optional(string)
-        table_name = optional(string)
-        use_caller_credentials = optional(bool)
     })))
     elasticsearch_config = optional(list(object({
         region = optional(string)
         endpoint = optional(string)
     })))
     http_config = optional(list(object({
-        endpoint = optional(string)
         authorization_config = optional(list(object({
             authorization_type = optional(string)
             aws_iam_config = optional(list(object({
@@ -41,6 +40,7 @@ variable "values" {
                 signing_service_name = optional(string)
             })))
         })))
+        endpoint = optional(string)
     })))
     lambda_config = optional(list(object({
         function_arn = optional(string)
@@ -49,11 +49,11 @@ variable "values" {
     relational_database_config = optional(list(object({
         source_type = optional(string)
         http_endpoint_config = optional(list(object({
+            region = optional(string)
+            schema = optional(string)
             db_cluster_identifier = optional(string)
             aws_secret_store_arn = optional(string)
             database_name = optional(string)
-            region = optional(string)
-            schema = optional(string)
         })))
     })))
     service_role_arn = optional(string)
@@ -73,18 +73,18 @@ resource "aws_appsync_datasource" "this" {
   dynamic "dynamodb_config" {
     for_each = var.values.dynamodb_config[*]
     content {
-      region = dynamodb_config.value.region
-      table_name = dynamodb_config.value.table_name
-      use_caller_credentials = dynamodb_config.value.use_caller_credentials
       versioned = dynamodb_config.value.versioned
       dynamic "delta_sync_config" {
         for_each = dynamodb_config.value.delta_sync_config[*]
         content {
-          base_table_ttl = delta_sync_config.value.base_table_ttl
           delta_sync_table_name = delta_sync_config.value.delta_sync_table_name
           delta_sync_table_ttl = delta_sync_config.value.delta_sync_table_ttl
+          base_table_ttl = delta_sync_config.value.base_table_ttl
         }
       }
+      region = dynamodb_config.value.region
+      table_name = dynamodb_config.value.table_name
+      use_caller_credentials = dynamodb_config.value.use_caller_credentials
     }
   }
   {{- end }}
@@ -105,7 +105,6 @@ resource "aws_appsync_datasource" "this" {
       dynamic "authorization_config" {
         for_each = http_config.value.authorization_config[*]
         content {
-          authorization_type = authorization_config.value.authorization_type
           dynamic "aws_iam_config" {
             for_each = authorization_config.value.aws_iam_config[*]
             content {
@@ -113,6 +112,7 @@ resource "aws_appsync_datasource" "this" {
               signing_service_name = aws_iam_config.value.signing_service_name
             }
           }
+          authorization_type = authorization_config.value.authorization_type
         }
       }
     }
@@ -133,6 +133,7 @@ resource "aws_appsync_datasource" "this" {
   dynamic "relational_database_config" {
     for_each = var.values.relational_database_config[*]
     content {
+      source_type = relational_database_config.value.source_type
       dynamic "http_endpoint_config" {
         for_each = relational_database_config.value.http_endpoint_config[*]
         content {
@@ -143,7 +144,6 @@ resource "aws_appsync_datasource" "this" {
           schema = http_endpoint_config.value.schema
         }
       }
-      source_type = relational_database_config.value.source_type
     }
   }
   {{- end }}

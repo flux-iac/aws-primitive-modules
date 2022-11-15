@@ -17,14 +17,14 @@ variable "values" {
   type = object({
     cluster_name = optional(string)
     oidc = optional(list(object({
+        identity_provider_config_name = optional(string)
+        issuer_url = optional(string)
         required_claims = optional(map(string))
         username_claim = optional(string)
         username_prefix = optional(string)
         client_id = optional(string)
         groups_claim = optional(string)
         groups_prefix = optional(string)
-        identity_provider_config_name = optional(string)
-        issuer_url = optional(string)
     })))
     tags = optional(map(string))
   })
@@ -39,6 +39,7 @@ resource "aws_eks_identity_provider_config" "this" {
   dynamic "oidc" {
     for_each = var.values.oidc[*]
     content {
+      groups_prefix = oidc.value.groups_prefix
       identity_provider_config_name = oidc.value.identity_provider_config_name
       issuer_url = oidc.value.issuer_url
       required_claims = oidc.value.required_claims
@@ -46,7 +47,6 @@ resource "aws_eks_identity_provider_config" "this" {
       username_prefix = oidc.value.username_prefix
       client_id = oidc.value.client_id
       groups_claim = oidc.value.groups_claim
-      groups_prefix = oidc.value.groups_prefix
     }
   }
   {{- end }}

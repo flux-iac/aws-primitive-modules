@@ -118,9 +118,9 @@ resource "aws_instance" "this" {
   dynamic "launch_template" {
     for_each = var.values.launch_template[*]
     content {
+      id = launch_template.value.id
       name = launch_template.value.name
       version = launch_template.value.version
-      id = launch_template.value.id
     }
   }
   {{- end }}

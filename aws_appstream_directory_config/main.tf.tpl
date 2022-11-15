@@ -36,8 +36,8 @@ resource "aws_appstream_directory_config" "this" {
   dynamic "service_account_credentials" {
     for_each = var.values.service_account_credentials[*]
     content {
-      account_password = service_account_credentials.value.account_password
       account_name = service_account_credentials.value.account_name
+      account_password = service_account_credentials.value.account_password
     }
   }
   {{- end }}

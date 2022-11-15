@@ -49,8 +49,8 @@ resource "aws_ami_copy" "this" {
   dynamic "ephemeral_block_device" {
     for_each = var.values.ephemeral_block_device[*]
     content {
-      device_name = ephemeral_block_device.value.device_name
       virtual_name = ephemeral_block_device.value.virtual_name
+      device_name = ephemeral_block_device.value.device_name
     }
   }
   {{- end }}

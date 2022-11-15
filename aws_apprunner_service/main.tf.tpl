@@ -19,12 +19,12 @@ variable "values" {
         kms_key = optional(string)
     })))
     health_check_configuration = optional(list(object({
-        unhealthy_threshold = optional(number)
-        healthy_threshold = optional(number)
         interval = optional(number)
         path = optional(string)
         protocol = optional(string)
         timeout = optional(number)
+        unhealthy_threshold = optional(number)
+        healthy_threshold = optional(number)
     })))
     observability_configuration = optional(list(object({
         observability_configuration_arn = optional(string)
@@ -38,27 +38,27 @@ variable "values" {
         })))
         auto_deployments_enabled = optional(bool)
         code_repository = optional(list(object({
+            code_configuration = optional(list(object({
+                code_configuration_values = optional(list(object({
+                    port = optional(string)
+                    runtime = optional(string)
+                    runtime_environment_variables = optional(map(string))
+                    start_command = optional(string)
+                    build_command = optional(string)
+                })))
+                configuration_source = optional(string)
+            })))
             repository_url = optional(string)
             source_code_version = optional(list(object({
                 type = optional(string)
                 value = optional(string)
             })))
-            code_configuration = optional(list(object({
-                code_configuration_values = optional(list(object({
-                    start_command = optional(string)
-                    build_command = optional(string)
-                    port = optional(string)
-                    runtime = optional(string)
-                    runtime_environment_variables = optional(map(string))
-                })))
-                configuration_source = optional(string)
-            })))
         })))
         image_repository = optional(list(object({
             image_configuration = optional(list(object({
+                port = optional(string)
                 runtime_environment_variables = optional(map(string))
                 start_command = optional(string)
-                port = optional(string)
             })))
             image_identifier = optional(string)
             image_repository_type = optional(string)
@@ -82,12 +82,12 @@ resource "aws_apprunner_service" "this" {
   dynamic "health_check_configuration" {
     for_each = var.values.health_check_configuration[*]
     content {
-      unhealthy_threshold = health_check_configuration.value.unhealthy_threshold
       healthy_threshold = health_check_configuration.value.healthy_threshold
       interval = health_check_configuration.value.interval
       path = health_check_configuration.value.path
       protocol = health_check_configuration.value.protocol
       timeout = health_check_configuration.value.timeout
+      unhealthy_threshold = health_check_configuration.value.unhealthy_threshold
     }
   }
   {{- end }}
@@ -107,11 +107,26 @@ resource "aws_apprunner_service" "this" {
   dynamic "source_configuration" {
     for_each = var.values.source_configuration[*]
     content {
+      dynamic "image_repository" {
+        for_each = source_configuration.value.image_repository[*]
+        content {
+          dynamic "image_configuration" {
+            for_each = image_repository.value.image_configuration[*]
+            content {
+              runtime_environment_variables = image_configuration.value.runtime_environment_variables
+              start_command = image_configuration.value.start_command
+              port = image_configuration.value.port
+            }
+          }
+          image_identifier = image_repository.value.image_identifier
+          image_repository_type = image_repository.value.image_repository_type
+        }
+      }
       dynamic "authentication_configuration" {
         for_each = source_configuration.value.authentication_configuration[*]
         content {
-          access_role_arn = authentication_configuration.value.access_role_arn
           connection_arn = authentication_configuration.value.connection_arn
+          access_role_arn = authentication_configuration.value.access_role_arn
         }
       }
       auto_deployments_enabled = source_configuration.value.auto_deployments_enabled
@@ -142,21 +157,6 @@ resource "aws_apprunner_service" "this" {
               value = source_code_version.value.value
             }
           }
-        }
-      }
-      dynamic "image_repository" {
-        for_each = source_configuration.value.image_repository[*]
-        content {
-          dynamic "image_configuration" {
-            for_each = image_repository.value.image_configuration[*]
-            content {
-              port = image_configuration.value.port
-              runtime_environment_variables = image_configuration.value.runtime_environment_variables
-              start_command = image_configuration.value.start_command
-            }
-          }
-          image_identifier = image_repository.value.image_identifier
-          image_repository_type = image_repository.value.image_repository_type
         }
       }
     }

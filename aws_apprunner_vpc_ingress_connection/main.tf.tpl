@@ -31,8 +31,8 @@ resource "aws_apprunner_vpc_ingress_connection" "this" {
   dynamic "ingress_vpc_configuration" {
     for_each = var.values.ingress_vpc_configuration[*]
     content {
-      vpc_endpoint_id = ingress_vpc_configuration.value.vpc_endpoint_id
       vpc_id = ingress_vpc_configuration.value.vpc_id
+      vpc_endpoint_id = ingress_vpc_configuration.value.vpc_endpoint_id
     }
   }
   {{- end }}

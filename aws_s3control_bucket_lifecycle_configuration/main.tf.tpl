@@ -17,6 +17,7 @@ variable "values" {
   type = object({
     bucket = optional(string)
     rule = optional(set(object({
+        status = optional(string)
         abort_incomplete_multipart_upload = optional(list(object({
             days_after_initiation = optional(number)
         })))
@@ -30,7 +31,6 @@ variable "values" {
             tags = optional(map(string))
         })))
         id = optional(string)
-        status = optional(string)
     })))
   })
 }

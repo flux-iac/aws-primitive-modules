@@ -18,6 +18,8 @@ variable "values" {
     bucket = optional(string)
     role = optional(string)
     rule = optional(list(object({
+        priority = optional(number)
+        status = optional(string)
         destination = optional(list(object({
             access_control_translation = optional(list(object({
                 owner = optional(string)
@@ -51,14 +53,12 @@ variable "values" {
             })))
             prefix = optional(string)
             tag = optional(list(object({
-                key = optional(string)
                 value = optional(string)
+                key = optional(string)
             })))
         })))
         id = optional(string)
         prefix = optional(string)
-        priority = optional(number)
-        status = optional(string)
         delete_marker_replication = optional(list(object({
             status = optional(string)
         })))
@@ -93,6 +93,26 @@ resource "aws_s3_bucket_replication_configuration" "this" {
           status = delete_marker_replication.value.status
         }
       }
+      dynamic "source_selection_criteria" {
+        for_each = rule.value.source_selection_criteria[*]
+        content {
+          dynamic "replica_modifications" {
+            for_each = source_selection_criteria.value.replica_modifications[*]
+            content {
+              status = replica_modifications.value.status
+            }
+          }
+          dynamic "sse_kms_encrypted_objects" {
+            for_each = source_selection_criteria.value.sse_kms_encrypted_objects[*]
+            content {
+              status = sse_kms_encrypted_objects.value.status
+            }
+          }
+        }
+      }
+      prefix = rule.value.prefix
+      priority = rule.value.priority
+      status = rule.value.status
       dynamic "destination" {
         for_each = rule.value.destination[*]
         content {
@@ -164,26 +184,6 @@ resource "aws_s3_bucket_replication_configuration" "this" {
         }
       }
       id = rule.value.id
-      prefix = rule.value.prefix
-      priority = rule.value.priority
-      status = rule.value.status
-      dynamic "source_selection_criteria" {
-        for_each = rule.value.source_selection_criteria[*]
-        content {
-          dynamic "sse_kms_encrypted_objects" {
-            for_each = source_selection_criteria.value.sse_kms_encrypted_objects[*]
-            content {
-              status = sse_kms_encrypted_objects.value.status
-            }
-          }
-          dynamic "replica_modifications" {
-            for_each = source_selection_criteria.value.replica_modifications[*]
-            content {
-              status = replica_modifications.value.status
-            }
-          }
-        }
-      }
     }
   }
   {{- end }}

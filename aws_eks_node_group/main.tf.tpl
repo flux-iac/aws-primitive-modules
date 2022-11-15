@@ -91,8 +91,8 @@ resource "aws_eks_node_group" "this" {
   dynamic "remote_access" {
     for_each = var.values.remote_access[*]
     content {
-      source_security_group_ids = remote_access.value.source_security_group_ids
       ec2_ssh_key = remote_access.value.ec2_ssh_key
+      source_security_group_ids = remote_access.value.source_security_group_ids
     }
   }
   {{- end }}
@@ -100,9 +100,9 @@ resource "aws_eks_node_group" "this" {
   dynamic "scaling_config" {
     for_each = var.values.scaling_config[*]
     content {
+      desired_size = scaling_config.value.desired_size
       max_size = scaling_config.value.max_size
       min_size = scaling_config.value.min_size
-      desired_size = scaling_config.value.desired_size
     }
   }
   {{- end }}
@@ -116,9 +116,9 @@ resource "aws_eks_node_group" "this" {
   dynamic "taint" {
     for_each = var.values.taint[*]
     content {
+      key = taint.value.key
       value = taint.value.value
       effect = taint.value.effect
-      key = taint.value.key
     }
   }
   {{- end }}

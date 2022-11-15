@@ -27,9 +27,10 @@ spec:
     - ${aws_load_balancer_policy.wu-tang-ssl.policy_name}
   sourceRef:
     kind: OCIRepository
-    name: aws-package-v4.38.0
+    name: aws-package
   approvePlan: auto
   interval: 1h0m
+  retryInterval: 20s
 ```
 
 ## Argument Reference

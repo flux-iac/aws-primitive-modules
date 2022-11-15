@@ -16,8 +16,8 @@ terraform {
 variable "values" {
   type = object({
     attribute = optional(set(object({
-        name = optional(string)
         value = optional(string)
+        name = optional(string)
     })))
     lb_port = optional(number)
     load_balancer = optional(string)

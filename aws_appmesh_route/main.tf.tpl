@@ -19,6 +19,21 @@ variable "values" {
     mesh_owner = optional(string)
     name = optional(string)
     spec = optional(list(object({
+        priority = optional(number)
+        tcp_route = optional(list(object({
+            action = optional(list(object({
+                weighted_target = optional(set(object({
+                    virtual_node = optional(string)
+                    weight = optional(number)
+                })))
+            })))
+            timeout = optional(list(object({
+                idle = optional(list(object({
+                    unit = optional(string)
+                    value = optional(number)
+                })))
+            })))
+        })))
         grpc_route = optional(list(object({
             action = optional(list(object({
                 weighted_target = optional(set(object({
@@ -27,7 +42,6 @@ variable "values" {
                 })))
             })))
             match = optional(list(object({
-                service_name = optional(string)
                 metadata = optional(set(object({
                     invert = optional(bool)
                     match = optional(list(object({
@@ -44,16 +58,17 @@ variable "values" {
                 })))
                 method_name = optional(string)
                 prefix = optional(string)
+                service_name = optional(string)
             })))
             retry_policy = optional(list(object({
-                grpc_retry_events = optional(set(string))
-                http_retry_events = optional(set(string))
-                max_retries = optional(number)
                 per_retry_timeout = optional(list(object({
                     unit = optional(string)
                     value = optional(number)
                 })))
                 tcp_retry_events = optional(set(string))
+                grpc_retry_events = optional(set(string))
+                http_retry_events = optional(set(string))
+                max_retries = optional(number)
             })))
             timeout = optional(list(object({
                 per_request = optional(list(object({
@@ -69,24 +84,24 @@ variable "values" {
         http2_route = optional(list(object({
             action = optional(list(object({
                 weighted_target = optional(set(object({
-                    weight = optional(number)
                     virtual_node = optional(string)
+                    weight = optional(number)
                 })))
             })))
             match = optional(list(object({
                 header = optional(set(object({
+                    invert = optional(bool)
                     match = optional(list(object({
-                        exact = optional(string)
-                        prefix = optional(string)
                         range = optional(list(object({
-                            start = optional(number)
                             end = optional(number)
+                            start = optional(number)
                         })))
                         regex = optional(string)
                         suffix = optional(string)
+                        exact = optional(string)
+                        prefix = optional(string)
                     })))
                     name = optional(string)
-                    invert = optional(bool)
                 })))
                 method = optional(string)
                 prefix = optional(string)
@@ -102,11 +117,11 @@ variable "values" {
                 tcp_retry_events = optional(set(string))
             })))
             timeout = optional(list(object({
-                per_request = optional(list(object({
+                idle = optional(list(object({
                     unit = optional(string)
                     value = optional(number)
                 })))
-                idle = optional(list(object({
+                per_request = optional(list(object({
                     unit = optional(string)
                     value = optional(number)
                 })))
@@ -120,23 +135,23 @@ variable "values" {
                 })))
             })))
             match = optional(list(object({
-                method = optional(string)
-                prefix = optional(string)
-                scheme = optional(string)
                 header = optional(set(object({
                     invert = optional(bool)
                     match = optional(list(object({
+                        regex = optional(string)
+                        suffix = optional(string)
                         exact = optional(string)
                         prefix = optional(string)
                         range = optional(list(object({
-                            end = optional(number)
                             start = optional(number)
+                            end = optional(number)
                         })))
-                        regex = optional(string)
-                        suffix = optional(string)
                     })))
                     name = optional(string)
                 })))
+                method = optional(string)
+                prefix = optional(string)
+                scheme = optional(string)
             })))
             retry_policy = optional(list(object({
                 http_retry_events = optional(set(string))
@@ -155,21 +170,6 @@ variable "values" {
                 per_request = optional(list(object({
                     unit = optional(string)
                     value = optional(number)
-                })))
-            })))
-        })))
-        priority = optional(number)
-        tcp_route = optional(list(object({
-            action = optional(list(object({
-                weighted_target = optional(set(object({
-                    virtual_node = optional(string)
-                    weight = optional(number)
-                })))
-            })))
-            timeout = optional(list(object({
-                idle = optional(list(object({
-                    value = optional(number)
-                    unit = optional(string)
                 })))
             })))
         })))
@@ -203,8 +203,8 @@ resource "aws_appmesh_route" "this" {
               dynamic "weighted_target" {
                 for_each = action.value.weighted_target[*]
                 content {
-                  weight = weighted_target.value.weight
                   virtual_node = weighted_target.value.virtual_node
+                  weight = weighted_target.value.weight
                 }
               }
             }
@@ -212,11 +212,9 @@ resource "aws_appmesh_route" "this" {
           dynamic "match" {
             for_each = http2_route.value.match[*]
             content {
-              scheme = match.value.scheme
               dynamic "header" {
                 for_each = match.value.header[*]
                 content {
-                  name = header.value.name
                   invert = header.value.invert
                   dynamic "match" {
                     for_each = header.value.match[*]
@@ -234,17 +232,17 @@ resource "aws_appmesh_route" "this" {
                       suffix = match.value.suffix
                     }
                   }
+                  name = header.value.name
                 }
               }
               method = match.value.method
               prefix = match.value.prefix
+              scheme = match.value.scheme
             }
           }
           dynamic "retry_policy" {
             for_each = http2_route.value.retry_policy[*]
             content {
-              http_retry_events = retry_policy.value.http_retry_events
-              max_retries = retry_policy.value.max_retries
               dynamic "per_retry_timeout" {
                 for_each = retry_policy.value.per_retry_timeout[*]
                 content {
@@ -253,6 +251,8 @@ resource "aws_appmesh_route" "this" {
                 }
               }
               tcp_retry_events = retry_policy.value.tcp_retry_events
+              http_retry_events = retry_policy.value.http_retry_events
+              max_retries = retry_policy.value.max_retries
             }
           }
           dynamic "timeout" {
@@ -285,8 +285,8 @@ resource "aws_appmesh_route" "this" {
               dynamic "weighted_target" {
                 for_each = action.value.weighted_target[*]
                 content {
-                  weight = weighted_target.value.weight
                   virtual_node = weighted_target.value.virtual_node
+                  weight = weighted_target.value.weight
                 }
               }
             }
@@ -294,8 +294,6 @@ resource "aws_appmesh_route" "this" {
           dynamic "match" {
             for_each = http_route.value.match[*]
             content {
-              prefix = match.value.prefix
-              scheme = match.value.scheme
               dynamic "header" {
                 for_each = match.value.header[*]
                 content {
@@ -320,6 +318,8 @@ resource "aws_appmesh_route" "this" {
                 }
               }
               method = match.value.method
+              prefix = match.value.prefix
+              scheme = match.value.scheme
             }
           }
           dynamic "retry_policy" {
@@ -340,18 +340,18 @@ resource "aws_appmesh_route" "this" {
           dynamic "timeout" {
             for_each = http_route.value.timeout[*]
             content {
-              dynamic "idle" {
-                for_each = timeout.value.idle[*]
-                content {
-                  unit = idle.value.unit
-                  value = idle.value.value
-                }
-              }
               dynamic "per_request" {
                 for_each = timeout.value.per_request[*]
                 content {
                   unit = per_request.value.unit
                   value = per_request.value.value
+                }
+              }
+              dynamic "idle" {
+                for_each = timeout.value.idle[*]
+                content {
+                  unit = idle.value.unit
+                  value = idle.value.value
                 }
               }
             }
@@ -362,18 +362,6 @@ resource "aws_appmesh_route" "this" {
       dynamic "tcp_route" {
         for_each = spec.value.tcp_route[*]
         content {
-          dynamic "timeout" {
-            for_each = tcp_route.value.timeout[*]
-            content {
-              dynamic "idle" {
-                for_each = timeout.value.idle[*]
-                content {
-                  unit = idle.value.unit
-                  value = idle.value.value
-                }
-              }
-            }
-          }
           dynamic "action" {
             for_each = tcp_route.value.action[*]
             content {
@@ -382,6 +370,18 @@ resource "aws_appmesh_route" "this" {
                 content {
                   virtual_node = weighted_target.value.virtual_node
                   weight = weighted_target.value.weight
+                }
+              }
+            }
+          }
+          dynamic "timeout" {
+            for_each = tcp_route.value.timeout[*]
+            content {
+              dynamic "idle" {
+                for_each = timeout.value.idle[*]
+                content {
+                  unit = idle.value.unit
+                  value = idle.value.value
                 }
               }
             }
@@ -397,8 +397,8 @@ resource "aws_appmesh_route" "this" {
               dynamic "weighted_target" {
                 for_each = action.value.weighted_target[*]
                 content {
-                  virtual_node = weighted_target.value.virtual_node
                   weight = weighted_target.value.weight
+                  virtual_node = weighted_target.value.virtual_node
                 }
               }
             }
@@ -413,10 +413,6 @@ resource "aws_appmesh_route" "this" {
                   dynamic "match" {
                     for_each = metadata.value.match[*]
                     content {
-                      regex = match.value.regex
-                      suffix = match.value.suffix
-                      exact = match.value.exact
-                      prefix = match.value.prefix
                       dynamic "range" {
                         for_each = match.value.range[*]
                         content {
@@ -424,6 +420,10 @@ resource "aws_appmesh_route" "this" {
                           start = range.value.start
                         }
                       }
+                      regex = match.value.regex
+                      suffix = match.value.suffix
+                      exact = match.value.exact
+                      prefix = match.value.prefix
                     }
                   }
                   name = metadata.value.name
@@ -437,6 +437,7 @@ resource "aws_appmesh_route" "this" {
           dynamic "retry_policy" {
             for_each = grpc_route.value.retry_policy[*]
             content {
+              tcp_retry_events = retry_policy.value.tcp_retry_events
               grpc_retry_events = retry_policy.value.grpc_retry_events
               http_retry_events = retry_policy.value.http_retry_events
               max_retries = retry_policy.value.max_retries
@@ -447,7 +448,6 @@ resource "aws_appmesh_route" "this" {
                   value = per_retry_timeout.value.value
                 }
               }
-              tcp_retry_events = retry_policy.value.tcp_retry_events
             }
           }
           dynamic "timeout" {
